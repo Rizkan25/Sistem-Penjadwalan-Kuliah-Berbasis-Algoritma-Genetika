@@ -1,0 +1,131 @@
+export interface Lecturer {
+  id: string;
+  nidn: string;
+  name: string;
+  email: string;
+  created_at?: string;
+}
+
+export interface Room {
+  id: string;
+  code: string;
+  name: string;
+  capacity: number;
+  room_type: 'THEORY' | 'LABORATORY';
+  is_active: boolean;
+}
+
+export interface TimeSlot {
+  id: string;
+  day_of_week: number;
+  period_order: number;
+  start_time: string;
+  end_time: string;
+}
+
+export interface Course {
+  id: string;
+  code: string;
+  name: string;
+  credits: number;
+  semester: number;
+  course_type: 'THEORY' | 'LABORATORY';
+  kbk: 'GENERAL' | 'PEMROGRAMAN' | 'MULTIMEDIA' | 'IOT';
+}
+
+export interface AcademicClass {
+  id: string;
+  course_id: string;
+  lecturer_id: string;
+  class_name: string;
+  semester: number;
+  cohort: string;
+  kbk: 'GENERAL' | 'PEMROGRAMAN' | 'MULTIMEDIA' | 'IOT';
+  student_count: number;
+  academic_year: string;
+  semester_type: 'ODD' | 'EVEN';
+  course?: Course;
+  lecturer?: Lecturer;
+}
+
+export interface LecturerPreference {
+  id: string;
+  lecturer_id: string;
+  time_slot_id: string;
+  preference_type: 'UNAVAILABLE' | 'PREFERRED';
+  reason?: string;
+  lecturer?: Lecturer;
+  time_slot?: TimeSlot;
+}
+
+export interface GAParameters {
+  population_size: number;
+  max_generations: number;
+  crossover_rate: number;
+  mutation_rate: number;
+  elitism_count: number;
+}
+
+export interface ScheduleJob {
+  id: string;
+  academic_year: string;
+  semester_type: 'ODD' | 'EVEN';
+  status: 'PENDING' | 'RUNNING' | 'COMPLETED' | 'FAILED';
+  is_published: boolean;
+  progress_percentage: number;
+  current_generation: number;
+  max_generations: number;
+  best_fitness: number;
+  hard_conflicts_count: number;
+  soft_conflicts_count: number;
+  execution_time_seconds?: number;
+  error_message?: string;
+  created_at: string;
+  updated_at: string;
+}
+
+export interface ScheduleItem {
+  id: string;
+  job_id: string;
+  class_id: string;
+  class_name: string;
+  semester: number;
+  cohort: string;
+  kbk: 'GENERAL' | 'PEMROGRAMAN' | 'MULTIMEDIA' | 'IOT';
+  student_count: number;
+  academic_year: string;
+  semester_type: 'ODD' | 'EVEN';
+  course_id: string;
+  course_code: string;
+  course_name: string;
+  credits: number;
+  course_type: 'THEORY' | 'LABORATORY';
+  lecturer_id: string;
+  lecturer_nidn: string;
+  lecturer_name: string;
+  room_id: string;
+  room_code: string;
+  room_name: string;
+  room_capacity: number;
+  room_type: 'THEORY' | 'LABORATORY';
+  time_slot_id: string;
+  day_of_week: number;
+  period_order: number;
+  start_time: string;
+  end_time: string;
+  is_preferred_slot: boolean;
+  soft_penalty_reasons: string[];
+}
+
+export interface PreCheckResult {
+  status: string;
+  is_feasible: boolean;
+  total_classes: number;
+  total_theory_classes: number;
+  total_lab_classes: number;
+  total_time_slots: number;
+  total_rooms: number;
+  capacity_issues: string[];
+  lecturer_workload_issues: string[];
+  message: string;
+}
