@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
-import { School, Plus, Trash2, RefreshCw, Filter, BookOpen, Layers } from 'lucide-react';
+import { School, Plus, Trash2, RefreshCw, Filter, BookOpen, Layers, Pencil } from 'lucide-react';
 import { AcademicClass, Course, Lecturer } from '@/lib/types';
 import { api } from '@/lib/api';
 
@@ -16,6 +16,7 @@ export default function ClassesPage() {
 
   // Modal & Form state
   const [showAddModal, setShowAddModal] = useState(false);
+  const [editingClassId, setEditingClassId] = useState<string | null>(null);
   const [modalFilterSemester, setModalFilterSemester] = useState<number | 'ALL'>(1);
   const [selectedCourseId, setSelectedCourseId] = useState('');
   const [selectedLecturerId, setSelectedLecturerId] = useState('');
@@ -60,6 +61,7 @@ export default function ClassesPage() {
 
   // Helper when opening add modal
   const handleOpenAddModal = (targetSem: number | 'ALL' = 1) => {
+    setEditingClassId(null);
     setModalFilterSemester(targetSem);
     const targetCourses = targetSem === 'ALL' ? courses : courses.filter((c) => c.semester === targetSem);
     const initialCourse = targetCourses.length > 0 ? targetCourses[0] : (courses.length > 0 ? courses[0] : null);
@@ -72,6 +74,20 @@ export default function ClassesPage() {
       setSelectedCourseId('');
       setClassName('');
     }
+    setShowAddModal(true);
+  };
+
+  // Helper when opening edit modal
+  const handleOpenEditModal = (cls: AcademicClass) => {
+    setEditingClassId(cls.id);
+    setModalFilterSemester(cls.semester);
+    setSelectedCourseId(cls.course_id);
+    setSelectedLecturerId(cls.lecturer_id);
+    setClassName(cls.class_name);
+    setSemester(cls.semester);
+    setCohort(cls.cohort);
+    setKbk(cls.kbk);
+    setStudentCount(cls.student_count);
     setShowAddModal(true);
   };
 
@@ -107,6 +123,15 @@ export default function ClassesPage() {
     }
   };
 
+  // Helper when user manually customizes the semester for this class
+  const handleSemesterChange = (newSem: number) => {
+    setSemester(newSem);
+    const found = courses.find((crs) => crs.id === selectedCourseId);
+    if (found) {
+      setClassName(`IK-${newSem}${cohort} ${found.name}`);
+    }
+  };
+
   // Helper when user changes cohort ('A' vs 'B')
   const handleCohortChange = (newCohort: string) => {
     setCohort(newCohort);
@@ -116,7 +141,7 @@ export default function ClassesPage() {
     }
   };
 
-  const handleCreateClass = async (e: React.FormEvent) => {
+  const handleSubmitClass = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!selectedCourseId) {
       alert('Silakan pilih mata kuliah terlebih dahulu.');
@@ -131,21 +156,36 @@ export default function ClassesPage() {
       return;
     }
     try {
-      await api.createClass({
-        course_id: selectedCourseId,
-        lecturer_id: selectedLecturerId,
-        class_name: className.trim(),
-        semester,
-        cohort,
-        kbk,
-        student_count: studentCount,
-        academic_year: '2026/2027',
-        semester_type: 'ODD',
-      });
+      if (editingClassId) {
+        await api.updateClass(editingClassId, {
+          course_id: selectedCourseId,
+          lecturer_id: selectedLecturerId,
+          class_name: className.trim(),
+          semester,
+          cohort,
+          kbk,
+          student_count: studentCount,
+          academic_year: '2026/2027',
+          semester_type: semester % 2 !== 0 ? 'ODD' : 'EVEN',
+        });
+      } else {
+        await api.createClass({
+          course_id: selectedCourseId,
+          lecturer_id: selectedLecturerId,
+          class_name: className.trim(),
+          semester,
+          cohort,
+          kbk,
+          student_count: studentCount,
+          academic_year: '2026/2027',
+          semester_type: semester % 2 !== 0 ? 'ODD' : 'EVEN',
+        });
+      }
       setShowAddModal(false);
+      setEditingClassId(null);
       loadData();
     } catch (err: any) {
-      alert(`Gagal membuat kelas: ${err.message || 'Terjadi kesalahan'}`);
+      alert(`Gagal ${editingClassId ? 'memperbarui' : 'membuat'} kelas: ${err.message || 'Terjadi kesalahan'}`);
     }
   };
 
@@ -221,11 +261,11 @@ export default function ClassesPage() {
               >
                 Semua
               </button>
-              {[1, 3, 5, 7].map((s) => (
+              {[1, 2, 3, 4, 5, 6, 7, 8].map((s) => (
                 <button
                   key={s}
                   onClick={() => setTableSemesterFilter(s)}
-                  className={`px-2.5 py-1 rounded-md text-[11px] font-bold transition cursor-pointer ${
+                  className={`px-2 py-1 rounded-md text-[11px] font-bold transition cursor-pointer ${
                     tableSemesterFilter === s
                       ? 'bg-[#1D8699] text-white shadow-xs'
                       : 'text-slate-600 hover:text-slate-900'
@@ -292,13 +332,22 @@ export default function ClassesPage() {
                           {c.student_count} Mahasiswa
                         </td>
                         <td className="py-3 px-4 text-center">
-                          <button
-                            onClick={() => handleDeleteClass(c.id)}
-                            className="p-1 text-rose-500 hover:text-rose-700 hover:bg-rose-50 rounded-md cursor-pointer transition"
-                            title="Hapus Kelas"
-                          >
-                            <Trash2 className="w-4 h-4" />
-                          </button>
+                          <div className="flex items-center justify-center space-x-1.5">
+                            <button
+                              onClick={() => handleOpenEditModal(c)}
+                              className="p-1.5 text-blue-600 hover:text-blue-800 hover:bg-blue-50 rounded-md cursor-pointer transition"
+                              title="Edit Kelas"
+                            >
+                              <Pencil className="w-4 h-4" />
+                            </button>
+                            <button
+                              onClick={() => handleDeleteClass(c.id)}
+                              className="p-1.5 text-rose-500 hover:text-rose-700 hover:bg-rose-50 rounded-md cursor-pointer transition"
+                              title="Hapus Kelas"
+                            >
+                              <Trash2 className="w-4 h-4" />
+                            </button>
+                          </div>
                         </td>
                       </tr>
                     );
@@ -310,32 +359,39 @@ export default function ClassesPage() {
         </div>
       )}
 
-      {/* Add Class Modal (Revised with Semester Selector & Clean Course Dropdown) */}
+      {/* Add / Edit Class Modal (Revised with Semester Selector & Clean Course Dropdown) */}
       {showAddModal && (
         <div className="fixed inset-0 bg-slate-900/50 backdrop-blur-xs flex items-center justify-center z-50 p-4">
           <div className="bg-white rounded-2xl max-w-xl w-full p-6 shadow-2xl border border-slate-200 overflow-y-auto max-h-[92vh]">
             <div className="flex items-center justify-between pb-3 mb-4 border-b border-slate-100">
               <div className="flex items-center space-x-2.5">
-                <div className="p-2 bg-teal-50 text-[#1D8699] rounded-lg">
-                  <School className="w-5 h-5" />
+                <div className={`p-2 rounded-lg ${editingClassId ? 'bg-blue-50 text-blue-600' : 'bg-teal-50 text-[#1D8699]'}`}>
+                  {editingClassId ? <Pencil className="w-5 h-5" /> : <School className="w-5 h-5" />}
                 </div>
                 <div>
-                  <h3 className="text-sm font-bold text-slate-800">Tambah Kelas / Rombel Baru</h3>
+                  <h3 className="text-sm font-bold text-slate-800">
+                    {editingClassId ? 'Edit Kelas / Rombel' : 'Tambah Kelas / Rombel Baru'}
+                  </h3>
                   <p className="text-[11px] text-slate-500">
-                    Gunakan tombol semester untuk menyaring mata kuliah agar mudah dipilih
+                    {editingClassId
+                      ? 'Perbarui mata kuliah, dosen pengampu, nama kelas, semester, atau kelompok'
+                      : 'Gunakan tombol semester untuk menyaring mata kuliah agar mudah dipilih'}
                   </p>
                 </div>
               </div>
               <button
                 type="button"
-                onClick={() => setShowAddModal(false)}
+                onClick={() => {
+                  setShowAddModal(false);
+                  setEditingClassId(null);
+                }}
                 className="text-slate-400 hover:text-slate-600 hover:bg-slate-100 p-1.5 rounded-lg transition cursor-pointer text-sm font-bold"
               >
                 ✕
               </button>
             </div>
 
-            <form onSubmit={handleCreateClass} className="space-y-4 text-xs">
+            <form onSubmit={handleSubmitClass} className="space-y-4 text-xs">
               {/* 1. SEMESTER SELECTOR BUTTONS */}
               <div>
                 <div className="flex items-center justify-between mb-1.5">
@@ -509,8 +565,25 @@ export default function ClassesPage() {
                 />
               </div>
 
-              {/* 5. COHORT, STUDENT COUNT & SYNCED METRICS */}
-              <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+              {/* 5. CUSTOM SEMESTER, COHORT, MAHASISWA & KBK */}
+              <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
+                <div>
+                  <label className="font-bold text-slate-700 block mb-1">
+                    Semester Kelas:
+                  </label>
+                  <select
+                    value={semester}
+                    onChange={(e) => handleSemesterChange(parseInt(e.target.value))}
+                    className="w-full px-3 py-2 bg-white border border-slate-300 rounded-lg text-xs font-semibold text-slate-800 focus:outline-none focus:ring-2 focus:ring-[#1D8699]/30"
+                  >
+                    {[1, 2, 3, 4, 5, 6, 7, 8].map((s) => (
+                      <option key={s} value={s}>
+                        Semester {s}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+
                 <div>
                   <label className="font-bold text-slate-700 block mb-1">Kelompok (Cohort):</label>
                   <select
@@ -537,11 +610,17 @@ export default function ClassesPage() {
                 </div>
 
                 <div>
-                  <label className="font-bold text-slate-700 block mb-1">Semester & Jalur KBK:</label>
-                  <div className="w-full px-3 py-2 bg-slate-100 border border-slate-200 rounded-lg text-[11px] font-bold text-slate-700 flex items-center justify-between">
-                    <span>Sem {semester}</span>
-                    <span className="text-[10px] text-teal-800 font-extrabold uppercase">{kbk}</span>
-                  </div>
+                  <label className="font-bold text-slate-700 block mb-1">Peminatan (KBK):</label>
+                  <select
+                    value={kbk}
+                    onChange={(e) => setKbk(e.target.value as any)}
+                    className="w-full px-3 py-2 bg-white border border-slate-300 rounded-lg text-xs font-semibold text-slate-800 focus:outline-none focus:ring-2 focus:ring-[#1D8699]/30"
+                  >
+                    <option value="GENERAL">GENERAL</option>
+                    <option value="PEMROGRAMAN">PEMROGRAMAN</option>
+                    <option value="MULTIMEDIA">MULTIMEDIA</option>
+                    <option value="IOT">IOT</option>
+                  </select>
                 </div>
               </div>
 
@@ -549,7 +628,10 @@ export default function ClassesPage() {
               <div className="flex justify-end space-x-2 pt-3 border-t border-slate-200">
                 <button
                   type="button"
-                  onClick={() => setShowAddModal(false)}
+                  onClick={() => {
+                    setShowAddModal(false);
+                    setEditingClassId(null);
+                  }}
                   className="px-4 py-2 border border-slate-300 rounded-lg text-slate-700 hover:bg-slate-50 cursor-pointer font-medium transition"
                 >
                   Batal
@@ -557,11 +639,16 @@ export default function ClassesPage() {
                 <button
                   type="submit"
                   disabled={!selectedCourseId || filteredModalCourses.length === 0}
-                  className={`px-5 py-2 bg-[#1D8699] hover:bg-[#166978] text-white rounded-lg font-bold shadow-xs cursor-pointer transition ${
+                  className={`px-5 py-2 ${
+                    editingClassId
+                      ? 'bg-blue-600 hover:bg-blue-700'
+                      : 'bg-[#1D8699] hover:bg-[#166978]'
+                  } text-white rounded-lg font-bold shadow-xs cursor-pointer transition flex items-center space-x-1.5 ${
                     (!selectedCourseId || filteredModalCourses.length === 0) ? 'opacity-50 cursor-not-allowed' : ''
                   }`}
                 >
-                  Simpan Kelas Rombel
+                  {editingClassId && <Pencil className="w-3.5 h-3.5" />}
+                  <span>{editingClassId ? 'Simpan Perubahan' : 'Simpan Kelas Rombel'}</span>
                 </button>
               </div>
             </form>

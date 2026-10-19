@@ -90,10 +90,9 @@ export default function CoursesPage() {
             className="px-3 py-1.5 rounded-lg border border-slate-300 text-xs bg-white text-slate-700"
           >
             <option value="ALL">Semua Semester</option>
-            <option value={1}>Semester 1</option>
-            <option value={3}>Semester 3</option>
-            <option value={5}>Semester 5</option>
-            <option value={7}>Semester 7</option>
+            {[1, 2, 3, 4, 5, 6, 7, 8].map((s) => (
+              <option key={s} value={s}>Semester {s}</option>
+            ))}
           </select>
 
           <button
