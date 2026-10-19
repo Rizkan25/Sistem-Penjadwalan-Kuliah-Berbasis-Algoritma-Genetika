@@ -1,9 +1,14 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
-import { School, Plus, Trash2, RefreshCw, Filter, BookOpen, Layers, Pencil } from 'lucide-react';
+import { 
+  School, Plus, Trash2, RefreshCw, Filter, BookOpen, Layers, Pencil,
+  ArrowUpDown, ArrowUp, ArrowDown, Search, X 
+} from 'lucide-react';
 import { AcademicClass, Course, Lecturer } from '@/lib/types';
 import { api } from '@/lib/api';
+
+type SortField = 'class_name' | 'course' | 'lecturer' | 'semester' | 'kbk' | 'student_count';
 
 export default function ClassesPage() {
   const [classes, setClasses] = useState<AcademicClass[]>([]);
@@ -11,8 +16,11 @@ export default function ClassesPage() {
   const [lecturers, setLecturers] = useState<Lecturer[]>([]);
   const [loading, setLoading] = useState(true);
 
-  // Table filter state
+  // Table filter, search & sort state
   const [tableSemesterFilter, setTableSemesterFilter] = useState<number | 'ALL'>('ALL');
+  const [searchQuery, setSearchQuery] = useState('');
+  const [sortField, setSortField] = useState<SortField>('semester');
+  const [sortDirection, setSortDirection] = useState<'asc' | 'desc'>('asc');
 
   // Modal & Form state
   const [showAddModal, setShowAddModal] = useState(false);
@@ -58,6 +66,27 @@ export default function ClassesPage() {
   useEffect(() => {
     loadData();
   }, []);
+
+  // Sorting handler
+  const handleSort = (field: SortField) => {
+    if (sortField === field) {
+      setSortDirection((prev) => (prev === 'asc' ? 'desc' : 'asc'));
+    } else {
+      setSortField(field);
+      setSortDirection('asc');
+    }
+  };
+
+  const renderSortIcon = (field: SortField) => {
+    if (sortField !== field) {
+      return <ArrowUpDown className="w-3 h-3 text-slate-300 group-hover:text-slate-500 transition shrink-0 ml-1" />;
+    }
+    return sortDirection === 'asc' ? (
+      <ArrowUp className="w-3.5 h-3.5 text-[#1D8699] font-bold shrink-0 ml-1" />
+    ) : (
+      <ArrowDown className="w-3.5 h-3.5 text-[#1D8699] font-bold shrink-0 ml-1" />
+    );
+  };
 
   // Helper when opening add modal
   const handleOpenAddModal = (targetSem: number | 'ALL' = 1) => {
@@ -206,10 +235,66 @@ export default function ClassesPage() {
 
   const selectedCourse = courses.find((c) => c.id === selectedCourseId);
 
-  // Filtered classes for table
-  const filteredClasses = tableSemesterFilter === 'ALL'
-    ? classes
-    : classes.filter((c) => c.semester === tableSemesterFilter);
+  // Filtered & Searched classes for table
+  const filteredClasses = classes.filter((c) => {
+    // 1. Filter Semester
+    if (tableSemesterFilter !== 'ALL' && c.semester !== tableSemesterFilter) {
+      return false;
+    }
+    // 2. Filter Search Query
+    if (searchQuery.trim()) {
+      const q = searchQuery.toLowerCase().trim();
+      const matchName = c.class_name.toLowerCase().includes(q);
+      const matchCourse = (c.course?.name || '').toLowerCase().includes(q);
+      const matchCode = (c.course?.code || '').toLowerCase().includes(q);
+      const matchLecturer = (c.lecturer?.name || '').toLowerCase().includes(q);
+      const matchKbk = c.kbk.toLowerCase().includes(q);
+      const matchCohort = `kelas ${c.cohort.toLowerCase()}`.includes(q);
+      if (!matchName && !matchCourse && !matchCode && !matchLecturer && !matchKbk && !matchCohort) {
+        return false;
+      }
+    }
+    return true;
+  });
+
+  // Sorted classes
+  const sortedClasses = [...filteredClasses].sort((a, b) => {
+    let valA: string | number = '';
+    let valB: string | number = '';
+
+    switch (sortField) {
+      case 'class_name':
+        valA = a.class_name.toLowerCase();
+        valB = b.class_name.toLowerCase();
+        break;
+      case 'course':
+        valA = (a.course?.name || '').toLowerCase();
+        valB = (b.course?.name || '').toLowerCase();
+        break;
+      case 'lecturer':
+        valA = (a.lecturer?.name || '').toLowerCase();
+        valB = (b.lecturer?.name || '').toLowerCase();
+        break;
+      case 'semester':
+        valA = a.semester * 10 + (a.cohort.charCodeAt(0) || 0);
+        valB = b.semester * 10 + (b.cohort.charCodeAt(0) || 0);
+        break;
+      case 'kbk':
+        valA = a.kbk.toLowerCase();
+        valB = b.kbk.toLowerCase();
+        break;
+      case 'student_count':
+        valA = a.student_count;
+        valB = b.student_count;
+        break;
+      default:
+        return 0;
+    }
+
+    if (valA < valB) return sortDirection === 'asc' ? -1 : 1;
+    if (valA > valB) return sortDirection === 'asc' ? 1 : -1;
+    return 0;
+  });
 
   return (
     <div className="max-w-6xl mx-auto space-y-6">
@@ -240,23 +325,65 @@ export default function ClassesPage() {
         </div>
       ) : (
         <div className="bg-white rounded-xl border border-slate-200 shadow-xs overflow-hidden">
-          {/* Table Header & Semester Filter Tabs */}
-          <div className="p-4 border-b border-slate-100 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
-            <div className="font-bold text-slate-800 text-xs">
-              Daftar Kelas Semester Ganjil 2026/2027 ({filteredClasses.length} dari {classes.length} Kelas)
+          {/* Table Header & Controls (Quick Search & Semester Filter) */}
+          <div className="p-4 border-b border-slate-100 flex flex-col gap-3">
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+              <div>
+                <div className="font-bold text-slate-800 text-xs flex items-center space-x-2">
+                  <span>Daftar Kelas Semester Ganjil 2026/2027</span>
+                  <span className="px-2 py-0.5 rounded-full bg-slate-100 text-slate-600 text-[10px] font-semibold">
+                    {sortedClasses.length} dari {classes.length} Kelas
+                  </span>
+                </div>
+                <div className="text-[10px] text-slate-500 mt-0.5 flex items-center space-x-1.5">
+                  <span>Urutan:</span>
+                  <span className="font-bold text-[#1D8699]">
+                    {sortField === 'class_name' && 'Nama Kelas'}
+                    {sortField === 'course' && 'Mata Kuliah'}
+                    {sortField === 'lecturer' && 'Dosen Pengampu'}
+                    {sortField === 'semester' && 'Semester & Cohort'}
+                    {sortField === 'kbk' && 'Jalur KBK'}
+                    {sortField === 'student_count' && 'Jumlah Mahasiswa'}
+                  </span>
+                  <span>({sortDirection === 'asc' ? 'Menaik / A-Z' : 'Menurun / Z-A'})</span>
+                  <span className="text-slate-400">• Klik header kolom untuk mengganti urutan</span>
+                </div>
+              </div>
+
+              {/* Quick Search Input */}
+              <div className="relative w-full sm:w-72">
+                <Search className="w-3.5 h-3.5 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2" />
+                <input
+                  type="text"
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                  placeholder="Cari kelas, MK, dosen, KBK..."
+                  className="w-full pl-8 pr-7 py-1.5 bg-slate-50 hover:bg-white focus:bg-white border border-slate-200 rounded-lg text-xs text-slate-800 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-[#1D8699]/30 focus:border-[#1D8699] transition shadow-2xs"
+                />
+                {searchQuery && (
+                  <button
+                    onClick={() => setSearchQuery('')}
+                    className="absolute right-2 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 p-0.5 rounded cursor-pointer"
+                    title="Hapus pencarian"
+                  >
+                    <X className="w-3.5 h-3.5" />
+                  </button>
+                )}
+              </div>
             </div>
 
-            <div className="flex items-center space-x-1 bg-slate-100 p-1 rounded-lg text-xs">
-              <span className="text-[11px] font-semibold text-slate-500 px-2 flex items-center space-x-1">
+            {/* Semester Filter Tabs */}
+            <div className="flex flex-wrap items-center gap-1.5 pt-1">
+              <span className="text-[11px] font-semibold text-slate-500 flex items-center space-x-1 mr-1">
                 <Filter className="w-3 h-3 text-[#1D8699]" />
-                <span>Semester:</span>
+                <span>Filter Semester:</span>
               </span>
               <button
                 onClick={() => setTableSemesterFilter('ALL')}
                 className={`px-2.5 py-1 rounded-md text-[11px] font-bold transition cursor-pointer ${
                   tableSemesterFilter === 'ALL'
                     ? 'bg-[#1D8699] text-white shadow-xs'
-                    : 'text-slate-600 hover:text-slate-900'
+                    : 'bg-slate-100 text-slate-600 hover:text-slate-900 hover:bg-slate-200'
                 }`}
               >
                 Semua
@@ -265,10 +392,10 @@ export default function ClassesPage() {
                 <button
                   key={s}
                   onClick={() => setTableSemesterFilter(s)}
-                  className={`px-2 py-1 rounded-md text-[11px] font-bold transition cursor-pointer ${
+                  className={`px-2.5 py-1 rounded-md text-[11px] font-bold transition cursor-pointer ${
                     tableSemesterFilter === s
                       ? 'bg-[#1D8699] text-white shadow-xs'
-                      : 'text-slate-600 hover:text-slate-900'
+                      : 'bg-slate-100 text-slate-600 hover:text-slate-900 hover:bg-slate-200'
                   }`}
                 >
                   Sem {s}
@@ -280,25 +407,101 @@ export default function ClassesPage() {
           <div className="overflow-x-auto">
             <table className="w-full text-left border-collapse text-xs">
               <thead>
-                <tr className="bg-slate-50 text-slate-600 text-[11px] font-bold uppercase border-b border-slate-200">
-                  <th className="py-2.5 px-4">Nama Kelas</th>
-                  <th className="py-2.5 px-4">Mata Kuliah</th>
-                  <th className="py-2.5 px-4">Dosen Pengampu</th>
-                  <th className="py-2.5 px-4 text-center">Semester / Cohort</th>
-                  <th className="py-2.5 px-4">KBK</th>
-                  <th className="py-2.5 px-4 text-center">Jumlah Mhs</th>
-                  <th className="py-2.5 px-4 text-center">Aksi</th>
+                <tr className="bg-slate-50 text-slate-600 text-[11px] font-bold uppercase border-b border-slate-200 select-none">
+                  {/* Kolom 1: Nama Kelas */}
+                  <th 
+                    onClick={() => handleSort('class_name')}
+                    className="py-2.5 px-4 cursor-pointer hover:bg-slate-100 transition group"
+                    title="Klik untuk mengurutkan berdasarkan Nama Kelas"
+                  >
+                    <div className="flex items-center space-x-1">
+                      <span className={sortField === 'class_name' ? 'text-[#1D8699]' : ''}>Nama Kelas</span>
+                      {renderSortIcon('class_name')}
+                    </div>
+                  </th>
+
+                  {/* Kolom 2: Mata Kuliah */}
+                  <th 
+                    onClick={() => handleSort('course')}
+                    className="py-2.5 px-4 cursor-pointer hover:bg-slate-100 transition group"
+                    title="Klik untuk mengurutkan berdasarkan Mata Kuliah"
+                  >
+                    <div className="flex items-center space-x-1">
+                      <span className={sortField === 'course' ? 'text-[#1D8699]' : ''}>Mata Kuliah</span>
+                      {renderSortIcon('course')}
+                    </div>
+                  </th>
+
+                  {/* Kolom 3: Dosen Pengampu */}
+                  <th 
+                    onClick={() => handleSort('lecturer')}
+                    className="py-2.5 px-4 cursor-pointer hover:bg-slate-100 transition group"
+                    title="Klik untuk mengurutkan berdasarkan Dosen Pengampu"
+                  >
+                    <div className="flex items-center space-x-1">
+                      <span className={sortField === 'lecturer' ? 'text-[#1D8699]' : ''}>Dosen Pengampu</span>
+                      {renderSortIcon('lecturer')}
+                    </div>
+                  </th>
+
+                  {/* Kolom 4: Semester / Cohort */}
+                  <th 
+                    onClick={() => handleSort('semester')}
+                    className="py-2.5 px-4 text-center cursor-pointer hover:bg-slate-100 transition group"
+                    title="Klik untuk mengurutkan berdasarkan Semester & Cohort"
+                  >
+                    <div className="flex items-center justify-center space-x-1">
+                      <span className={sortField === 'semester' ? 'text-[#1D8699]' : ''}>Semester / Cohort</span>
+                      {renderSortIcon('semester')}
+                    </div>
+                  </th>
+
+                  {/* Kolom 5: KBK */}
+                  <th 
+                    onClick={() => handleSort('kbk')}
+                    className="py-2.5 px-4 cursor-pointer hover:bg-slate-100 transition group"
+                    title="Klik untuk mengurutkan berdasarkan Peminatan (KBK)"
+                  >
+                    <div className="flex items-center space-x-1">
+                      <span className={sortField === 'kbk' ? 'text-[#1D8699]' : ''}>KBK</span>
+                      {renderSortIcon('kbk')}
+                    </div>
+                  </th>
+
+                  {/* Kolom 6: Jumlah Mahasiswa */}
+                  <th 
+                    onClick={() => handleSort('student_count')}
+                    className="py-2.5 px-4 text-center cursor-pointer hover:bg-slate-100 transition group"
+                    title="Klik untuk mengurutkan berdasarkan Jumlah Mahasiswa"
+                  >
+                    <div className="flex items-center justify-center space-x-1">
+                      <span className={sortField === 'student_count' ? 'text-[#1D8699]' : ''}>Jumlah Mhs</span>
+                      {renderSortIcon('student_count')}
+                    </div>
+                  </th>
+
+                  {/* Kolom 7: Aksi */}
+                  <th className="py-2.5 px-4 text-center">
+                    Aksi
+                  </th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-slate-100">
-                {filteredClasses.length === 0 ? (
+                {sortedClasses.length === 0 ? (
                   <tr>
-                    <td colSpan={7} className="py-8 text-center text-slate-400">
-                      Tidak ada kelas yang ditemukan untuk filter ini.
+                    <td colSpan={7} className="py-10 text-center text-slate-400">
+                      {searchQuery ? (
+                        <div>
+                          <p className="font-semibold text-slate-600">Tidak ada kelas yang cocok dengan pencarian &quot;{searchQuery}&quot;</p>
+                          <p className="text-[11px] mt-1 text-slate-400">Coba gunakan kata kunci lain atau bersihkan kotak pencarian.</p>
+                        </div>
+                      ) : (
+                        'Tidak ada kelas yang ditemukan untuk filter semester ini.'
+                      )}
                     </td>
                   </tr>
                 ) : (
-                  filteredClasses.map((c) => {
+                  sortedClasses.map((c) => {
                     return (
                       <tr key={c.id} className="hover:bg-slate-50/60">
                         <td className="py-3 px-4 font-bold text-slate-800">

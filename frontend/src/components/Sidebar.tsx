@@ -5,8 +5,7 @@ import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { 
   Users, BookOpen, DoorClosed, Clock, School, 
-  Cpu, History, Calendar, LayoutGrid, CheckCircle2, ChevronRight,
-  PanelLeftClose, PanelLeftOpen
+  Cpu, History, Calendar, LayoutGrid, CheckCircle2, ChevronRight
 } from 'lucide-react';
 import { useSidebar } from '@/context/SidebarContext';
 
@@ -48,50 +47,26 @@ export default function Sidebar() {
       } bg-[#1E293B] text-slate-300 flex flex-col shrink-0 min-h-screen border-r border-slate-700 transition-all duration-300 ease-in-out select-none relative z-20`}
     >
       {/* Brand Header */}
-      <div className={`border-b border-slate-700/80 bg-[#0F172A]/60 ${isCollapsed ? 'p-3 flex flex-col items-center' : 'p-4'}`}>
-        <div className="flex items-center justify-between w-full">
+      <div className={`border-b border-slate-700/80 bg-[#0F172A]/60 ${isCollapsed ? 'p-3.5 flex justify-center' : 'p-4'}`}>
+        <div className={`flex items-center space-x-3 ${isCollapsed ? 'justify-center' : ''}`}>
           <div 
             onClick={isCollapsed ? toggleSidebar : undefined}
-            className={`flex items-center space-x-3 ${isCollapsed ? 'cursor-pointer mx-auto' : ''}`}
+            className={`w-9 h-9 rounded-lg bg-[#1D8699] flex items-center justify-center font-bold text-white shadow-md shadow-[#1D8699]/30 shrink-0 ${isCollapsed ? 'cursor-pointer hover:brightness-110' : ''} transition`}
             title={isCollapsed ? 'SIM-JADWAL GA (Klik untuk Buka Sidebar)' : undefined}
           >
-            <div className="w-9 h-9 rounded-lg bg-[#1D8699] flex items-center justify-center font-bold text-white shadow-md shadow-[#1D8699]/30 shrink-0 hover:brightness-110 transition">
-              AG
-            </div>
-            {!isCollapsed && (
-              <div className="overflow-hidden transition-all duration-300">
-                <h1 className="text-sm font-bold text-white tracking-wide leading-tight whitespace-nowrap">
-                  SIM-JADWAL GA
-                </h1>
-                <p className="text-[11px] text-cyan-400 font-medium whitespace-nowrap">
-                  FSTIK — UBBG Banda Aceh
-                </p>
-              </div>
-            )}
+            AG
           </div>
-
-          {/* Toggle Button for Expanded mode */}
           {!isCollapsed && (
-            <button
-              onClick={toggleSidebar}
-              className="p-1.5 text-slate-400 hover:text-white hover:bg-slate-700/60 rounded-lg cursor-pointer transition"
-              title="Tutup Sidebar (Perluas Layar)"
-            >
-              <PanelLeftClose className="w-4 h-4" />
-            </button>
+            <div className="overflow-hidden transition-all duration-300">
+              <h1 className="text-sm font-bold text-white tracking-wide leading-tight whitespace-nowrap">
+                SIM-JADWAL GA
+              </h1>
+              <p className="text-[11px] text-cyan-400 font-medium whitespace-nowrap">
+                FSTIK — UBBG Banda Aceh
+              </p>
+            </div>
           )}
         </div>
-
-        {/* Toggle Button for Collapsed mode */}
-        {isCollapsed && (
-          <button
-            onClick={toggleSidebar}
-            className="mt-2 p-1 text-slate-400 hover:text-white hover:bg-slate-700/60 rounded-md cursor-pointer transition"
-            title="Buka Sidebar"
-          >
-            <PanelLeftOpen className="w-4 h-4" />
-          </button>
-        )}
       </div>
 
       {/* Navigation List */}
