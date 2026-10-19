@@ -5,9 +5,10 @@
 | Metadata               | Keterangan                                                     |
 | :--------------------- | :------------------------------------------------------------- |
 | **Nama Proyek**        | Sistem Penjadwalan Kuliah Berbasis Algoritma Genetika (SPK-AG) |
-| **Versi Dokumen**      | 1.0.0 (Production-Ready Draft)                                 |
+| **Studi Kasus**        | Prodi Ilmu Komputer - Universitas Bina Bangsa Getsempena       |
+| **Versi Dokumen**      | 2.0.0 (Final Production-Ready Spec)                            |
 | **Target Rilis**       | Semester Ganjil 2026/2027                                      |
-| **Konteks Proyek**     | Tugas Besar Manajemen Proyek Perangkat Lunak                   |
+| **Konteks Proyek**     | Tugas Besar Manajemen Proyek Perangkat Lunak (5 Anggota)       |
 | **Tumpukan Teknologi** | Next.js, FastAPI, Celery, Redis, PostgreSQL (AlloyDB)          |
 
 ---
@@ -16,23 +17,23 @@
 
 ### 1.1 Latar Belakang Masalah
 
-Penyusunan jadwal kuliah merupakan masalah optimasi kombinatorial klasik yang tergolong ke dalam kategori **NP-Hard** (_University Course Timetabling Problem_ / UCTP). Metode penyusunan konvensional (manual/spreadsheet) sering menghadapi kendala:
+Penyusunan jadwal kuliah merupakan masalah optimasi kombinatorial klasik yang tergolong ke dalam kategori **NP-Hard** (_University Course Timetabling Problem_ / UCTP). Di Program Studi Ilmu Komputer Universitas Bina Bangsa Getsempena (UBBG), kompleksitas penjadwalan meningkat karena adanya pembagian kelompok mahasiswa reguler pada Semester 1–2 (`GENERAL`) serta percabangan 3 Kelompok Bidang Keahlian (KBK) mulai Semester 3 ke atas (`PEMROGRAMAN`, `MULTIMEDIA`, dan `IOT`). Metode penyusunan konvensional (manual/spreadsheet) sering menghadapi kendala:
 
-- Terjadinya bentrok jadwal dosen, ruangan, maupun kelompok mahasiswa (rombel).
-- Ketidaksesuaian kapasitas ruangan dengan jumlah mahasiswa.
+- Terjadinya bentrok jadwal dosen, ruangan laboratorium/teori, maupun kelompok mahasiswa (rombel) antara mata kuliah wajib umum dengan mata kuliah KBK.
+- Ketidaksesuaian kapasitas kursi ruangan dengan jumlah mahasiswa peserta kelas.
 - Waktu penyusunan yang memakan waktu berhari-hari hingga berminggu-minggu.
-- Sulitnya mengakomodasi preferensi waktu luang dosen tanpa merusak jadwal lain.
+- Sulitnya mengakomodasi waktu berhalangan hadir dan preferensi waktu mengajar dosen tanpa merusak jadwal lain.
 
 ### 1.2 Tujuan Proyek
 
-Membangun aplikasi berbasis web yang mampu mengotomatisasi pembuatan jadwal kuliah menggunakan **Algoritma Genetika (GA)** secara asinkron, memastikan **nol pelanggaran aturan mutlak (_zero hard-constraint violation_)**, meminimalkan ketidaknyamanan jadwal (_soft constraints_), serta menyediakan visualisasi matriks jadwal interaktif.
+Membangun aplikasi berbasis web yang mampu mengotomatisasi pembuatan jadwal kuliah menggunakan **Algoritma Genetika (GA)** secara asinkron, memastikan **nol pelanggaran aturan mutlak (_zero hard-constraint violation_)**, meminimalkan ketidaknyamanan jadwal (_soft constraints_), serta menyediakan visualisasi matriks jadwal interaktif yang siap dipublikasikan dan diekspor.
 
 ### 1.3 Metrik Keberhasilan (KPIs)
 
-1. **Validitas Jadwal:** 100% bebas bentrok dosen, ruangan, dan kelas (Hard Constraint Violations = 0).
+1. **Validitas Jadwal:** 100% bebas bentrok dosen, ruangan, dan rombel mahasiswa baik kelas umum maupun KBK (Hard Constraint Violations = 0).
 2. **Efisiensi Waktu Generasi:** Pembuatan jadwal untuk 100+ sesi kelas selesai dalam waktu < 3 menit.
 3. **Resiliensi Sistem:** Tidak ada _request timeout_ pada antarmuka web saat proses komputasi algoritma berlangsung.
-4. **Usabilitas Antarmuka:** Pengguna dapat memfilter jadwal berdasarkan dosen, ruangan, dan program studi serta mengekspornya ke format Excel/PDF dalam < 3 klik.
+4. **Usabilitas Antarmuka:** Pengguna dapat memfilter jadwal berdasarkan semester, KBK, dosen, dan ruangan serta mengekspornya ke format Excel/PDF dalam < 3 klik.
 
 ---
 
@@ -42,13 +43,13 @@ Membangun aplikasi berbasis web yang mampu mengotomatisasi pembuatan jadwal kuli
    - Mengelola data master (Dosen, Ruangan, Mata Kuliah, Kelas/Rombel, Slot Waktu).
    - Menentukan parameter Algoritma Genetika (Populasi, Mutasi, Crossover, Maksimum Generasi).
    - Memicu proses pembuatan jadwal otomatis dan memantau progres secara _real-time_.
-   - Melakukan penyesuaian manual minor pasca-generasi jika diperlukan.
-   - Mempublikasikan dan mengekspor jadwal resmi.
-2. **Dosen (Viewer):**
-   - Melihat jadwal mengajar pribadi dan ketersediaan ruangan.
-   - Memasukkan data preferensi waktu berhalangan mengajar (_unavailability time_).
+   - Melakukan penyesuaian manual minor (_manual swap_) pasca-generasi jika diperlukan.
+   - Menandai satu hasil generasi jadwal terbaik sebagai jadwal resmi (`PUBLISHED`) dan mengekspornya ke Excel/PDF.
+2. **Dosen (Viewer & Contributor):**
+   - Melihat jadwal mengajar pribadi yang telah dipublikasikan dan ketersediaan ruangan.
+   - Memasukkan data waktu berhalangan hadir (_unavailable_) maupun waktu prioritas mengajar (_preferred_).
 3. **Mahasiswa (Viewer):**
-   - Melihat jadwal kuliah berdasarkan semester, program studi, dan kelas masing-masing.
+   - Melihat dan mengunduh jadwal kuliah resmi berdasarkan semester, kelas (_cohort_), dan peminatan KBK masing-masing.
 
 ---
 
@@ -60,7 +61,7 @@ Membangun aplikasi berbasis web yang mampu mengotomatisasi pembuatan jadwal kuli
 +-------------------------------------------------------------+
 |                      Frontend (Next.js)                     |
 |  - Data Master CRUD            - Status Progress (Polling)  |
-|  - Interactive Calendar Grid   - Export Manager             |
+|  - Interactive Calendar Grid   - Export & Publish Manager   |
 +------------------------------+------------------------------+
                                | HTTP REST / JSON
                                v
@@ -82,48 +83,52 @@ Membangun aplikasi berbasis web yang mampu mengotomatisasi pembuatan jadwal kuli
 
 ### 3.2 Alur Komputasi Asinkron
 
-1. Admin menekan tombol **"Generate Jadwal"** pada antarmuka Next.js.
+1. Admin memilih tahun akademik dan semester (Ganjil/Genap), lalu menekan tombol **"Generate Jadwal"** pada antarmuka Next.js.
 2. FastAPI menjalankan validasi kelayakan data master (_pre-feasibility check_), membuat entri baru pada tabel `schedule_jobs` dengan status `PENDING`, dan mendaftarkan pekerjaan ke antrean Redis via Celery.
 3. FastAPI langsung mengembalikan respons `202 Accepted` beserta `job_id` ke frontend agar koneksi HTTP tidak terputus (_anti-timeout_).
 4. Celery Worker mengambil antrean tugas dari Redis, memuat data relasional ke dalam memori, lalu memulai kalkulasi populasi Algoritma Genetika.
-5. Celery Worker memperbarui persentase progres, nomor generasi saat ini, dan nilai _fitness_ terbaik ke Redis/PostgreSQL setiap _N_ generasi.
+5. Celery Worker memperbarui persentase progres, nomor generasi saat ini, dan nilai _fitness_ terbaik ke Redis/PostgreSQL setiap 5 generasi (_throttled update_).
 6. Next.js melakukan polling berkala setiap 2–3 detik ke endpoint `/api/v1/schedules/jobs/{job_id}/status` untuk memperbarui indikator progres di layar.
-7. Saat kriteria konvergensi tercapai (`COMPLETED`), hasil penempatan jadwal terbaik disimpan ke tabel `schedules`, dan antarmuka Next.js otomatis memuat matriks kalender interaktif.
+7. Saat kriteria konvergensi tercapai (`COMPLETED`), hasil penempatan jadwal terbaik disimpan secara transaksional ke tabel `schedules`, dan antarmuka Next.js otomatis memuat matriks kalender interaktif.
 
 ### 3.3 Integrasi Perangkat Pengembangan (MCP)
 
-- **AlloyDB for PostgreSQL MCP:** Memungkinkan agent melakukan inspeksi langsung terhadap struktur relasi tabel, menguji query pengecekan bentrok jadwal, dan memvalidasi keutuhan data hasil penjadwalan.
+- **AlloyDB for PostgreSQL MCP:** Memungkinkan agent melakukan inspeksi langsung terhadap struktur relasi tabel, menguji query analitik pengecekan bentrok jadwal, dan memvalidasi keutuhan data hasil penjadwalan.
 - **Chrome DevTools MCP:** Memungkinkan agent memeriksa elemen antarmuka, memantau _network payload_, serta mengaudit rendering tata letak grid kalender di Next.js agar tidak terjadi sel jadwal yang bertumpuk.
 
 ---
 
 ## 4. Pemodelan Matematis Algoritma Genetika
 
-### 4.1 Struktur Kromosom
+### 4.1 Struktur Kromosom & Model Blok Waktu
 
+- **Model Blok Sesi (_Macro-Slot_):** Setiap entitas `TimeSlotID` merepresentasikan satu blok penuh sesi pertemuan perkuliahan (contoh: Sesi 1 = `08:00 - 10:00`, Sesi 2 = `10:15 - 12:15`, Sesi 3 = `14:00 - 16:00`, Sesi 4 = `16:15 - 18:15`), dengan penguncian waktu bebas kuliah pada hari Jumat pukul `11:30 - 14:00 WIB` untuk pelaksanaan ibadah Sholat Jumat.
 - **Gen (Sesi Pertemuan Kelas):** Representasi unit jadwal terkecil dalam bentuk tupel:
   $$\text{Gene}_i = \langle \text{ClassID}_i, \text{RoomID}, \text{TimeSlotID} \rangle$$
-  Setiap `ClassID` telah mengikat informasi dosen pengampu, mata kuliah, jumlah mahasiswa terdaftar, dan tipe kebutuhan ruangan (teori atau laboratorium).
-- **Kromosom (Individu / Solusi Lengkap):** Kumpulan gen lengkap yang merepresentasikan seluruh kelas yang wajib dijadwalkan dalam satu semester:
+  Setiap `ClassID` telah mengikat informasi dosen pengampu, mata kuliah, semester, kelompok kelas (_cohort_), jalur KBK, jumlah mahasiswa terdaftar, dan tipe kebutuhan ruangan.
+- **Kromosom (Individu / Solusi Lengkap):** Kumpulan gen lengkap yang merepresentasikan seluruh kelas yang wajib dijadwalkan dalam satu semester aktif:
   $$\text{Chromosome} = [\text{Gene}_1, \text{Gene}_2, \dots, \text{Gene}_N]$$
 
 ### 4.2 Batasan Sistem (Constraints)
 
 #### A. Batasan Keras (Hard Constraints - Toleransi Pelanggaran = 0)
 
-1. **$HC_1$ (Bebas Bentrok Dosen):** Seorang dosen tidak boleh mengajar lebih dari 1 kelas pada slot waktu yang bersamaan.
-2. **$HC_2$ (Bebas Bentrok Ruangan):** Suatu ruangan tidak boleh digunakan oleh lebih dari 1 sesi perkuliahan pada slot waktu yang bersamaan.
-3. **$HC_3$ (Bebas Bentrok Rombel/Kelas):** Suatu rombongan belajar (angkatan dan kelompok mahasiswa yang sama) tidak boleh memiliki 2 jadwal kuliah pada slot waktu yang bersamaan.
+1. **$HC_1$ (Bebas Bentrok Dosen):** Seorang dosen tidak boleh mengajar lebih dari 1 kelas pada `TimeSlotID` yang bersamaan.
+2. **$HC_2$ (Bebas Bentrok Ruangan):** Suatu ruangan tidak boleh digunakan oleh lebih dari 1 sesi perkuliahan pada `TimeSlotID` yang bersamaan.
+3. **$HC_3$ (Bebas Bentrok Rombel & Aturan Paralel KBK):** Dua kelas dinyatakan bentrok rombel pada `TimeSlotID` yang sama apabila berada pada `semester` dan `cohort` (misal: kelas `'A'`) yang sama, **DAN** memenuhi salah satu kondisi berikut:
+   - Kedua kelas memiliki tipe KBK yang sama (misal: sama-sama `'GENERAL'` atau sama-sama `'PEMROGRAMAN'`).
+   - Salah satu kelas bertipe `'GENERAL'` (mata kuliah wajib umum) dan kelas lainnya bertipe KBK spesifik (`'PEMROGRAMAN'`, `'MULTIMEDIA'`, atau `'IOT'`).
+   - _(Catatan: Dua kelas pada semester dan cohort yang sama dengan KBK spesifik yang berbeda—misal `'PEMROGRAMAN'` vs `'MULTIMEDIA'`—**diizinkan berjalan paralel** pada waktu yang sama selama dosen dan ruangannya berbeda)._
 4. **$HC_4$ (Kecukupan Kapasitas Ruangan):** Daya tampung kursi ruangan harus lebih besar atau sama dengan jumlah mahasiswa dalam kelas:
    $$\text{Kapasitas Ruangan} \ge \text{Jumlah Mahasiswa}$$
-5. **$HC_5$ (Kesesuaian Tipe Ruangan):** Sesi perkuliahan praktikum wajib dialokasikan pada ruangan laboratorium; sesi perkuliahan teori dialokasikan pada ruang kelas reguler.
-6. **$HC_6$ (Ketersediaan Waktu Dosen):** Sesi mengajar tidak boleh ditempatkan pada slot waktu di mana dosen telah mengajukan status berhalangan hadir (_unavailable_).
+5. **$HC_5$ (Kesesuaian Tipe Ruangan):** Sesi perkuliahan praktikum (`LABORATORY`) wajib dialokasikan pada ruangan bertipe laboratorium; sesi perkuliahan teori (`THEORY`) dialokasikan pada ruang kelas teori reguler.
+6. **$HC_6$ (Waktu Dosen Berhalangan Hadir):** Sesi mengajar tidak boleh ditempatkan pada `TimeSlotID` di mana dosen telah mengajukan status `UNAVAILABLE`.
 
 #### B. Batasan Lunak (Soft Constraints - Diupayakan Minimal)
 
-1. **$SC_1$ (Preferensi Waktu Dosen):** Penempatan jadwal sedapat mungkin mengikuti slot waktu yang diprioritaskan oleh dosen.
-2. **$SC_2$ (Minimasi Jam Kosong Mahasiswa / Gap Hours):** Meminimalkan jeda waktu kosong lebih dari 2 jam di antara dua mata kuliah pada hari yang sama untuk kelompok mahasiswa yang sama.
-3. **$SC_3$ (Pemerataan Beban Mengajar Harian):** Membatasi dosen agar tidak mengajar lebih dari 3 sesi kelas berturut-turut dalam satu hari yang sama.
+1. **$SC_1$ (Preferensi Waktu Dosen):** Memberikan pinalti ringan apabila sesi mengajar dosen ditempatkan di luar slot waktu yang ditandai `PREFERRED` oleh dosen bersangkutan (jika dosen memiliki preferensi).
+2. **$SC_2$ (Minimasi Jam Kosong Mahasiswa / Gap Hours):** Meminimalkan jeda waktu kosong antar-sesi kuliah pada hari yang sama untuk kelompok mahasiswa (`semester`, `cohort`, dan `kbk`) yang sama.
+3. **$SC_3$ (Pemerataan Beban Mengajar Harian):** Membatasi dosen agar tidak mengajar lebih dari 3 blok sesi kelas dalam satu hari yang sama.
 
 ### 4.3 Formulasi Fungsi Fitness
 
@@ -134,61 +139,65 @@ $$\text{Penalty} = \left( W_{\text{hard}} \sum_{k=1}^{6} HC_k \right) + \left( W
 - Bobot Batasan Lunak: $W_{\text{soft}} = 1$ (pinalti inkremental).
 - Fungsi Fitness Solusi:
   $$\text{Fitness} = \frac{1}{1 + \text{Penalty}}$$
-  Solusi dinyatakan valid dan siap dipublikasikan hanya jika seluruh batasan keras bernilai 0 ($\sum HC_k = 0$).
+  Solusi dinyatakan valid dan layak dipublikasikan hanya jika seluruh batasan keras bernilai 0 ($\sum HC_k = 0$, sehingga $\text{Penalty} < 1000$).
 
 ### 4.4 Parameter & Operator Genetika
 
-- **Ukuran Populasi ($N_p$):** 50 hingga 100 individu per generasi.
-- **Mekanisme Seleksi:** _Tournament Selection_ (ukuran turnamen $k = 3$) untuk menjaga selektivitas tanpa menghilangkan variasi kromosom terlalu cepat.
-- **Operator Crossover:** _Uniform Crossover_ atau _Two-Point Crossover_ dengan probabilitas persilangan $P_c = 0.85$.
-- **Operator Mutasi:** _Swap Mutation_ (menukar slot waktu antara dua gen) dan _Random Resetting_ (memilih ruangan atau slot waktu baru secara acak) dengan probabilitas mutasi dasar $P_m = 0.08$.
-- **Elitisme:** Mengamankan 2 individu terbaik ($2\% - 5\%$) dari generasi berjalan langsung ke generasi berikutnya tanpa modifikasi genetik.
+- **Ukuran Populasi ($N_p$):** 50 hingga 100 individu per generasi (Inisialisasi menggunakan _Heuristic Room-Type Matching_ agar $HC_4$ dan $HC_5$ langsung terpenuhi sejak generasi ke-0).
+- **Mekanisme Seleksi:** _Tournament Selection_ (ukuran turnamen $k = 3$).
+- **Operator Crossover:** _Uniform Crossover_ dengan probabilitas persilangan $P_c = 0.85$.
+- **Operator Mutasi:** _Swap Mutation_ dan _Valid-Room Random Resetting_ dengan probabilitas mutasi dasar $P_m = 0.08$.
+- **Elitisme:** Mengamankan 2 individu terbaik langsung ke generasi berikutnya tanpa modifikasi genetik.
 - **Kriteria Penghentian (Termination Criteria):**
-  1. Pelanggaran batasan keras mencapai nol ($\sum HC = 0$) dan target batasan lunak terpenuhi.
-  2. Batas maksimum generasi tercapai (contoh: 500 generasi).
+  1. Pelanggaran batasan keras mencapai nol ($\sum HC = 0$) dan pinalti batasan lunak mencapai0 atau di bawah ambang target.
+  2. Batas maksimum generasi tercapai (default: 500 generasi).
   3. Konvergensi mendatar (_plateau_): Nilai _fitness_ terbaik tidak mengalami perbaikan selama 50 generasi berturut-turut.
 
 ---
 
 ## 5. Skema Basis Data Relasional (PostgreSQL)
 
+_(Catatan: Urutan pembuatan tabel di bawah ini telah disusun mengikuti hierarki ketergantungan Foreign Key yang valid)._
+
 ```sql
 -- 1. Data Master Dosen
 CREATE TABLE lecturers (
     id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-    nip VARCHAR(30) UNIQUE NOT NULL,
+    nidn VARCHAR(30) UNIQUE NOT NULL,
     name VARCHAR(150) NOT NULL,
     email VARCHAR(100) UNIQUE NOT NULL,
     created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
 );
 
--- 2. Data Slot Waktu Ketersediaan Dosen
-CREATE TABLE lecturer_unavailabilities (
-    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-    lecturer_id UUID REFERENCES lecturers(id) ON DELETE CASCADE,
-    day_of_week INT NOT NULL CHECK (day_of_week BETWEEN 1 AND 6), -- 1: Senin, 6: Sabtu
-    time_slot_id UUID NOT NULL,
-    reason VARCHAR(255)
-);
-
--- 3. Data Master Ruangan
+-- 2. Data Master Ruangan
 CREATE TABLE rooms (
     id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
     code VARCHAR(20) UNIQUE NOT NULL,
     name VARCHAR(100) NOT NULL,
     capacity INT NOT NULL CHECK (capacity > 0),
-    room_type VARCHAR(20) NOT NULL DEFAULT 'THEORY' CHECK (room_type IN ('THEORY', 'LABORATORY')),
+    room_type VARCHAR(30) NOT NULL DEFAULT 'THEORY' CHECK (room_type IN ('THEORY', 'LABORATORY')),
     is_active BOOLEAN DEFAULT TRUE
 );
 
--- 4. Data Master Slot Waktu Pembelajaran
+-- 3. Data Master Slot Waktu Pembelajaran (Blok Sesi)
 CREATE TABLE time_slots (
     id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-    day_of_week INT NOT NULL CHECK (day_of_week BETWEEN 1 AND 6),
-    period_order INT NOT NULL, -- Urutan sesi perkuliahan harian
+    day_of_week INT NOT NULL CHECK (day_of_week BETWEEN 1 AND 6), -- 1: Senin, 5: Jumat, 6: Sabtu
+    period_order INT NOT NULL CHECK (period_order > 0), -- Sesi 1, Sesi 2, dst.
     start_time TIME NOT NULL,
     end_time TIME NOT NULL,
+    CHECK (end_time > start_time),
     CONSTRAINT unique_day_period UNIQUE (day_of_week, period_order)
+);
+
+-- 4. Data Preferensi & Ketidaktersediaan Waktu Dosen (Mendukung HC_6 dan SC_1)
+CREATE TABLE lecturer_time_preferences (
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    lecturer_id UUID NOT NULL REFERENCES lecturers(id) ON DELETE CASCADE,
+    time_slot_id UUID NOT NULL REFERENCES time_slots(id) ON DELETE CASCADE,
+    preference_type VARCHAR(20) NOT NULL CHECK (preference_type IN ('UNAVAILABLE', 'PREFERRED')),
+    reason VARCHAR(255),
+    CONSTRAINT unique_lecturer_slot_pref UNIQUE (lecturer_id, time_slot_id)
 );
 
 -- 5. Data Master Mata Kuliah
@@ -196,7 +205,8 @@ CREATE TABLE courses (
     id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
     code VARCHAR(20) UNIQUE NOT NULL,
     name VARCHAR(150) NOT NULL,
-    credits INT NOT NULL CHECK (credits > 0),
+    credits INT NOT NULL CHECK (credits BETWEEN 1 AND 6),
+    semester INT NOT NULL CHECK (semester BETWEEN 1 AND 8),
     course_type VARCHAR(20) NOT NULL DEFAULT 'THEORY' CHECK (course_type IN ('THEORY', 'LABORATORY')),
     kbk VARCHAR(30) NOT NULL DEFAULT 'GENERAL' CHECK (kbk IN ('GENERAL', 'PEMROGRAMAN', 'MULTIMEDIA', 'IOT'))
 );
@@ -204,10 +214,11 @@ CREATE TABLE courses (
 -- 6. Data Kelas / Rombel Perkuliahan
 CREATE TABLE academic_classes (
     id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-    course_id UUID REFERENCES courses(id) ON DELETE RESTRICT,
-    lecturer_id UUID REFERENCES lecturers(id) ON DELETE RESTRICT,
+    course_id UUID NOT NULL REFERENCES courses(id) ON DELETE RESTRICT,
+    lecturer_id UUID NOT NULL REFERENCES lecturers(id) ON DELETE RESTRICT,
     class_name VARCHAR(50) NOT NULL, -- Contoh: "IK-3A (Pemrograman)"
     semester INT NOT NULL CHECK (semester BETWEEN 1 AND 8),
+    cohort VARCHAR(10) NOT NULL DEFAULT 'A', -- Kelompok kelas: 'A', 'B', dst. untuk deteksi HC_3
     kbk VARCHAR(30) NOT NULL DEFAULT 'GENERAL' CHECK (kbk IN ('GENERAL', 'PEMROGRAMAN', 'MULTIMEDIA', 'IOT')),
     student_count INT NOT NULL CHECK (student_count > 0),
     academic_year VARCHAR(10) NOT NULL, -- Contoh: "2026/2027"
@@ -217,8 +228,11 @@ CREATE TABLE academic_classes (
 -- 7. Antrean Tugas & Riwayat Eksekusi Algoritma
 CREATE TABLE schedule_jobs (
     id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    academic_year VARCHAR(10) NOT NULL,
+    semester_type VARCHAR(10) NOT NULL CHECK (semester_type IN ('ODD', 'EVEN')),
     status VARCHAR(20) NOT NULL DEFAULT 'PENDING' CHECK (status IN ('PENDING', 'RUNNING', 'COMPLETED', 'FAILED')),
-    progress_percentage INT DEFAULT 0,
+    is_published BOOLEAN NOT NULL DEFAULT FALSE,
+    progress_percentage INT DEFAULT 0 CHECK (progress_percentage BETWEEN 0 AND 100),
     current_generation INT DEFAULT 0,
     max_generations INT NOT NULL,
     best_fitness DOUBLE PRECISION DEFAULT 0.0,
@@ -233,26 +247,31 @@ CREATE TABLE schedule_jobs (
 -- 8. Hasil Pemetaan Jadwal Final
 CREATE TABLE schedules (
     id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-    job_id UUID REFERENCES schedule_jobs(id) ON DELETE CASCADE,
-    class_id UUID REFERENCES academic_classes(id) ON DELETE CASCADE,
-    room_id UUID REFERENCES rooms(id) ON DELETE RESTRICT,
-    time_slot_id UUID REFERENCES time_slots(id) ON DELETE RESTRICT,
+    job_id UUID NOT NULL REFERENCES schedule_jobs(id) ON DELETE CASCADE,
+    class_id UUID NOT NULL REFERENCES academic_classes(id) ON DELETE CASCADE,
+    room_id UUID NOT NULL REFERENCES rooms(id) ON DELETE RESTRICT,
+    time_slot_id UUID NOT NULL REFERENCES time_slots(id) ON DELETE RESTRICT,
+    CONSTRAINT unique_class_per_job UNIQUE (job_id, class_id),
     CONSTRAINT unique_room_slot_per_job UNIQUE (job_id, room_id, time_slot_id)
 );
 ```
+
+---
 
 ## 6. Spesifikasi Antarmuka Pemrograman Aplikasi (REST API)
 
 ### 6.1 Ringkasan Endpoint
 
-| Metode | Endpoint                                      | Deskripsi                                  | Respons Utama                          |
-| :----- | :-------------------------------------------- | :----------------------------------------- | :------------------------------------- |
-| `POST` | `/api/v1/schedules/generate`                  | Memicu komputasi algoritma genetika        | `202 Accepted` + `job_id`              |
-| `GET`  | `/api/v1/schedules/jobs/{job_id}/status`      | Polling progres komputasi pekerjaan        | `200 OK` (status, generation, fitness) |
-| `GET`  | `/api/v1/schedules/jobs/{job_id}/result`      | Mengambil seluruh hasil jadwal final       | `200 OK` (array matriks jadwal)        |
-| `POST` | `/api/v1/schedules/{schedule_id}/manual-swap` | Validasi & tukar slot secara manual        | `200 OK` atau `409 Conflict`           |
-| `GET`  | `/api/v1/schedules/{job_id}/export`           | Unduh jadwal (`?format=excel` / `pdf`)     | `200 OK` (binary stream file)          |
-| `GET`  | `/api/v1/conflicts/pre-check`                 | Validasi kelayakan sebelum algoritma jalan | `200 OK` (feasibility check score)     |
+| Metode                | Endpoint                                      | Deskripsi                                                                               | Respons Utama                          |
+| :-------------------- | :-------------------------------------------- | :-------------------------------------------------------------------------------------- | :------------------------------------- |
+| `GET/POST/PUT/DELETE` | `/api/v1/master/{resource}`                   | CRUD untuk `lecturers`, `rooms`, `time-slots`, `courses`, `classes`, `preferences`      | `200 OK` / `201 Created`               |
+| `GET`                 | `/api/v1/conflicts/pre-check`                 | Validasi kelayakan kapasitas slot sebelum algoritma jalan                               | `200 OK` / `422 Unprocessable Entity`  |
+| `POST`                | `/api/v1/schedules/generate`                  | Memicu komputasi algoritma genetika via Celery                                          | `202 Accepted` + `job_id`              |
+| `GET`                 | `/api/v1/schedules/jobs/{job_id}/status`      | Polling progres komputasi pekerjaan                                                     | `200 OK` (status, generation, fitness) |
+| `GET`                 | `/api/v1/schedules/jobs/{job_id}/result`      | Mengambil matriks jadwal (mendukung filter `semester`, `kbk`, `lecturer_id`, `room_id`) | `200 OK` (array matriks jadwal)        |
+| `PATCH`               | `/api/v1/schedules/jobs/{job_id}/publish`     | Menetapkan jadwal hasil generasi sebagai jadwal resmi aktif                             | `200 OK`                               |
+| `POST`                | `/api/v1/schedules/{schedule_id}/manual-swap` | Validasi bentrok & tukar slot/ruangan secara manual                                     | `200 OK` atau `409 Conflict`           |
+| `GET`                 | `/api/v1/schedules/jobs/{job_id}/export`      | Unduh jadwal (`?format=excel` / `pdf`)                                                  | `200 OK` (binary stream file)          |
 
 ### 6.2 Detail Skema Payload & Respons
 
@@ -283,7 +302,7 @@ CREATE TABLE schedules (
   "data": {
     "job_id": "8f3b2a1c-9d4e-4b2a-a1b2-c3d4e5f6a7b8",
     "status": "PENDING",
-    "created_at": "2026-10-13T16:00:00Z"
+    "created_at": "2026-10-19T12:00:00Z"
   }
 }
 ```
@@ -315,25 +334,25 @@ CREATE TABLE schedules (
 
 ### 7.1 Masalah Tidak Layak (_Infeasible Problem_)
 
-- **Skenario:** Total jam pertemuan seluruh kelas melebihi akumulasi total slot waktu dan kapasitas ruangan yang tersedia, atau jumlah kelas praktikum melebihi ketersediaan laboratorium aktif.
-- **Mekanisme Penanganan:** Sebelum antrean Celery dieksekusi, backend memanggil fungsi `pre_execution_feasibility_check()`. Jika $\sum \text{Kebutuhan Slot} > \sum \text{Kapasitas Ruang} \times \text{Slot Waktu}$, sistem langsung menolak inisiasi pembuatan jadwal dengan kode `422 Unprocessable Entity` disertai pesan diagnostik yang jelas (misal: _"Kekurangan 14 slot ruangan teori untuk semester ini"_).
+- **Skenario:** Total kelas teori/praktikum melebihi akumulasi total slot waktu dan kapasitas ruangan yang tersedia, atau seorang dosen mengampu kelas melebihi total slot waktu mingguan.
+- **Mekanisme Penanganan:** Sebelum antrean Celery dieksekusi, backend memanggil fungsi `pre_execution_feasibility_check()`. Jika beban kelas melampaui kapasitas ruangan/waktu, sistem langsung menolak inisiasi pembuatan jadwal dengan kode `422 Unprocessable Entity` disertai rincian diagnostik yang spesifik.
 
 ### 7.2 Jebakan Optimum Lokal (_Premature Convergence_)
 
-- **Skenario:** Seluruh populasi memiliki gen serupa pada generasi awal sehingga algoritma berhenti berimprovisasi meskipun pelanggaran belum mencapai 0 (_hard constraints_ masih ada).
-- **Mekanisme Penanganan:** Terapkan strategi **Adaptive Mutation Rate**. Apabila nilai _fitness_ terbaik tidak mengalami peningkatan selama 15 generasi berturut-turut, tingkat mutasi dinaikkan otomatis dari $0.08$ ke $0.25$ selama 5 generasi (_diversity injection_) untuk membongkar pola genetik yang buntu.
+- **Skenario:** Seluruh populasi memiliki susunan gen serupa pada generasi awal sehingga algoritma berhenti berkembang meskipun masih terdapat pelanggaran _hard constraints_.
+- **Mekanisme Penanganan:** Terapkan strategi **Adaptive Mutation Rate & Heuristic Initialization**. Saat populasi awal dibentuk, gen langsung dipasangkan hanya dengan ruangan yang memenuhi tipe ($HC_5$) dan kapasitas ($HC_4$). Apabila nilai _fitness_ terbaik stagnan selama 15 generasi berturut-turut, tingkat mutasi dinaikkan otomatis dari $0.08$ ke $0.25$ selama 5 generasi (_diversity injection_).
 
-### 7.3 Crash pada Komputasi Latar Belakang (_Worker Out-of-Memory_)
+### 7.3 Crash pada Komputasi Latar Belakang (_Worker Out-of-Memory / Timeout_)
 
-- **Skenario:** Worker Celery terhenti mendadak (_killed by OS_) karena beban kalkulasi matriks memori melonjak.
+- **Skenario:** Worker Celery terhenti mendadak karena beban kalkulasi matriks memori melonjak.
 - **Mekanisme Penanganan:**
-  - Pasang batas waktu eksekusi tugas (_hard time limit_ 600 detik) di konfigurasi Celery (`CELERY_TASK_TIME_LIMIT = 600`).
-  - Manfaatkan blok `try...except` dan _signal handler_ di Celery: jika tugas gagal atau mengalami _kill_, status pada tabel `schedule_jobs` di PostgreSQL langsung diperbarui menjadi `FAILED` dengan keterangan galat lengkap, sehingga frontend tidak terjebak dalam status pemuatan (_infinite loading_).
+  - Pasang batas waktu eksekusi tugas (`CELERY_TASK_TIME_LIMIT = 600`).
+  - Manfaatkan blok `try...except` di Celery: jika tugas gagal, status pada tabel `schedule_jobs` di PostgreSQL langsung diperbarui menjadi `FAILED` dengan keterangan galat lengkap agar frontend menghentikan _polling_.
 
 ### 7.4 Penyesuaian Manual yang Memicu Konflik Baru (_Post-generation Manual Swap_)
 
-- **Skenario:** Admin mencoba menukar jadwal dua kelas secara manual melalui antarmuka tabel, namun perpindahan tersebut memicu dosen atau ruangan menjadi bentrok.
-- **Mekanisme Penanganan:** Endpoint `/manual-swap` wajib menjalankan fungsi verifikasi bentrok (_conflict checker_). Jika pertukaran menimbulkan bentrok mutlak, sistem menolak transaksi dengan kode respons `409 Conflict` dan mengembalikan rincian pihak yang bertabrakan.
+- **Skenario:** Admin mencoba memindahkan jadwal suatu kelas secara manual di tabel antarmuka, namun perpindahan tersebut memicu bentrok dosen, ruangan, atau bentrok antara kelas `GENERAL` dan kelas `KBK`.
+- **Mekanisme Penanganan:** Endpoint `/manual-swap` wajib menjalankan fungsi verifikasi $HC_1$ hingga $HC_6$. Jika pertukaran menimbulkan bentrok mutlak, sistem menolak transaksi dengan kode respons `409 Conflict` dan mengembalikan detail alasan bentroknya.
 
 ---
 
@@ -341,37 +360,37 @@ CREATE TABLE schedules (
 
 ### 8.1 Pengujian Unit (Unit Testing - Backend & Algoritma)
 
-- **Verifikasi Fungsi Fitness:** Memastikan setiap jenis pelanggaran (dosen bentrok, rombel bentrok, ruangan penuh) memicu pinalti nilai yang tepat dan terukur.
-- **Integritas Operator Genetik:** Menguji bahwa proses _crossover_ dan _mutation_ tidak menghilangkan gen kelas atau menduplikasi entitas sesi kelas yang sama.
+- **Verifikasi Fungsi Fitness:** Memastikan setiap jenis pelanggaran ($HC_1 - HC_6$ dan $SC_1 - SC_3$) memicu pinalti nilai yang tepat, termasuk pengujian aturan paralel antar-KBK vs bentrok kelas `GENERAL`.
+- **Integritas Operator Genetik:** Menguji bahwa proses _crossover_ dan _mutation_ tidak menghilangkan `class_id` atau menduplikasi kelas yang sama.
 
 ### 8.2 Pengujian Integrasi (Integration Testing)
 
 - Menguji siklus hidup tugas: `FastAPI (Trigger) -> Redis (Queue) -> Celery Worker (Compute) -> PostgreSQL (Persist)`.
-- Memastikan polling frontend tetap menerima pembaruan status generasi secara periodik tanpa membebani basis data (_throttled update_).
+- Memastikan mekanisme _polling_ frontend menerima pembaruan progres secara mulus.
 
 ### 8.3 Pengujian Antarmuka & Visual (Frontend UI/UX)
 
-- Mengaudit visualisasi matriks kalender mingguan pada resolusi laptop (1366x768) dan monitor desktop (1920x1080) menggunakan Chrome DevTools.
-- Memastikan tidak terjadi _layout shift_, tumpang-tindih (_overlapping_) teks mata kuliah pada kartu jadwal, atau kelambatan rendering saat menampilkan puluhan blok sesi.
+- Mengaudit visualisasi matriks kalender mingguan pada resolusi laptop (1366x768) dan monitor desktop (1920x1080) menggunakan Chrome DevTools MCP.
+- Memastikan filter tampilan berdasarkan Semester dan KBK (`PEMROGRAMAN`, `MULTIMEDIA`, `IOT`) merender kartu jadwal dengan warna pembeda yang jelas tanpa tumpang-tindih.
 
 ### 8.4 Pengujian Beban & Skalabilitas (Stress Testing)
 
-- Menguji batas performa dengan dataset riil: **150 kelas kuliah, 25 ruangan, 80 dosen, dan 30 slot waktu mingguan**.
-- Kriteria Lolos: Penggunaan memori worker stabil di bawah 500 MB RAM dan proses generasi selesai di bawah 3 menit dengan 0 pelanggaran batasan mutlak (_zero hard constraints_).
+- Menguji batas performa dengan dataset simulasi penuh Prodi Ilmu Komputer UBBG (Semester 1, 3, 5, 7 lengkap dengan 3 jalur KBK).
+- Kriteria Lolos: Penggunaan memori worker stabil di bawah 500 MB RAM dan proses generasi selesai di bawah 3 menit dengan `hard_conflicts_count = 0`.
 
 ---
 
-## 9. Manajemen Proyek & Pembagian Peran Kelompok
+## 9. Manajemen Proyek & Pembagian Peran Kelompok (5 Anggota)
 
 ### 9.1 Matriks RACI (Responsible, Accountable, Consulted, Informed)
 
-| Modul / Komponen Tugas                 | Spesialis Algoritma | Backend Developer | Frontend Developer | Project Manager / QA |
-| :------------------------------------- | :-----------------: | :---------------: | :----------------: | :------------------: |
-| Formulasi Matematis & GA Engine        |        **R**        |         C         |         I          |          A           |
-| REST API & Integrasi Celery/Redis      |          C          |       **R**       |         I          |          A           |
-| Desain Skema DB & Kueri PostgreSQL     |          C          |       **R**       |         I          |          A           |
-| UI Dashboard & Visualisasi Kalender    |          I          |         C         |       **R**        |          A           |
-| Pengujian Bentrok, QA, & Laporan Akhir |          C          |         C         |         C          |      **R / A**       |
+| Modul / Komponen Tugas                         | Anggota 1 (PM & QA) | Anggota 2 (GA Specialist) | Anggota 3 (Backend & Async) | Anggota 4 (DB & Data Specialist) | Anggota 5 (Frontend Engineer) |
+| :--------------------------------------------- | :-----------------: | :-----------------------: | :-------------------------: | :------------------------------: | :---------------------------: |
+| Manajemen Proyek, Dokumentasi, & QA Testing    |      **R / A**      |             C             |              C              |                C                 |               C               |
+| Formulasi Matematis & Mesin Algoritma Genetika |          A          |           **R**           |              C              |                C                 |               I               |
+| REST API, Celery Worker, & Redis Queue         |          A          |             C             |            **R**            |                C                 |               I               |
+| Skema PostgreSQL, Seed Data UBBG, & Ekspor     |          A          |             C             |              C              |              **R**               |               I               |
+| UI Dashboard, CRUD Master, & Matriks Kalender  |          A          |             I             |              C              |                I                 |             **R**             |
 
 - **Responsible (R):** Anggota yang mengeksekusi dan menulis kode modul tersebut secara langsung.
 - **Accountable (A):** Penanggung jawab utama yang memastikan modul selesai tepat waktu dan sesuai spesifikasi.
@@ -381,20 +400,18 @@ CREATE TABLE schedules (
 ### 9.2 Timeline Pengerjaan Proyek (Sprint 4 Minggu)
 
 - **Minggu 1: Inisialisasi Fondasi & Data Master**
-  - Perancangan skema relasional PostgreSQL dan migrasi awal.
-  - Setup repositori Git bersama (_branching model_: `main`, `develop`, `feature/*`).
-  - Pembuatan REST API CRUD data master (Dosen, Ruangan, Waktu, Kelas).
-  - Pembuatan halaman form input data master di Next.js.
-- **Minggu 2: Pengembangan Inti Algoritma Genetika**
-  - Perancangan struktur kromosom dan formulasi fungsi pinalti/fitness Python.
-  - Uji mandiri performa konvergensi algoritma via terminal (CLI).
-  - Konfigurasi Celery Worker dan Redis broker untuk pemrosesan asinkron.
-- **Minggu 3: Integrasi Antarmuka & Visualisasi Matriks**
-  - Pembangunan komponen tabel matriks jadwal mingguan responsif di Next.js.
-  - Implementasi mekanisme polling progres (_real-time progress bar_ & indikator generasi).
-  - Integrasi data hasil komputasi dari API ke visual kalender jadwal.
+  - Pembuatan repositori Git bersama, struktur Docker/environment, dan pelacak tugas (`TASKS.md`).
+  - Implementasi skema 8 tabel PostgreSQL dan skrip _seed data_ Prodi Ilmu Komputer UBBG (Semester 1–7 beserta 3 KBK).
+  - Pembuatan REST API CRUD data master dan halaman form manajemen data di Next.js.
+- **Minggu 2: Pengembangan Inti Algoritma Genetika & Antrean Asinkron**
+  - Implementasi inisialisasi populasi heuristik, fungsi pinalti/fitness ($HC_1 - HC_6$, $SC_1 - SC_3$), dan operator evolusi di Python.
+  - Uji mandiri performa konvergensi algoritma via terminal lokal (CLI).
+  - Integrasi mesin algoritma ke dalam Celery Worker dan Redis broker.
+- **Minggu 3: Integrasi Antarmuka & Visualisasi Matriks Kalender**
+  - Pembangunan komponen tabel matriks jadwal mingguan responsif dengan filter Semester, KBK, Dosen, dan Ruangan di Next.js.
+  - Implementasi mekanisme polling progres (_real-time progress bar_ & metrik generasi).
+  - Integrasi tampilan hasil komputasi jadwal dan fitur publikasi jadwal (`is_published`).
 - **Minggu 4: Penanganan Kasus Ekstrem, Ekspor, & Finalisasi Laporan**
-  - Implementasi validasi awal (_pre-execution check_) dan fitur _manual swap_.
-  - Pembuatan fitur ekspor jadwal ke format Excel/PDF.
-  - Pengujian menyeluruh (_stress test_ dataset besar) dan pencatatan metrik.
-  - Penyusunan laporan akhir tugas manajemen proyek dan materi presentasi kelompok.
+  - Implementasi validasi awal (_pre-execution check_), fitur _manual swap_ anti-bentrok, dan ekspor ke Excel/PDF.
+  - Pengujian menyeluruh (_stress test_ dataset penuh) dan pencatatan metrik eksperimen algoritma.
+  - Penyusunan laporan akhir tugas manajemen proyek dan persiapan presentasi kelompok.
