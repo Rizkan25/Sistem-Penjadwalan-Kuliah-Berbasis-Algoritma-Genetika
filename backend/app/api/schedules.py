@@ -1,5 +1,5 @@
 import uuid
-import asyncio
+import threading
 from typing import Optional, List
 from fastapi import APIRouter, Depends, HTTPException, status, Query, Response
 from fastapi.responses import StreamingResponse
@@ -74,7 +74,7 @@ def generate_schedule(
 
     if not dispatched:
         # Local background thread fallback (PRD 3.2 resilient anti-timeout)
-        asyncio.create_task(asyncio.to_thread(execute_optimization, job_id_str, params_dict))
+        threading.Thread(target=execute_optimization, args=(job_id_str, params_dict), daemon=True).start()
 
     return {
         "status": "success",
