@@ -64,43 +64,63 @@ Aplikasi web full-stack modern untuk otomatisasi penyusunan jadwal kuliah bebas 
 
 ## 🚀 Panduan Menjalankan Sistem Secara Lokal
 
-### 1. Menjalankan Backend (FastAPI + Celery + Uvicorn)
+Anda dapat menjalankan seluruh sistem (Backend FastAPI + Frontend Next.js) menggunakan **salah satu dari 3 cara berikut**:
 
-Buka terminal pada direktori `backend`:
+---
 
-```bash
+### Cara 1: Melalui Terminal IDE (PowerShell) — *Paling Cepat*
+
+Buka terminal di root direktori proyek, lalu jalankan salah satu script berikut (wajib menggunakan awalan `.\`):
+
+```powershell
+.\start-all.ps1
+# atau
+.\start-all.bat
+```
+
+> **Catatan:** Dua jendela terminal baru akan otomatis terbuka untuk menjalankan Backend di `http://127.0.0.1:8000` dan Frontend di `http://localhost:3000`.
+
+---
+
+### Cara 2: Sekali Klik via File Explorer (Windows Double-Click)
+
+1. Buka folder proyek di **Windows File Explorer**.
+2. **Klik dua kali (double-click)** pada file `start-all.bat`.
+3. Jendela terminal Backend dan Frontend akan otomatis aktif dan siap digunakan.
+
+---
+
+### Cara 3: Menjalankan Secara Manual (2 Terminal Terpisah)
+
+Jika ingin memantau log masing-masing server secara detail:
+
+#### 🔹 Terminal 1: Backend (FastAPI + Celery + GA Engine)
+```powershell
 cd backend
 
-# Aktifkan virtual environment (Windows)
+# 1. Aktifkan virtual environment Python (Windows)
 .\.venv\Scripts\Activate.ps1
 
-# (Opsional) Jalankan seeding data awal UBBG
+# 2. (Opsional) Inisialisasi data master UBBG jika database masih baru
 python -m app.seed_data
 
-# Jalankan server backend FastAPI
+# 3. Jalankan server FastAPI
 python run.py
 ```
-> Server backend akan aktif di: **http://127.0.0.1:8000**  
-> Dokumentasi interaktif Swagger API: **http://127.0.0.1:8000/docs**
+> - Backend API aktif di: **http://127.0.0.1:8000**  
+> - Dokumentasi Interaktif Swagger: **http://127.0.0.1:8000/docs**
 
-### 2. Menjalankan Worker Celery (Opsional jika Redis aktif)
+*(Opsional: Jika menggunakan Redis, jalankan worker Celery di terminal tambahan: `celery -A app.celery_app worker --loglevel=info -P solo`. Jika Redis tidak ada, sistem otomatis menggunakan background thread internal).*
 
-```bash
-celery -A app.celery_app worker --loglevel=info -P solo
-```
-*(Catatan: Jika Redis tidak aktif, backend otomatis menggunakan fallback background threading terintegrasi sehingga komputasi GA tetap berjalan lancar dan anti-timeout tanpa konfigurasi tambahan).*
-
-### 3. Menjalankan Frontend (Next.js)
-
-Buka terminal pada direktori `frontend`:
-
-```bash
+#### 🔹 Terminal 2: Frontend (Next.js 16 + Turbopack)
+```powershell
 cd frontend
 
 # Jalankan server pengembangan Next.js
 npm run dev
 ```
-> Antarmuka web akan aktif di: **http://localhost:3000**
+> - Antarmuka Web aktif di: **http://localhost:3000**
+> - Halaman Master Kelas: **http://localhost:3000/master/classes**
 
 ---
 
