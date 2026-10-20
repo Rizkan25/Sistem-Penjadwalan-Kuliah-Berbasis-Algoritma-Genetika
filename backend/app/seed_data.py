@@ -53,14 +53,39 @@ def seed_database():
 
         # 2. Seed Rooms
         rooms_data = [
-            {"code": "C.III.10", "name": "LAB KOMPUTER 02", "capacity": 45, "room_type": "LABORATORY"},
-            {"code": "C.III.11", "name": "LAB KOMPUTER 01", "capacity": 45, "room_type": "LABORATORY"},
-            {"code": "C.II.01", "name": "LAB CBT 1", "capacity": 50, "room_type": "LABORATORY"},
-            {"code": "C.II.12", "name": "LAB CBT 2", "capacity": 50, "room_type": "LABORATORY"},
-            {"code": "D.III.01", "name": "RUANG KELAS D301", "capacity": 50, "room_type": "THEORY"},
-            {"code": "D.III.02", "name": "RUANG KELAS D302", "capacity": 50, "room_type": "THEORY"},
-            {"code": "E.II.06", "name": "RUANG KELAS E206", "capacity": 55, "room_type": "THEORY"},
-            {"code": "E.II.07", "name": "RUANG KELAS E207", "capacity": 45, "room_type": "THEORY"},
+            # Lantai 2
+            {"code": "C.II.01", "name": "Lab. CBT 01", "capacity": 40, "room_type": "LABORATORY"},
+            {"code": "C.II.06", "name": "Ruang Kuliah C.II.06", "capacity": 20, "room_type": "THEORY"},
+            {"code": "C.II.07", "name": "Ruang Kuliah C.II.07", "capacity": 40, "room_type": "THEORY"},
+            {"code": "C.II.08", "name": "Ruang Kuliah C.II.08", "capacity": 30, "room_type": "THEORY"},
+            {"code": "C.II.11", "name": "Ruang Kuliah C.II.11", "capacity": 55, "room_type": "THEORY"},
+            {"code": "C.II.12", "name": "Lab. CBT 02", "capacity": 40, "room_type": "LABORATORY"},
+            {"code": "D.II.01", "name": "Ruang Kuliah D.II.01", "capacity": 45, "room_type": "THEORY"},
+            {"code": "D.II.02", "name": "Ruang Kuliah D.II.02", "capacity": 45, "room_type": "THEORY"},
+            {"code": "D.II.03", "name": "Ruang Kuliah D.II.03", "capacity": 45, "room_type": "THEORY"},
+            {"code": "D.II.04", "name": "Ruang Kuliah D.II.04", "capacity": 45, "room_type": "THEORY"},
+            {"code": "D.II.05", "name": "Ruang Kuliah D.II.05", "capacity": 45, "room_type": "THEORY"},
+            {"code": "D.II.06", "name": "Ruang Kuliah D.II.06", "capacity": 45, "room_type": "THEORY"},
+            {"code": "D.II.07", "name": "Ruang Kuliah D.II.07", "capacity": 45, "room_type": "THEORY"},
+            {"code": "D.II.09", "name": "Ruang Kuliah D.II.09", "capacity": 50, "room_type": "THEORY"},
+
+            # Lantai 3
+            {"code": "C.III.06", "name": "Ruang Kuliah C.III.06", "capacity": 30, "room_type": "THEORY"},
+            {"code": "C.III.10", "name": "Lab. Komputer 02", "capacity": 30, "room_type": "LABORATORY"},
+            {"code": "C.III.11", "name": "Lab. Komputer 01", "capacity": 50, "room_type": "LABORATORY"},
+            {"code": "D.III.01", "name": "Ruang Kuliah D.III.01", "capacity": 45, "room_type": "THEORY"},
+            {"code": "D.III.02", "name": "Ruang Kuliah D.III.02", "capacity": 45, "room_type": "THEORY"},
+            {"code": "D.III.03", "name": "Ruang Kuliah D.III.03", "capacity": 45, "room_type": "THEORY"},
+            {"code": "D.III.04", "name": "Ruang Kuliah D.III.04", "capacity": 45, "room_type": "THEORY"},
+            {"code": "D.III.05", "name": "Ruang Kuliah D.III.05", "capacity": 45, "room_type": "THEORY"},
+            {"code": "D.III.06", "name": "Ruang Kuliah D.III.06", "capacity": 45, "room_type": "THEORY"},
+            {"code": "D.III.07", "name": "Ruang Kuliah D.III.07", "capacity": 45, "room_type": "THEORY"},
+            {"code": "D.III.08", "name": "Ruang Kuliah D.III.08", "capacity": 55, "room_type": "THEORY"},
+            {"code": "D.III.09", "name": "Ruang Kuliah D.III.09", "capacity": 50, "room_type": "THEORY"},
+            {"code": "D.III.10", "name": "Ruang Kuliah D.III.10", "capacity": 50, "room_type": "THEORY"},
+
+            # Lantai 4
+            {"code": "D.IV.03", "name": "Smart Room D.IV.03", "capacity": 40, "room_type": "THEORY"},
         ]
         created_rooms = {}
         for r_data in rooms_data:
