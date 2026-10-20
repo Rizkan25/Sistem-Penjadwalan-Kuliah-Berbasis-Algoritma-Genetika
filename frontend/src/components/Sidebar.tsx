@@ -65,9 +65,9 @@ export default function Sidebar() {
 
       <aside 
         className={`
-          ${isCollapsed ? 'w-0 -translate-x-full md:translate-x-0 md:w-[72px] overflow-hidden md:overflow-visible' : 'w-64 translate-x-0 shadow-2xl md:shadow-none'} 
+          ${isCollapsed ? 'w-0 -translate-x-full md:translate-x-0 md:w-[72px]' : 'w-64 translate-x-0 shadow-2xl md:shadow-none'} 
           fixed md:relative inset-y-0 left-0 z-40 md:z-20
-          bg-[#1E293B] text-slate-300 flex flex-col shrink-0 h-full border-r border-slate-700 
+          bg-[#1E293B] text-slate-300 flex flex-col shrink-0 h-full border-r border-slate-700 overflow-x-hidden
           transition-all duration-300 ease-in-out select-none
         `}
       >
@@ -98,7 +98,7 @@ export default function Sidebar() {
         </div>
 
         {/* Navigation List */}
-        <nav className={`flex-1 overflow-y-auto ${isCollapsed ? 'p-2 space-y-3' : 'p-3 space-y-5'}`}>
+        <nav className={`flex-1 overflow-y-auto overflow-x-hidden no-scrollbar ${isCollapsed ? 'p-2 space-y-3' : 'p-3 space-y-5'}`}>
           {navGroups.map((group, gIdx) => (
             <div key={gIdx} className="space-y-1">
               {/* Group Header or Divider */}
@@ -112,15 +112,16 @@ export default function Sidebar() {
 
               <div className="space-y-1 pt-0.5">
                 {group.items.map((item) => {
-                  const isActive = item.href === '/' ? pathname === '/' : (pathname === item.href || pathname.startsWith(item.href + '/'));
+                  const isActive = pathname === item.href;
                   const Icon = item.icon;
 
                   if (isCollapsed) {
                     return (
-                      <div key={item.href} className="relative group flex justify-center">
+                      <div key={item.href} className="flex justify-center">
                         <Link
                           href={item.href}
                           onClick={handleNavClick}
+                          title={item.label}
                           className={`w-11 h-11 flex items-center justify-center rounded-xl transition-all duration-200 cursor-pointer ${
                             isActive
                               ? 'bg-[#1D8699] text-white shadow-md shadow-[#1D8699]/30 font-bold scale-105'
@@ -129,12 +130,6 @@ export default function Sidebar() {
                         >
                           <Icon className={`w-5 h-5 ${isActive ? 'text-white' : 'text-slate-400 group-hover:text-white'}`} />
                         </Link>
-
-                        {/* Tooltip on Hover */}
-                        <div className="absolute left-full ml-3 top-1/2 -translate-y-1/2 px-2.5 py-1.5 bg-slate-900 text-white text-xs font-semibold rounded-lg shadow-xl border border-slate-700 whitespace-nowrap opacity-0 pointer-events-none group-hover:opacity-100 transition-opacity duration-200 z-50 flex items-center space-x-1.5">
-                          <span>{item.label}</span>
-                          {isActive && <span className="w-1.5 h-1.5 rounded-full bg-cyan-400"></span>}
-                        </div>
                       </div>
                     );
                   }

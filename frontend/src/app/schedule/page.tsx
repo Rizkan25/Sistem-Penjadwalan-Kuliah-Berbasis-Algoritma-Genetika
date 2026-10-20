@@ -116,10 +116,12 @@ export default function ScheduleTablePage() {
       {/* Header Bar */}
       <div className="flex flex-col md:flex-row md:items-center justify-between pb-4 border-b border-slate-200 gap-4">
         <div>
-          <h2 className="text-xl font-bold text-slate-800 flex items-center space-x-2">
-            <span>Tabel Jadwal Perkuliahan Resmi</span>
+          <div className="flex flex-wrap items-center gap-2.5">
+            <h2 className="text-lg sm:text-xl font-bold text-slate-800 tracking-tight">
+              Tabel Jadwal Perkuliahan Resmi
+            </h2>
             {job && (
-              <span className={`px-2.5 py-0.5 rounded-full text-xs font-bold ${
+              <span className={`whitespace-nowrap shrink-0 px-2.5 py-1 rounded-full text-xs font-bold inline-flex items-center ${
                 job.is_published 
                   ? 'bg-amber-100 text-amber-800 border border-amber-200' 
                   : 'bg-slate-100 text-slate-700 border border-slate-200'
@@ -127,7 +129,7 @@ export default function ScheduleTablePage() {
                 {job.is_published ? 'Resmi Dipublikasikan' : 'Draft / Hasil Generasi'}
               </span>
             )}
-          </h2>
+          </div>
           <p className="text-xs text-slate-500 mt-1">
             Menampilkan seluruh sesi mata kuliah yang telah dioptimasi oleh Algoritma Genetika tanpa bentrok mutlak.
           </p>
