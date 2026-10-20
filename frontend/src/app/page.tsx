@@ -54,7 +54,7 @@ export default function DashboardPage() {
     <div className="space-y-6 max-w-7xl mx-auto">
       {/* Banner Selamat Datang */}
       <div className="relative overflow-hidden rounded-2xl bg-gradient-to-r from-[#1D8699] to-[#0F4C5C] text-white p-7 shadow-lg shadow-[#1D8699]/15">
-        <div className="relative z-10 max-w-2xl">
+        <div className="relative z-1 max-w-2xl">
           <div className="inline-flex items-center space-x-2 px-3 py-1 rounded-full bg-white/15 backdrop-blur-xs text-xs font-semibold mb-3">
             <Sparkles className="w-3.5 h-3.5 text-amber-300" />
             <span>Sistem Optimasi Berbasis AI & Algoritma Genetika</span>

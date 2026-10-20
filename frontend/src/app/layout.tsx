@@ -16,14 +16,16 @@ export default function RootLayout({
 }) {
   return (
     <html lang="id" className="h-full antialiased" suppressHydrationWarning>
-      <body className="min-h-full flex bg-[#F8FAFC] text-slate-900 font-sans" suppressHydrationWarning>
+      <body className="h-screen w-screen overflow-hidden flex bg-[#F8FAFC] text-slate-900 font-sans" suppressHydrationWarning>
         <SidebarProvider>
-          <Sidebar />
-          <div className="flex-1 flex flex-col min-w-0 min-h-screen">
-            <TopNav />
-            <main className="flex-1 p-6 overflow-y-auto">
-              {children}
-            </main>
+          <div className="flex h-full w-full overflow-hidden relative">
+            <Sidebar />
+            <div className="flex-1 flex flex-col min-w-0 h-full overflow-hidden">
+              <TopNav />
+              <main className="flex-1 p-4 sm:p-6 overflow-y-auto overflow-x-hidden">
+                {children}
+              </main>
+            </div>
           </div>
         </SidebarProvider>
       </body>

@@ -22,6 +22,8 @@ export function SidebarProvider({ children }: { children: React.ReactNode }) {
       const saved = localStorage.getItem('spk_sidebar_collapsed');
       if (saved !== null) {
         setIsCollapsed(saved === 'true');
+      } else if (typeof window !== 'undefined' && window.innerWidth < 768) {
+        setIsCollapsed(true);
       }
     } catch {
       // Ignore localStorage access errors if any
