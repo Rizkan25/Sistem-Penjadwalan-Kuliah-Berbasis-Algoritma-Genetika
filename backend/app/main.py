@@ -24,13 +24,14 @@ app = FastAPI(
     lifespan=lifespan
 )
 
-# CORS Middleware for Next.js frontend
+# CORS Middleware for Next.js frontend (mendukung akses LAN / Private Network)
 app.add_middleware(
     CORSMiddleware,
     allow_origins=["*"],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
+    allow_private_network=True,
 )
 
 # Include Routers

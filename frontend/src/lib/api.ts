@@ -3,10 +3,20 @@ import {
   GAParameters, ScheduleJob, ScheduleItem, PreCheckResult
 } from './types';
 
-const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000/api/v1';
+export function getApiBaseUrl(): string {
+  if (process.env.NEXT_PUBLIC_API_URL) {
+    return process.env.NEXT_PUBLIC_API_URL;
+  }
+  if (typeof window !== 'undefined') {
+    const protocol = window.location.protocol === 'https:' ? 'https:' : 'http:';
+    const hostname = window.location.hostname || 'localhost';
+    return `${protocol}//${hostname}:8000/api/v1`;
+  }
+  return 'http://127.0.0.1:8000/api/v1';
+}
 
 async function fetchJSON<T>(endpoint: string, options: RequestInit = {}): Promise<T> {
-  const url = `${API_BASE_URL}${endpoint}`;
+  const url = `${getApiBaseUrl()}${endpoint}`;
   const res = await fetch(url, {
     ...options,
     headers: {
@@ -131,5 +141,5 @@ export const api = {
     fetchJSON<{ status: string; data: ScheduleJob[] }>('/schedules/jobs'),
 
   getExportUrl: (jobId: string, format: 'excel' | 'pdf') => 
-    `${API_BASE_URL}/schedules/jobs/${jobId}/export?format=${format}`,
+    `${getApiBaseUrl()}/schedules/jobs/${jobId}/export?format=${format}`,
 };
