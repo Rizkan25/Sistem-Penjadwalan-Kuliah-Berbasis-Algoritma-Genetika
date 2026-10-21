@@ -71,13 +71,13 @@ export default function RoomsPage() {
             <span>Data Master Ruang Kuliah & Laboratorium</span>
           </h2>
           <p className="text-xs text-slate-500 mt-1">
-            Data kapasitas kursi dan tipe ruangan untuk memenuhi batasan keras $HC_4$ dan $HC_5$.
+            Data kapasitas kursi dan tipe ruangan untuk memenuhi batasan keras kapasitas dan kesesuaian ruang teori/lab.
           </p>
         </div>
 
         <button
           onClick={() => setShowAddModal(true)}
-          className="flex items-center space-x-1.5 px-3.5 py-2 bg-[#1D8699] hover:bg-[#166978] text-white rounded-lg text-xs font-bold shadow-xs cursor-pointer"
+          className="flex items-center space-x-1.5 px-3.5 py-2 bg-[#1D8699] hover:bg-[#166978] text-white rounded-lg text-xs font-bold shadow-xs cursor-pointer shrink-0"
         >
           <Plus className="w-3.5 h-3.5" />
           <span>Tambah Ruangan</span>
@@ -95,7 +95,7 @@ export default function RoomsPage() {
             Daftar Ruangan Kampus UBBG ({rooms.length})
           </div>
           <div className="overflow-x-auto">
-            <table className="w-full text-left border-collapse text-xs">
+            <table className="w-full text-left border-collapse text-xs min-w-[640px]">
               <thead>
                 <tr className="bg-slate-50 text-slate-600 text-[11px] font-bold uppercase border-b border-slate-200">
                   <th className="py-2.5 px-4">Kode Ruang</th>

@@ -52,18 +52,18 @@ export default function RoomMatrixGrid({
   return (
     <div className="bg-white rounded-xl border border-slate-200 shadow-xs p-6 mb-6">
       {/* Day Selector Tabs */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between pb-4 mb-6 border-b border-slate-200 gap-3">
+      <div className="flex flex-col lg:flex-row lg:items-center justify-between pb-4 mb-6 border-b border-slate-200 gap-4">
         <div>
           <h3 className="text-sm font-bold text-slate-800">
             Matriks Kalender Jadwal per Ruangan (Room-Time Grid)
           </h3>
-          <p className="text-xs text-slate-500">
+          <p className="text-xs text-slate-500 mt-0.5">
             Visualisasi alokasi ruangan laboratorium dan kelas teori per slot waktu
           </p>
         </div>
 
         {/* Day Pills */}
-        <div className="flex items-center space-x-1 bg-slate-100 p-1 rounded-xl">
+        <div className="flex flex-wrap items-center gap-1.5 bg-slate-100 p-1.5 rounded-xl shrink-0 self-start lg:self-auto">
           {[1, 2, 3, 4, 5, 6].map((dayNum) => (
             <button
               key={dayNum}

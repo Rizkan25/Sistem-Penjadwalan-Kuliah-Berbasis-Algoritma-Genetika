@@ -44,9 +44,9 @@ export default function GAController({ onStartGeneration, isRunning }: GAControl
 
   return (
     <div className="bg-white rounded-xl border border-slate-200 shadow-xs p-6 mb-6">
-      <div className="flex items-center justify-between pb-4 mb-5 border-b border-slate-100">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between pb-4 mb-5 border-b border-slate-100 gap-3">
         <div className="flex items-center space-x-2.5">
-          <div className="p-2 rounded-lg bg-cyan-50 text-[#1D8699]">
+          <div className="p-2 rounded-lg bg-cyan-50 text-[#1D8699] shrink-0">
             <Settings2 className="w-5 h-5" />
           </div>
           <div>
@@ -59,7 +59,7 @@ export default function GAController({ onStartGeneration, isRunning }: GAControl
           </div>
         </div>
 
-        <div className="flex items-center space-x-2">
+        <div className="flex items-center space-x-2 shrink-0">
           <button
             type="button"
             onClick={handleRunPreCheck}
@@ -77,7 +77,7 @@ export default function GAController({ onStartGeneration, isRunning }: GAControl
       </div>
 
       <form onSubmit={handleSubmit}>
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4 mb-6">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-3.5 sm:gap-4 mb-6">
           {/* Populasi */}
           <div className="space-y-1.5">
             <label className="text-xs font-semibold text-slate-700">
@@ -167,11 +167,11 @@ export default function GAController({ onStartGeneration, isRunning }: GAControl
         </div>
 
         {/* Action Button */}
-        <div className="flex items-center justify-end space-x-3 pt-3 border-t border-slate-100">
+        <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-end gap-3 pt-3 border-t border-slate-100">
           <button
             type="submit"
             disabled={isRunning}
-            className="flex items-center space-x-2 px-6 py-2.5 rounded-lg bg-[#1D8699] hover:bg-[#166978] text-white text-xs font-bold shadow-md shadow-[#1D8699]/25 transition-all disabled:opacity-50 cursor-pointer"
+            className="flex items-center justify-center space-x-2 px-6 py-2.5 rounded-lg bg-[#1D8699] hover:bg-[#166978] text-white text-xs font-bold shadow-md shadow-[#1D8699]/25 transition-all disabled:opacity-50 cursor-pointer w-full sm:w-auto"
           >
             {isRunning ? (
               <>

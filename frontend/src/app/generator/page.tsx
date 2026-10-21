@@ -117,7 +117,7 @@ export default function GeneratorPage() {
             </span>
           </h2>
           <p className="text-xs text-slate-500 mt-1">
-            Mengeksekusi evolusi populasi solusi jadwal dengan evaluasi 6 Batasan Keras ($HC$) dan 3 Batasan Lunak ($SC$).
+            Mengeksekusi evolusi populasi solusi jadwal dengan evaluasi 6 Batasan Keras (Hard Constraints) dan 3 Batasan Lunak (Soft Constraints).
           </p>
         </div>
       </div>

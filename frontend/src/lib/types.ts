@@ -103,7 +103,7 @@ export interface ScheduleItem {
   credits: number;
   course_type: 'THEORY' | 'LABORATORY';
   lecturer_id: string;
-  lecturer_nidn: string;
+  lecturer_nidn?: string | null;
   lecturer_name: string;
   room_id: string;
   room_code: string;

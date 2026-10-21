@@ -20,22 +20,26 @@ class GUID(TypeDecorator):
             return dialect.type_descriptor(CHAR(36))
 
     def process_bind_param(self, value, dialect):
-        if value is None:
-            return value
+        if value is None or str(value).strip() == "":
+            return None
         elif dialect.name == "postgresql":
             return str(value)
         else:
             if isinstance(value, uuid.UUID):
                 return str(value)
-            else:
+            try:
                 return str(uuid.UUID(str(value)))
+            except (ValueError, TypeError):
+                return str(value)
 
     def process_result_value(self, value, dialect):
-        if value is None:
+        if value is None or str(value).strip() == "":
+            return None
+        if isinstance(value, uuid.UUID):
             return value
-        else:
-            if not isinstance(value, uuid.UUID):
-                value = uuid.UUID(str(value))
+        try:
+            return uuid.UUID(str(value))
+        except (ValueError, TypeError):
             return value
 
 # Engine configuration

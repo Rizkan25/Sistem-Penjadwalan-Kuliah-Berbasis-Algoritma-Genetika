@@ -18,16 +18,27 @@ export function SidebarProvider({ children }: { children: React.ReactNode }) {
   const [isCollapsed, setIsCollapsed] = useState(false);
 
   useEffect(() => {
-    try {
-      const saved = localStorage.getItem('spk_sidebar_collapsed');
-      if (saved !== null) {
-        setIsCollapsed(saved === 'true');
-      } else if (typeof window !== 'undefined' && window.innerWidth < 768) {
+    const checkViewport = () => {
+      if (typeof window !== 'undefined' && window.innerWidth < 768) {
         setIsCollapsed(true);
       }
+    };
+
+    try {
+      if (typeof window !== 'undefined' && window.innerWidth < 768) {
+        setIsCollapsed(true);
+      } else {
+        const saved = localStorage.getItem('spk_sidebar_collapsed');
+        if (saved !== null) {
+          setIsCollapsed(saved === 'true');
+        }
+      }
     } catch {
-      // Ignore localStorage access errors if any
+      // Ignore
     }
+
+    window.addEventListener('resize', checkViewport);
+    return () => window.removeEventListener('resize', checkViewport);
   }, []);
 
   const toggleSidebar = () => {

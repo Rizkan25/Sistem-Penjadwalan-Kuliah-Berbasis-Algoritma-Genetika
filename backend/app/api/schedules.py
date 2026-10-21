@@ -147,11 +147,11 @@ def get_schedule_result(
         if not semester:
             query = query.join(AcademicClass)
         query = query.filter(AcademicClass.kbk == kbk)
-    if lecturer_id:
+    if lecturer_id and str(lecturer_id).strip():
         if not semester and not kbk:
             query = query.join(AcademicClass)
         query = query.filter(AcademicClass.lecturer_id == lecturer_id)
-    if room_id:
+    if room_id and str(room_id).strip():
         query = query.filter(Schedule.room_id == room_id)
 
     schedules = query.all()
@@ -197,7 +197,7 @@ def get_schedule_result(
             credits=crs.credits,
             course_type=crs.course_type,
             lecturer_id=lec.id,
-            lecturer_nidn=lec.nidn,
+            lecturer_nidn=lec.nidn or "-",
             lecturer_name=lec.name,
             room_id=rm.id,
             room_code=rm.code,
@@ -361,7 +361,7 @@ def manual_swap(
         credits=crs.credits,
         course_type=crs.course_type,
         lecturer_id=lec.id,
-        lecturer_nidn=lec.nidn,
+        lecturer_nidn=lec.nidn or "-",
         lecturer_name=lec.name,
         room_id=new_room.id,
         room_code=new_room.code,

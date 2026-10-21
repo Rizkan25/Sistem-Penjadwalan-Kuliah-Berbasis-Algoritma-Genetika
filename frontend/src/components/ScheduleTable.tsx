@@ -131,7 +131,7 @@ export default function ScheduleTable({ schedules, onOpenSwapModal }: ScheduleTa
                           {item.lecturer_name}
                         </span>
                         <span className="font-mono-metrics text-[10px] text-slate-400">
-                          NIDN: {item.lecturer_nidn}
+                          {item.lecturer_nidn && item.lecturer_nidn !== '-' ? `NIDN: ${item.lecturer_nidn}` : 'Dosen Tamu / Pengampu'}
                         </span>
                         {item.is_preferred_slot ? (
                           <span className="text-[10px] text-emerald-600 font-medium mt-0.5">

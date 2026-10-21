@@ -372,40 +372,29 @@ export default function ClassesPage() {
               </div>
             </div>
 
-            {/* Semester Filter Tabs */}
-            <div className="flex flex-wrap items-center gap-1.5 pt-1">
-              <span className="text-[11px] font-semibold text-slate-500 flex items-center space-x-1 mr-1">
-                <Filter className="w-3 h-3 text-[#1D8699]" />
+            {/* Semester Filter Dropdown (Gambar 5 style: rapi, ringkas, responsif) */}
+            <div className="flex items-center gap-2 pt-1">
+              <span className="text-[11px] font-semibold text-slate-500 flex items-center space-x-1 shrink-0">
+                <Filter className="w-3.5 h-3.5 text-[#1D8699]" />
                 <span>Filter Semester:</span>
               </span>
-              <button
-                onClick={() => setTableSemesterFilter('ALL')}
-                className={`px-2.5 py-1 rounded-md text-[11px] font-bold transition cursor-pointer ${
-                  tableSemesterFilter === 'ALL'
-                    ? 'bg-[#1D8699] text-white shadow-xs'
-                    : 'bg-slate-100 text-slate-600 hover:text-slate-900 hover:bg-slate-200'
-                }`}
-              >
-                Semua
-              </button>
-              {[1, 2, 3, 4, 5, 6, 7, 8].map((s) => (
-                <button
-                  key={s}
-                  onClick={() => setTableSemesterFilter(s)}
-                  className={`px-2.5 py-1 rounded-md text-[11px] font-bold transition cursor-pointer ${
-                    tableSemesterFilter === s
-                      ? 'bg-[#1D8699] text-white shadow-xs'
-                      : 'bg-slate-100 text-slate-600 hover:text-slate-900 hover:bg-slate-200'
-                  }`}
+              <div className="relative inline-block w-48">
+                <select
+                  value={tableSemesterFilter === 'ALL' ? 'ALL' : tableSemesterFilter}
+                  onChange={(e) => setTableSemesterFilter(e.target.value === 'ALL' ? 'ALL' : Number(e.target.value))}
+                  className="w-full px-3 py-1.5 rounded-lg border border-slate-300 text-xs font-semibold text-slate-700 bg-white hover:border-[#1D8699] focus:outline-none focus:ring-2 focus:ring-[#1D8699]/20 transition cursor-pointer shadow-2xs"
                 >
-                  Sem {s}
-                </button>
-              ))}
+                  <option value="ALL">Semua Semester</option>
+                  {[1, 2, 3, 4, 5, 6, 7, 8].map((s) => (
+                    <option key={s} value={s}>Semester {s}</option>
+                  ))}
+                </select>
+              </div>
             </div>
           </div>
 
           <div className="overflow-x-auto">
-            <table className="w-full text-left border-collapse text-xs">
+            <table className="w-full text-left border-collapse text-xs min-w-[760px]">
               <thead>
                 <tr className="bg-slate-50 text-slate-600 text-[11px] font-bold uppercase border-b border-slate-200 select-none">
                   {/* Kolom 1: Nama Kelas */}

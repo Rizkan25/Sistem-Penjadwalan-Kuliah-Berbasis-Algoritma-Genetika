@@ -64,7 +64,7 @@ class ScheduleItemResponse(BaseModel):
     
     # Lecturer info
     lecturer_id: UUID
-    lecturer_nidn: str
+    lecturer_nidn: Optional[str] = "-"
     lecturer_name: str
     
     # Room info

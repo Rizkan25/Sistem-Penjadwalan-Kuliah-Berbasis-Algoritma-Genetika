@@ -114,7 +114,7 @@ export default function ScheduleTablePage() {
   return (
     <div className="max-w-7xl mx-auto space-y-6">
       {/* Header Bar */}
-      <div className="flex flex-col md:flex-row md:items-center justify-between pb-4 border-b border-slate-200 gap-4">
+      <div className="flex flex-col lg:flex-row lg:items-center justify-between pb-4 border-b border-slate-200 gap-4">
         <div>
           <div className="flex flex-wrap items-center gap-2.5">
             <h2 className="text-lg sm:text-xl font-bold text-slate-800 tracking-tight">
