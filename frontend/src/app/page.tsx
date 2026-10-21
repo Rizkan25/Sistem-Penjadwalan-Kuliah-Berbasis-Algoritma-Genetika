@@ -92,60 +92,84 @@ export default function DashboardPage() {
       </div>
 
       {/* KPI Cards */}
-      <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+      <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4">
         {/* Total Dosen */}
-        <div className="bg-white rounded-xl border border-slate-200 p-5 shadow-xs flex items-center space-x-4">
-          <div className="p-3 rounded-xl bg-cyan-50 text-[#1D8699]">
-            <Users className="w-6 h-6" />
+        <div className="bg-white rounded-xl border border-slate-200/90 p-4 sm:p-5 shadow-xs hover:shadow-md transition-all flex flex-col justify-between">
+          <div className="flex items-center justify-between gap-2 mb-2 sm:mb-3">
+            <span className="text-xs font-semibold text-slate-500 truncate">
+              Total Dosen
+            </span>
+            <div className="p-2 sm:p-2.5 rounded-xl bg-cyan-50 text-[#1D8699] shrink-0">
+              <Users className="w-4 h-4 sm:w-5 sm:h-5" />
+            </div>
           </div>
           <div>
-            <div className="text-xs font-semibold text-slate-500">Total Dosen</div>
-            <div className="text-xl font-bold font-mono-metrics text-slate-800">
+            <div className="text-2xl sm:text-3xl font-bold font-mono-metrics text-slate-800 tracking-tight">
               {loading ? '...' : stats.lecturers}
             </div>
-            <div className="text-[10px] text-slate-400 mt-0.5">Dosen Pengampu</div>
+            <div className="text-[10px] sm:text-[11px] text-slate-400 mt-1 truncate">
+              Dosen Pengampu
+            </div>
           </div>
         </div>
 
         {/* Total Mata Kuliah */}
-        <div className="bg-white rounded-xl border border-slate-200 p-5 shadow-xs flex items-center space-x-4">
-          <div className="p-3 rounded-xl bg-amber-50 text-[#D4822A]">
-            <BookOpen className="w-6 h-6" />
+        <div className="bg-white rounded-xl border border-slate-200/90 p-4 sm:p-5 shadow-xs hover:shadow-md transition-all flex flex-col justify-between">
+          <div className="flex items-center justify-between gap-2 mb-2 sm:mb-3">
+            <span className="text-xs font-semibold text-slate-500 truncate">
+              Mata Kuliah
+            </span>
+            <div className="p-2 sm:p-2.5 rounded-xl bg-amber-50 text-[#D4822A] shrink-0">
+              <BookOpen className="w-4 h-4 sm:w-5 sm:h-5" />
+            </div>
           </div>
           <div>
-            <div className="text-xs font-semibold text-slate-500">Mata Kuliah</div>
-            <div className="text-xl font-bold font-mono-metrics text-slate-800">
+            <div className="text-2xl sm:text-3xl font-bold font-mono-metrics text-slate-800 tracking-tight">
               {loading ? '...' : stats.courses}
             </div>
-            <div className="text-[10px] text-slate-400 mt-0.5">Teori & Praktikum</div>
+            <div className="text-[10px] sm:text-[11px] text-slate-400 mt-1 truncate">
+              Teori & Praktikum
+            </div>
           </div>
         </div>
 
         {/* Total Ruangan */}
-        <div className="bg-white rounded-xl border border-slate-200 p-5 shadow-xs flex items-center space-x-4">
-          <div className="p-3 rounded-xl bg-purple-50 text-purple-600">
-            <DoorClosed className="w-6 h-6" />
+        <div className="bg-white rounded-xl border border-slate-200/90 p-4 sm:p-5 shadow-xs hover:shadow-md transition-all flex flex-col justify-between">
+          <div className="flex items-center justify-between gap-2 mb-2 sm:mb-3">
+            <span className="text-xs font-semibold text-slate-500 truncate">
+              Total Ruangan
+            </span>
+            <div className="p-2 sm:p-2.5 rounded-xl bg-purple-50 text-purple-600 shrink-0">
+              <DoorClosed className="w-4 h-4 sm:w-5 sm:h-5" />
+            </div>
           </div>
           <div>
-            <div className="text-xs font-semibold text-slate-500">Total Ruangan</div>
-            <div className="text-xl font-bold font-mono-metrics text-slate-800">
+            <div className="text-2xl sm:text-3xl font-bold font-mono-metrics text-slate-800 tracking-tight">
               {loading ? '...' : stats.rooms}
             </div>
-            <div className="text-[10px] text-slate-400 mt-0.5">Lab Komputer & Teori</div>
+            <div className="text-[10px] sm:text-[11px] text-slate-400 mt-1 truncate">
+              Lab Komputer & Teori
+            </div>
           </div>
         </div>
 
         {/* Total Rombel / Kelas */}
-        <div className="bg-white rounded-xl border border-slate-200 p-5 shadow-xs flex items-center space-x-4">
-          <div className="p-3 rounded-xl bg-blue-50 text-blue-600">
-            <School className="w-6 h-6" />
+        <div className="bg-white rounded-xl border border-slate-200/90 p-4 sm:p-5 shadow-xs hover:shadow-md transition-all flex flex-col justify-between">
+          <div className="flex items-center justify-between gap-2 mb-2 sm:mb-3">
+            <span className="text-xs font-semibold text-slate-500 truncate">
+              Kelas Perkuliahan
+            </span>
+            <div className="p-2 sm:p-2.5 rounded-xl bg-blue-50 text-blue-600 shrink-0">
+              <School className="w-4 h-4 sm:w-5 sm:h-5" />
+            </div>
           </div>
           <div>
-            <div className="text-xs font-semibold text-slate-500">Kelas Perkuliahan</div>
-            <div className="text-xl font-bold font-mono-metrics text-slate-800">
+            <div className="text-2xl sm:text-3xl font-bold font-mono-metrics text-slate-800 tracking-tight">
               {loading ? '...' : stats.classes}
             </div>
-            <div className="text-[10px] text-slate-400 mt-0.5">Rombel Aktif</div>
+            <div className="text-[10px] sm:text-[11px] text-slate-400 mt-1 truncate">
+              Rombel Aktif
+            </div>
           </div>
         </div>
       </div>
