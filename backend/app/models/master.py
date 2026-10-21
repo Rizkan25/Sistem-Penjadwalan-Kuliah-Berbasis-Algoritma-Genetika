@@ -104,7 +104,7 @@ class AcademicClass(Base):
     id = Column(GUID, primary_key=True, default=uuid.uuid4)
     course_id = Column(GUID, ForeignKey("courses.id", ondelete="RESTRICT"), nullable=False)
     lecturer_id = Column(GUID, ForeignKey("lecturers.id", ondelete="RESTRICT"), nullable=False)
-    class_name = Column(String(50), nullable=False) # e.g. "IK-3A (Pemrograman)"
+    class_name = Column(String(150), nullable=False) # e.g. "IK-3A (Pemrograman)"
     semester = Column(Integer, nullable=False)
     cohort = Column(String(10), nullable=False, default="A")
     kbk = Column(String(30), nullable=False, default="GENERAL") # GENERAL, PEMROGRAMAN, MULTIMEDIA, IOT

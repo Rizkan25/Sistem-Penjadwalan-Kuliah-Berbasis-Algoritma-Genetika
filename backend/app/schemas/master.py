@@ -130,7 +130,7 @@ class CourseResponse(CourseBase):
 class AcademicClassBase(BaseModel):
     course_id: UUID
     lecturer_id: UUID
-    class_name: str = Field(..., max_length=50)
+    class_name: str = Field(..., max_length=150)
     semester: int = Field(..., ge=1, le=8)
     cohort: str = Field(default="A", max_length=10)
     kbk: str = Field(default="GENERAL", description="GENERAL, PEMROGRAMAN, MULTIMEDIA, IOT")
@@ -144,7 +144,7 @@ class AcademicClassCreate(AcademicClassBase):
 class AcademicClassUpdate(BaseModel):
     course_id: Optional[UUID] = None
     lecturer_id: Optional[UUID] = None
-    class_name: Optional[str] = Field(None, max_length=50)
+    class_name: Optional[str] = Field(None, max_length=150)
     semester: Optional[int] = Field(None, ge=1, le=8)
     cohort: Optional[str] = None
     kbk: Optional[str] = None
