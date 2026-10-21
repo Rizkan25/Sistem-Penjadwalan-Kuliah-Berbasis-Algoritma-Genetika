@@ -8,9 +8,9 @@ export function getApiBaseUrl(): string {
     return process.env.NEXT_PUBLIC_API_URL;
   }
   if (typeof window !== 'undefined') {
-    const protocol = window.location.protocol === 'https:' ? 'https:' : 'http:';
-    const hostname = window.location.hostname || 'localhost';
-    return `${protocol}//${hostname}:8000/api/v1`;
+    // Di browser gunakan relative URL '/api/v1' agar otomatis di-proxy oleh Next.js rewrites
+    // Ini menjamin kelancaran akses baik dari localhost maupun LAN / IP Wi-Fi tanpa terhalang firewall atau CORS
+    return '/api/v1';
   }
   return 'http://127.0.0.1:8000/api/v1';
 }
