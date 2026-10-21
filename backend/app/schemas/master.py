@@ -5,9 +5,11 @@ from pydantic import BaseModel, Field, EmailStr
 
 # Lecturer
 class LecturerBase(BaseModel):
-    nidn: str = Field(..., max_length=30)
+    nidn: Optional[str] = Field(None, max_length=30)
     name: str = Field(..., max_length=150)
     email: EmailStr
+    jabatan: Optional[str] = Field(None, max_length=150)
+    is_guest: bool = False
 
 class LecturerCreate(LecturerBase):
     pass
@@ -16,6 +18,8 @@ class LecturerUpdate(BaseModel):
     nidn: Optional[str] = Field(None, max_length=30)
     name: Optional[str] = Field(None, max_length=150)
     email: Optional[EmailStr] = None
+    jabatan: Optional[str] = Field(None, max_length=150)
+    is_guest: Optional[bool] = None
 
 class LecturerResponse(LecturerBase):
     id: UUID

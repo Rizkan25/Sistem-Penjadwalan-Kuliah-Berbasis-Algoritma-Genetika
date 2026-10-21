@@ -8,9 +8,11 @@ class Lecturer(Base):
     __tablename__ = "lecturers"
 
     id = Column(GUID, primary_key=True, default=uuid.uuid4)
-    nidn = Column(String(30), unique=True, nullable=False, index=True)
+    nidn = Column(String(30), unique=True, nullable=True, index=True)
     name = Column(String(150), nullable=False)
     email = Column(String(100), unique=True, nullable=False)
+    jabatan = Column(String(150), nullable=True)
+    is_guest = Column(Boolean, default=False)
     created_at = Column(DateTime(timezone=True), default=lambda: datetime.now(timezone.utc))
 
     # Relationships

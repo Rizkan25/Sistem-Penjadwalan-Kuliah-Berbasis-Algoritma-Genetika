@@ -25,6 +25,8 @@ export default function LecturersPage() {
   const [newNidn, setNewNidn] = useState('');
   const [newName, setNewName] = useState('');
   const [newEmail, setNewEmail] = useState('');
+  const [newJabatan, setNewJabatan] = useState('');
+  const [newIsGuest, setNewIsGuest] = useState(false);
 
   // New Preference Form
   const [showPrefModal, setShowPrefModal] = useState(false);
@@ -58,11 +60,19 @@ export default function LecturersPage() {
   const handleCreateLecturer = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
-      await api.createLecturer({ nidn: newNidn, name: newName, email: newEmail });
+      await api.createLecturer({ 
+        nidn: newNidn.trim() || undefined, 
+        name: newName.trim(), 
+        email: newEmail.trim(),
+        jabatan: newJabatan.trim() || undefined,
+        is_guest: newIsGuest,
+      });
       setShowAddModal(false);
       setNewNidn('');
       setNewName('');
       setNewEmail('');
+      setNewJabatan('');
+      setNewIsGuest(false);
       loadData();
     } catch (err: any) {
       alert(`Gagal: ${err.message}`);
@@ -161,7 +171,8 @@ export default function LecturersPage() {
                 <thead>
                   <tr className="bg-slate-50 text-slate-600 text-[11px] font-bold uppercase border-b border-slate-200">
                     <th className="py-2.5 px-4">NIDN</th>
-                    <th className="py-2.5 px-4">Nama Dosen</th>
+                    <th className="py-2.5 px-4">Nama & Jabatan</th>
+                    <th className="py-2.5 px-4">Status</th>
                     <th className="py-2.5 px-4">Email</th>
                     <th className="py-2.5 px-4 text-center">Aksi</th>
                   </tr>
@@ -170,12 +181,24 @@ export default function LecturersPage() {
                   {lecturers.map((lec) => (
                     <tr key={lec.id} className="hover:bg-slate-50/60">
                       <td className="py-3 px-4 font-mono-metrics font-semibold text-slate-600">
-                        {lec.nidn}
+                        {lec.nidn || '-'}
                       </td>
-                      <td className="py-3 px-4 font-bold text-slate-800">
-                        {lec.name}
+                      <td className="py-3 px-4">
+                        <div className="font-bold text-slate-800">{lec.name}</div>
+                        {lec.jabatan && (
+                          <div className="text-[11px] text-slate-500 mt-0.5 line-clamp-1">{lec.jabatan}</div>
+                        )}
                       </td>
-                      <td className="py-3 px-4 text-slate-500">
+                      <td className="py-3 px-4">
+                        <span className={`px-2 py-0.5 rounded-full text-[10px] font-bold inline-flex items-center ${
+                          lec.is_guest 
+                            ? 'bg-amber-100 text-amber-800 border border-amber-200' 
+                            : 'bg-emerald-100 text-emerald-800 border border-emerald-200'
+                        }`}>
+                          {lec.is_guest ? 'Dosen Tamu' : 'Dosen Tetap'}
+                        </span>
+                      </td>
+                      <td className="py-3 px-4 text-slate-500 font-mono text-[11px]">
                         {lec.email}
                       </td>
                       <td className="py-3 px-4 text-center">
@@ -262,13 +285,14 @@ export default function LecturersPage() {
             <h3 className="text-sm font-bold text-slate-800 mb-4">Tambah Dosen Baru</h3>
             <form onSubmit={handleCreateLecturer} className="space-y-3 text-xs">
               <div>
-                <label className="font-semibold text-slate-700 block mb-1">NIDN:</label>
+                <label className="font-semibold text-slate-700 block mb-1">
+                  NIDN <span className="text-slate-400 font-normal">(Opsional untuk Dosen Tamu)</span>:
+                </label>
                 <input
                   type="text"
-                  required
                   value={newNidn}
                   onChange={(e) => setNewNidn(e.target.value)}
-                  placeholder="Contoh: 0012058501"
+                  placeholder="Contoh: 1318018001"
                   className="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-[#1D8699]/20"
                 />
               </div>
@@ -280,7 +304,18 @@ export default function LecturersPage() {
                   required
                   value={newName}
                   onChange={(e) => setNewName(e.target.value)}
-                  placeholder="Contoh: Teuku Rizky, M.Kom."
+                  placeholder="Contoh: Khairuman, S.Kom, M.Kom"
+                  className="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-[#1D8699]/20"
+                />
+              </div>
+
+              <div>
+                <label className="font-semibold text-slate-700 block mb-1">Jabatan Institusi:</label>
+                <input
+                  type="text"
+                  value={newJabatan}
+                  onChange={(e) => setNewJabatan(e.target.value)}
+                  placeholder="Contoh: Ketua Prodi S1 ILKOM / Dosen Pengampu"
                   className="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-[#1D8699]/20"
                 />
               </div>
@@ -295,6 +330,19 @@ export default function LecturersPage() {
                   placeholder="Contoh: dosen@bbg.ac.id"
                   className="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-[#1D8699]/20"
                 />
+              </div>
+
+              <div className="flex items-center space-x-2 pt-1 pb-1">
+                <input
+                  type="checkbox"
+                  id="is_guest_cb"
+                  checked={newIsGuest}
+                  onChange={(e) => setNewIsGuest(e.target.checked)}
+                  className="rounded border-slate-300 text-[#1D8699] focus:ring-[#1D8699]"
+                />
+                <label htmlFor="is_guest_cb" className="font-semibold text-slate-700 cursor-pointer">
+                  Tandai sebagai Dosen Tamu (Guest Lecturer)
+                </label>
               </div>
 
               <div className="flex justify-end space-x-2 pt-3 border-t">

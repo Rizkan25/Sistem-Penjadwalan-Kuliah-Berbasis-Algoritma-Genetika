@@ -1,8 +1,10 @@
 export interface Lecturer {
   id: string;
-  nidn: string;
+  nidn?: string | null;
   name: string;
   email: string;
+  jabatan?: string | null;
+  is_guest?: boolean;
   created_at?: string;
 }
 
