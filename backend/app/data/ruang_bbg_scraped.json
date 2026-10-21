@@ -1,0 +1,2975 @@
+{
+  "metadata": {
+    "source": "https://ruang.bbg.ac.id/",
+    "academic_year": "2026/2027",
+    "semester_type": "ODD",
+    "total_target_rooms": 28,
+    "total_ilkom_classes": 114,
+    "total_target_bookings": 1172,
+    "filter_applied": "Strict 28 Target Rooms Whitelist (Lantai 2, 3, 4)"
+  },
+  "rooms": [
+    {
+      "code": "C.II.01",
+      "name": "Lab. CBT 01",
+      "capacity": 40,
+      "room_type": "LABORATORY",
+      "floor": 2,
+      "is_active": true,
+      "present_on_web": true
+    },
+    {
+      "code": "C.II.06",
+      "name": "Ruang Kuliah C.II.06",
+      "capacity": 20,
+      "room_type": "THEORY",
+      "floor": 2,
+      "is_active": true,
+      "present_on_web": true
+    },
+    {
+      "code": "C.II.07",
+      "name": "Ruang Kuliah C.II.07",
+      "capacity": 40,
+      "room_type": "THEORY",
+      "floor": 2,
+      "is_active": true,
+      "present_on_web": false
+    },
+    {
+      "code": "C.II.08",
+      "name": "Ruang Kuliah C.II.08",
+      "capacity": 30,
+      "room_type": "THEORY",
+      "floor": 2,
+      "is_active": true,
+      "present_on_web": true
+    },
+    {
+      "code": "C.II.11",
+      "name": "Ruang Kuliah C.II.11",
+      "capacity": 55,
+      "room_type": "THEORY",
+      "floor": 2,
+      "is_active": true,
+      "present_on_web": true
+    },
+    {
+      "code": "C.II.12",
+      "name": "Lab. CBT 02",
+      "capacity": 40,
+      "room_type": "LABORATORY",
+      "floor": 2,
+      "is_active": true,
+      "present_on_web": true
+    },
+    {
+      "code": "D.II.01",
+      "name": "Ruang Kuliah D.II.01",
+      "capacity": 45,
+      "room_type": "THEORY",
+      "floor": 2,
+      "is_active": true,
+      "present_on_web": true
+    },
+    {
+      "code": "D.II.02",
+      "name": "Ruang Kuliah D.II.02",
+      "capacity": 45,
+      "room_type": "THEORY",
+      "floor": 2,
+      "is_active": true,
+      "present_on_web": true
+    },
+    {
+      "code": "D.II.03",
+      "name": "Ruang Kuliah D.II.03",
+      "capacity": 45,
+      "room_type": "THEORY",
+      "floor": 2,
+      "is_active": true,
+      "present_on_web": true
+    },
+    {
+      "code": "D.II.04",
+      "name": "Ruang Kuliah D.II.04",
+      "capacity": 45,
+      "room_type": "THEORY",
+      "floor": 2,
+      "is_active": true,
+      "present_on_web": true
+    },
+    {
+      "code": "D.II.05",
+      "name": "Ruang Kuliah D.II.05",
+      "capacity": 45,
+      "room_type": "THEORY",
+      "floor": 2,
+      "is_active": true,
+      "present_on_web": true
+    },
+    {
+      "code": "D.II.06",
+      "name": "Ruang Kuliah D.II.06",
+      "capacity": 45,
+      "room_type": "THEORY",
+      "floor": 2,
+      "is_active": true,
+      "present_on_web": true
+    },
+    {
+      "code": "D.II.07",
+      "name": "Ruang Kuliah D.II.07",
+      "capacity": 45,
+      "room_type": "THEORY",
+      "floor": 2,
+      "is_active": true,
+      "present_on_web": true
+    },
+    {
+      "code": "D.II.09",
+      "name": "Ruang Kuliah D.II.09",
+      "capacity": 50,
+      "room_type": "THEORY",
+      "floor": 2,
+      "is_active": true,
+      "present_on_web": true
+    },
+    {
+      "code": "C.III.06",
+      "name": "Ruang Kuliah C.III.06",
+      "capacity": 30,
+      "room_type": "THEORY",
+      "floor": 3,
+      "is_active": true,
+      "present_on_web": true
+    },
+    {
+      "code": "C.III.10",
+      "name": "Lab. Komputer 02",
+      "capacity": 30,
+      "room_type": "LABORATORY",
+      "floor": 3,
+      "is_active": true,
+      "present_on_web": true
+    },
+    {
+      "code": "C.III.11",
+      "name": "Lab. Komputer 01",
+      "capacity": 50,
+      "room_type": "LABORATORY",
+      "floor": 3,
+      "is_active": true,
+      "present_on_web": true
+    },
+    {
+      "code": "D.III.01",
+      "name": "Ruang Kuliah D.III.01",
+      "capacity": 45,
+      "room_type": "THEORY",
+      "floor": 3,
+      "is_active": true,
+      "present_on_web": true
+    },
+    {
+      "code": "D.III.02",
+      "name": "Ruang Kuliah D.III.02",
+      "capacity": 45,
+      "room_type": "THEORY",
+      "floor": 3,
+      "is_active": true,
+      "present_on_web": true
+    },
+    {
+      "code": "D.III.03",
+      "name": "Ruang Kuliah D.III.03",
+      "capacity": 45,
+      "room_type": "THEORY",
+      "floor": 3,
+      "is_active": true,
+      "present_on_web": true
+    },
+    {
+      "code": "D.III.04",
+      "name": "Ruang Kuliah D.III.04",
+      "capacity": 45,
+      "room_type": "THEORY",
+      "floor": 3,
+      "is_active": true,
+      "present_on_web": true
+    },
+    {
+      "code": "D.III.05",
+      "name": "Ruang Kuliah D.III.05",
+      "capacity": 45,
+      "room_type": "THEORY",
+      "floor": 3,
+      "is_active": true,
+      "present_on_web": true
+    },
+    {
+      "code": "D.III.06",
+      "name": "Ruang Kuliah D.III.06",
+      "capacity": 45,
+      "room_type": "THEORY",
+      "floor": 3,
+      "is_active": true,
+      "present_on_web": true
+    },
+    {
+      "code": "D.III.07",
+      "name": "Ruang Kuliah D.III.07",
+      "capacity": 45,
+      "room_type": "THEORY",
+      "floor": 3,
+      "is_active": true,
+      "present_on_web": true
+    },
+    {
+      "code": "D.III.08",
+      "name": "Ruang Kuliah D.III.08",
+      "capacity": 55,
+      "room_type": "THEORY",
+      "floor": 3,
+      "is_active": true,
+      "present_on_web": true
+    },
+    {
+      "code": "D.III.09",
+      "name": "Ruang Kuliah D.III.09",
+      "capacity": 50,
+      "room_type": "THEORY",
+      "floor": 3,
+      "is_active": true,
+      "present_on_web": false
+    },
+    {
+      "code": "D.III.10",
+      "name": "Ruang Kuliah D.III.10",
+      "capacity": 50,
+      "room_type": "THEORY",
+      "floor": 3,
+      "is_active": true,
+      "present_on_web": true
+    },
+    {
+      "code": "D.IV.03",
+      "name": "Smart Room D.IV.03",
+      "capacity": 40,
+      "room_type": "THEORY",
+      "floor": 4,
+      "is_active": true,
+      "present_on_web": true
+    }
+  ],
+  "classes": [
+    {
+      "spadaCode": "R2026155201MKKD1022A",
+      "rawCourseName": "Desain Grafis(*)- Rombel A",
+      "cleanCourseName": "Desain Grafis",
+      "cohort": "A",
+      "prodi": "S1 ILKOM",
+      "lecturerRaw": "Miftahul Jannah, M.Pd / Muhajir, M.T",
+      "lecturers": [
+        "Miftahul Jannah, M.Pd",
+        "Muhajir, M.T"
+      ],
+      "studentCount": 38,
+      "dayNum": 1,
+      "dayName": "Senin",
+      "roomCode": "C.II.01",
+      "roomName": "Lab. CBT 01",
+      "roomType": "LABORATORY",
+      "periods": [
+        "Jam ke-1",
+        "Jam ke-2",
+        "Jam ke-3"
+      ],
+      "sks": 3
+    },
+    {
+      "spadaCode": "R2026155201MKKD1009C",
+      "rawCourseName": "Arsitektur dan Organisasi Komputer - Rombel C",
+      "cleanCourseName": "Arsitektur dan Organisasi Komputer",
+      "cohort": "C",
+      "prodi": "S1 ILKOM",
+      "lecturerRaw": "Muhajir, M.T / Rossiana Br Ginting, S.Kom, M.Pd",
+      "lecturers": [
+        "Muhajir, M.T",
+        "Rossiana Br Ginting, S.Kom, M.Pd"
+      ],
+      "studentCount": 52,
+      "dayNum": 1,
+      "dayName": "Senin",
+      "roomCode": "C.II.01",
+      "roomName": "Lab. CBT 01",
+      "roomType": "LABORATORY",
+      "periods": [
+        "Jam ke-4",
+        "Jam ke-5",
+        "Jam ke-6"
+      ],
+      "sks": 3
+    },
+    {
+      "spadaCode": "R2026155201MKKD1024A",
+      "rawCourseName": "Audio Digital(*)- Rombel A",
+      "cleanCourseName": "Audio Digital",
+      "cohort": "A",
+      "prodi": "S1 ILKOM",
+      "lecturerRaw": "Khairuman, S.Kom, M.Kom / Munandar, ST., MT",
+      "lecturers": [
+        "Khairuman, S.Kom, M.Kom",
+        "Munandar, ST., MT"
+      ],
+      "studentCount": 39,
+      "dayNum": 1,
+      "dayName": "Senin",
+      "roomCode": "C.II.01",
+      "roomName": "Lab. CBT 01",
+      "roomType": "LABORATORY",
+      "periods": [
+        "Jam ke-7",
+        "Jam ke-8",
+        "Jam ke-9"
+      ],
+      "sks": 3
+    },
+    {
+      "spadaCode": "R2026155201MKKL1008A",
+      "rawCourseName": "Manajemen Proyek - Rombel A",
+      "cleanCourseName": "Manajemen Proyek",
+      "cohort": "A",
+      "prodi": "S1 ILKOM",
+      "lecturerRaw": "Oktalia Triananda Lovita, S.ST. MT",
+      "lecturers": [
+        "Oktalia Triananda Lovita, S.ST. MT"
+      ],
+      "studentCount": 45,
+      "dayNum": 1,
+      "dayName": "Senin",
+      "roomCode": "C.II.12",
+      "roomName": "Lab. CBT 02",
+      "roomType": "LABORATORY",
+      "periods": [
+        "Jam ke-1",
+        "Jam ke-2",
+        "Jam ke-3"
+      ],
+      "sks": 3
+    },
+    {
+      "spadaCode": "R2026155201MKKD1040A",
+      "rawCourseName": "Kecerdasan Komputasional(*)- Rombel A",
+      "cleanCourseName": "Kecerdasan Komputasional",
+      "cohort": "A",
+      "prodi": "S1 ILKOM",
+      "lecturerRaw": "Munandar, ST., MT / Bismar Fadli, S.Kom.,M.Kom",
+      "lecturers": [
+        "Munandar, ST., MT",
+        "Bismar Fadli, S.Kom.,M.Kom"
+      ],
+      "studentCount": 54,
+      "dayNum": 1,
+      "dayName": "Senin",
+      "roomCode": "C.II.12",
+      "roomName": "Lab. CBT 02",
+      "roomType": "LABORATORY",
+      "periods": [
+        "Jam ke-4",
+        "Jam ke-5",
+        "Jam ke-6"
+      ],
+      "sks": 3
+    },
+    {
+      "spadaCode": "R2026155201MKKL1008B",
+      "rawCourseName": "Manajemen Proyek - Rombel B",
+      "cleanCourseName": "Manajemen Proyek",
+      "cohort": "B",
+      "prodi": "S1 ILKOM",
+      "lecturerRaw": "Oktalia Triananda Lovita, S.ST. MT / Zharifah Muthi'ah, S.T., M.T",
+      "lecturers": [
+        "Oktalia Triananda Lovita, S.ST. MT",
+        "Zharifah Muthi'ah, S.T., M.T"
+      ],
+      "studentCount": 40,
+      "dayNum": 1,
+      "dayName": "Senin",
+      "roomCode": "C.II.12",
+      "roomName": "Lab. CBT 02",
+      "roomType": "LABORATORY",
+      "periods": [
+        "Jam ke-7",
+        "Jam ke-8",
+        "Jam ke-9"
+      ],
+      "sks": 3
+    },
+    {
+      "spadaCode": "R2026155201MKKD1001A",
+      "rawCourseName": "Dasar Pemrograman - Rombel A",
+      "cleanCourseName": "Dasar Pemrograman",
+      "cohort": "A",
+      "prodi": "S1 ILKOM",
+      "lecturerRaw": "Khairunnisa, S.Tr.Kom.,MT / Bismar Fadli, S.Kom.,M.Kom",
+      "lecturers": [
+        "Khairunnisa, S.Tr.Kom.,MT",
+        "Bismar Fadli, S.Kom.,M.Kom"
+      ],
+      "studentCount": 53,
+      "dayNum": 1,
+      "dayName": "Senin",
+      "roomCode": "C.III.10",
+      "roomName": "Lab. Komputer 02",
+      "roomType": "LABORATORY",
+      "periods": [
+        "Jam ke-1",
+        "Jam ke-2",
+        "Jam ke-3"
+      ],
+      "sks": 3
+    },
+    {
+      "spadaCode": "R2026155201MKKL1009A",
+      "rawCourseName": "Jaringan Saraf Tiruan - Rombel A",
+      "cleanCourseName": "Jaringan Saraf Tiruan",
+      "cohort": "A",
+      "prodi": "S1 ILKOM",
+      "lecturerRaw": "Mukhroji, S.ST., M.T. / Aga Maulana, S.Kom., M.Kom",
+      "lecturers": [
+        "Mukhroji, S.ST., M.T.",
+        "Aga Maulana, S.Kom., M.Kom"
+      ],
+      "studentCount": 49,
+      "dayNum": 1,
+      "dayName": "Senin",
+      "roomCode": "C.III.10",
+      "roomName": "Lab. Komputer 02",
+      "roomType": "LABORATORY",
+      "periods": [
+        "Jam ke-7",
+        "Jam ke-8",
+        "Jam ke-9"
+      ],
+      "sks": 3
+    },
+    {
+      "spadaCode": "R2026155201MKKD1001D",
+      "rawCourseName": "Dasar Pemrograman - Rombel D",
+      "cleanCourseName": "Dasar Pemrograman",
+      "cohort": "D",
+      "prodi": "S1 ILKOM",
+      "lecturerRaw": "Atha Irrahman, S.Si., M.T / Ir Muhibul Jamal, S.T., M.T.",
+      "lecturers": [
+        "Atha Irrahman, S.Si., M.T",
+        "Ir Muhibul Jamal, S.T., M.T."
+      ],
+      "studentCount": 51,
+      "dayNum": 1,
+      "dayName": "Senin",
+      "roomCode": "C.III.11",
+      "roomName": "Lab. Komputer 01",
+      "roomType": "LABORATORY",
+      "periods": [
+        "Jam ke-1",
+        "Jam ke-2",
+        "Jam ke-3"
+      ],
+      "sks": 3
+    },
+    {
+      "spadaCode": "R2026155201MKKD1023A",
+      "rawCourseName": "Pemrograman Game(*)- Rombel A",
+      "cleanCourseName": "Pemrograman Game",
+      "cohort": "A",
+      "prodi": "S1 ILKOM",
+      "lecturerRaw": "Teuku Muhammad Mirza Keumala, S.Kom, M.T / Nazuarsyah, ST, MT",
+      "lecturers": [
+        "Teuku Muhammad Mirza Keumala, S.Kom, M.T",
+        "Nazuarsyah, ST, MT"
+      ],
+      "studentCount": 40,
+      "dayNum": 1,
+      "dayName": "Senin",
+      "roomCode": "C.III.11",
+      "roomName": "Lab. Komputer 01",
+      "roomType": "LABORATORY",
+      "periods": [
+        "Jam ke-4",
+        "Jam ke-5",
+        "Jam ke-6"
+      ],
+      "sks": 3
+    },
+    {
+      "spadaCode": "R2026155201MKKD1023B",
+      "rawCourseName": "Pemrograman Game(*)- Rombel B",
+      "cleanCourseName": "Pemrograman Game",
+      "cohort": "B",
+      "prodi": "S1 ILKOM",
+      "lecturerRaw": "Teuku Muhammad Mirza Keumala, S.Kom, M.T / Nazuarsyah, ST, MT",
+      "lecturers": [
+        "Teuku Muhammad Mirza Keumala, S.Kom, M.T",
+        "Nazuarsyah, ST, MT"
+      ],
+      "studentCount": 40,
+      "dayNum": 1,
+      "dayName": "Senin",
+      "roomCode": "C.III.11",
+      "roomName": "Lab. Komputer 01",
+      "roomType": "LABORATORY",
+      "periods": [
+        "Jam ke-7",
+        "Jam ke-8",
+        "Jam ke-9"
+      ],
+      "sks": 3
+    },
+    {
+      "spadaCode": "R2026155201MKKD1017E",
+      "rawCourseName": "Etika Profesi - Rombel E",
+      "cleanCourseName": "Etika Profesi",
+      "cohort": "E",
+      "prodi": "S1 ILKOM",
+      "lecturerRaw": "Ahmad Mujahid Abdurrahman, S.Kom, M.T / Waziruddin, S.T., M.T",
+      "lecturers": [
+        "Ahmad Mujahid Abdurrahman, S.Kom, M.T",
+        "Waziruddin, S.T., M.T"
+      ],
+      "studentCount": 42,
+      "dayNum": 1,
+      "dayName": "Senin",
+      "roomCode": "D.II.04",
+      "roomName": "Ruang Kuliah D.II.04",
+      "roomType": "THEORY",
+      "periods": [
+        "Jam ke-8",
+        "Jam ke-9"
+      ],
+      "sks": 2
+    },
+    {
+      "spadaCode": "R2026155201MKKD1017A",
+      "rawCourseName": "Etika Profesi - Rombel A",
+      "cleanCourseName": "Etika Profesi",
+      "cohort": "A",
+      "prodi": "S1 ILKOM",
+      "lecturerRaw": "Komala Kartikasari Nst, SKM, MKM / Mukhroji, S.ST., M.T.",
+      "lecturers": [
+        "Komala Kartikasari Nst, SKM, MKM",
+        "Mukhroji, S.ST., M.T."
+      ],
+      "studentCount": 45,
+      "dayNum": 1,
+      "dayName": "Senin",
+      "roomCode": "D.III.07",
+      "roomName": "Ruang Kuliah D.III.07",
+      "roomType": "THEORY",
+      "periods": [
+        "Jam ke-1",
+        "Jam ke-2"
+      ],
+      "sks": 2
+    },
+    {
+      "spadaCode": "R2026155201MKKD1017B",
+      "rawCourseName": "Etika Profesi - Rombel B",
+      "cleanCourseName": "Etika Profesi",
+      "cohort": "B",
+      "prodi": "S1 ILKOM",
+      "lecturerRaw": "Mukhroji, S.ST., M.T. / Khairuman, S.Kom, M.Kom",
+      "lecturers": [
+        "Mukhroji, S.ST., M.T.",
+        "Khairuman, S.Kom, M.Kom"
+      ],
+      "studentCount": 50,
+      "dayNum": 1,
+      "dayName": "Senin",
+      "roomCode": "D.III.07",
+      "roomName": "Ruang Kuliah D.III.07",
+      "roomType": "THEORY",
+      "periods": [
+        "Jam ke-5",
+        "Jam ke-6"
+      ],
+      "sks": 2
+    },
+    {
+      "spadaCode": "R2026155201MKKD1001C",
+      "rawCourseName": "Dasar Pemrograman - Rombel C",
+      "cleanCourseName": "Dasar Pemrograman",
+      "cohort": "C",
+      "prodi": "S1 ILKOM",
+      "lecturerRaw": "Atha Irrahman, S.Si., M.T / Ir Muhibul Jamal, S.T., M.T.",
+      "lecturers": [
+        "Atha Irrahman, S.Si., M.T",
+        "Ir Muhibul Jamal, S.T., M.T."
+      ],
+      "studentCount": 54,
+      "dayNum": 1,
+      "dayName": "Senin",
+      "roomCode": "D.III.07",
+      "roomName": "Ruang Kuliah D.III.07",
+      "roomType": "THEORY",
+      "periods": [
+        "Jam ke-7",
+        "Jam ke-8",
+        "Jam ke-9"
+      ],
+      "sks": 3
+    },
+    {
+      "spadaCode": "R2026155201MKKD1017C",
+      "rawCourseName": "Etika Profesi - Rombel C",
+      "cleanCourseName": "Etika Profesi",
+      "cohort": "C",
+      "prodi": "S1 ILKOM",
+      "lecturerRaw": "Bakruddin, S.Si. M.T / Mirshal Arief, S.T., M.T",
+      "lecturers": [
+        "Bakruddin, S.Si. M.T",
+        "Mirshal Arief, S.T., M.T"
+      ],
+      "studentCount": 40,
+      "dayNum": 1,
+      "dayName": "Senin",
+      "roomCode": "D.III.08",
+      "roomName": "Ruang Kuliah D.III.08",
+      "roomType": "THEORY",
+      "periods": [
+        "Jam ke-3",
+        "Jam ke-4"
+      ],
+      "sks": 2
+    },
+    {
+      "spadaCode": "R2026155201MKKD1017D",
+      "rawCourseName": "Etika Profesi - Rombel D",
+      "cleanCourseName": "Etika Profesi",
+      "cohort": "D",
+      "prodi": "S1 ILKOM",
+      "lecturerRaw": "Bakruddin, S.Si. M.T / Mirshal Arief, S.T., M.T",
+      "lecturers": [
+        "Bakruddin, S.Si. M.T",
+        "Mirshal Arief, S.T., M.T"
+      ],
+      "studentCount": 49,
+      "dayNum": 1,
+      "dayName": "Senin",
+      "roomCode": "D.III.08",
+      "roomName": "Ruang Kuliah D.III.08",
+      "roomType": "THEORY",
+      "periods": [
+        "Jam ke-8",
+        "Jam ke-9"
+      ],
+      "sks": 2
+    },
+    {
+      "spadaCode": "R2026155201MKKL1034E",
+      "rawCourseName": "Teori Bahasa dan Otomata - Rombel E",
+      "cleanCourseName": "Teori Bahasa dan Otomata",
+      "cohort": "E",
+      "prodi": "S1 ILKOM",
+      "lecturerRaw": "Oktalia Triananda Lovita, S.ST. MT / Rossiana Br Ginting, S.Kom, M.Pd",
+      "lecturers": [
+        "Oktalia Triananda Lovita, S.ST. MT",
+        "Rossiana Br Ginting, S.Kom, M.Pd"
+      ],
+      "studentCount": 32,
+      "dayNum": 1,
+      "dayName": "Senin",
+      "roomCode": "D.IV.03",
+      "roomName": "Smart Room D.IV.03",
+      "roomType": "THEORY",
+      "periods": [
+        "Jam ke-1",
+        "Jam ke-2",
+        "Jam ke-3"
+      ],
+      "sks": 3
+    },
+    {
+      "spadaCode": "R2026155201MKKD1024B",
+      "rawCourseName": "Audio Digital(*)- Rombel B",
+      "cleanCourseName": "Audio Digital",
+      "cohort": "B",
+      "prodi": "S1 ILKOM",
+      "lecturerRaw": "Khairuman, S.Kom, M.Kom / Munandar, ST., MT",
+      "lecturers": [
+        "Khairuman, S.Kom, M.Kom",
+        "Munandar, ST., MT"
+      ],
+      "studentCount": 38,
+      "dayNum": 1,
+      "dayName": "Senin",
+      "roomCode": "D.IV.03",
+      "roomName": "Smart Room D.IV.03",
+      "roomType": "THEORY",
+      "periods": [
+        "Jam ke-4",
+        "Jam ke-5",
+        "Jam ke-6"
+      ],
+      "sks": 3
+    },
+    {
+      "spadaCode": "R2026155201MKKD1018D",
+      "rawCourseName": "Pengembangan Aplikasi AI(*)- Rombel D",
+      "cleanCourseName": "Pengembangan Aplikasi AI",
+      "cohort": "D",
+      "prodi": "S1 ILKOM",
+      "lecturerRaw": "Aji Teguh Prihatno, S.T. M.Sc / Atha Irrahman, S.Si., M.T",
+      "lecturers": [
+        "Aji Teguh Prihatno, S.T. M.Sc",
+        "Atha Irrahman, S.Si., M.T"
+      ],
+      "studentCount": 42,
+      "dayNum": 1,
+      "dayName": "Senin",
+      "roomCode": "D.IV.03",
+      "roomName": "Smart Room D.IV.03",
+      "roomType": "THEORY",
+      "periods": [
+        "Jam ke-7",
+        "Jam ke-8",
+        "Jam ke-9"
+      ],
+      "sks": 3
+    },
+    {
+      "spadaCode": "R2026155201MKKD1039A",
+      "rawCourseName": "Pengenalan Pola AI(*)- Rombel A",
+      "cleanCourseName": "Pengenalan Pola AI",
+      "cohort": "A",
+      "prodi": "S1 ILKOM",
+      "lecturerRaw": "Mulyati, S.Si, M.Kom / Zharifah Muthi'ah, S.T., M.T",
+      "lecturers": [
+        "Mulyati, S.Si, M.Kom",
+        "Zharifah Muthi'ah, S.T., M.T"
+      ],
+      "studentCount": 45,
+      "dayNum": 2,
+      "dayName": "Selasa",
+      "roomCode": "C.II.01",
+      "roomName": "Lab. CBT 01",
+      "roomType": "LABORATORY",
+      "periods": [
+        "Jam ke-1",
+        "Jam ke-2",
+        "Jam ke-3"
+      ],
+      "sks": 3
+    },
+    {
+      "spadaCode": "R2026155201MKKD1010C",
+      "rawCourseName": "Pengantar Basis Data - Rombel C",
+      "cleanCourseName": "Pengantar Basis Data",
+      "cohort": "C",
+      "prodi": "S1 ILKOM",
+      "lecturerRaw": "Oktalia Triananda Lovita, S.ST. MT / Nur Aynun Siregar, S.kom., M.Kom",
+      "lecturers": [
+        "Oktalia Triananda Lovita, S.ST. MT",
+        "Nur Aynun Siregar, S.kom., M.Kom"
+      ],
+      "studentCount": 34,
+      "dayNum": 2,
+      "dayName": "Selasa",
+      "roomCode": "C.II.01",
+      "roomName": "Lab. CBT 01",
+      "roomType": "LABORATORY",
+      "periods": [
+        "Jam ke-4",
+        "Jam ke-5",
+        "Jam ke-6"
+      ],
+      "sks": 3
+    },
+    {
+      "spadaCode": "R2026155201MKKL1009C",
+      "rawCourseName": "Jaringan Saraf Tiruan - Rombel C",
+      "cleanCourseName": "Jaringan Saraf Tiruan",
+      "cohort": "C",
+      "prodi": "S1 ILKOM",
+      "lecturerRaw": "Zharifah Muthi'ah, S.T., M.T / Aga Maulana, S.Kom., M.Kom",
+      "lecturers": [
+        "Zharifah Muthi'ah, S.T., M.T",
+        "Aga Maulana, S.Kom., M.Kom"
+      ],
+      "studentCount": 22,
+      "dayNum": 2,
+      "dayName": "Selasa",
+      "roomCode": "C.II.01",
+      "roomName": "Lab. CBT 01",
+      "roomType": "LABORATORY",
+      "periods": [
+        "Jam ke-7",
+        "Jam ke-8",
+        "Jam ke-9"
+      ],
+      "sks": 3
+    },
+    {
+      "spadaCode": "R2026155201MKKL1001C",
+      "rawCourseName": "Desain dan Analisis Algoritma - Rombel C",
+      "cleanCourseName": "Desain dan Analisis Algoritma",
+      "cohort": "C",
+      "prodi": "S1 ILKOM",
+      "lecturerRaw": "Oktalia Triananda Lovita, S.ST. MT / Nur Aynun Siregar, S.kom., M.Kom",
+      "lecturers": [
+        "Oktalia Triananda Lovita, S.ST. MT",
+        "Nur Aynun Siregar, S.kom., M.Kom"
+      ],
+      "studentCount": 43,
+      "dayNum": 2,
+      "dayName": "Selasa",
+      "roomCode": "C.II.12",
+      "roomName": "Lab. CBT 02",
+      "roomType": "LABORATORY",
+      "periods": [
+        "Jam ke-1",
+        "Jam ke-2",
+        "Jam ke-3"
+      ],
+      "sks": 3
+    },
+    {
+      "spadaCode": "R2026155201MKKL1001B",
+      "rawCourseName": "Desain dan Analisis Algoritma - Rombel B",
+      "cleanCourseName": "Desain dan Analisis Algoritma",
+      "cohort": "B",
+      "prodi": "S1 ILKOM",
+      "lecturerRaw": "Mulyati, S.Si, M.Kom / Ir Muhibul Jamal, S.T., M.T.",
+      "lecturers": [
+        "Mulyati, S.Si, M.Kom",
+        "Ir Muhibul Jamal, S.T., M.T."
+      ],
+      "studentCount": 43,
+      "dayNum": 2,
+      "dayName": "Selasa",
+      "roomCode": "C.II.12",
+      "roomName": "Lab. CBT 02",
+      "roomType": "LABORATORY",
+      "periods": [
+        "Jam ke-4",
+        "Jam ke-5",
+        "Jam ke-6"
+      ],
+      "sks": 3
+    },
+    {
+      "spadaCode": "R2026155201MKKD1009A",
+      "rawCourseName": "Arsitektur dan Organisasi Komputer - Rombel A",
+      "cleanCourseName": "Arsitektur dan Organisasi Komputer",
+      "cohort": "A",
+      "prodi": "S1 ILKOM",
+      "lecturerRaw": "Atha Irrahman, S.Si., M.T / Nur Aynun Siregar, S.kom., M.Kom",
+      "lecturers": [
+        "Atha Irrahman, S.Si., M.T",
+        "Nur Aynun Siregar, S.kom., M.Kom"
+      ],
+      "studentCount": 54,
+      "dayNum": 2,
+      "dayName": "Selasa",
+      "roomCode": "C.III.10",
+      "roomName": "Lab. Komputer 02",
+      "roomType": "LABORATORY",
+      "periods": [
+        "Jam ke-1",
+        "Jam ke-2",
+        "Jam ke-3"
+      ],
+      "sks": 3
+    },
+    {
+      "spadaCode": "R2026155201MKKD1010A",
+      "rawCourseName": "Pengantar Basis Data - Rombel A",
+      "cleanCourseName": "Pengantar Basis Data",
+      "cohort": "A",
+      "prodi": "S1 ILKOM",
+      "lecturerRaw": "Khairunnisa, S.Tr.Kom.,MT / Ondo Tobesakti Syahri, S.Kom., M.Kom.",
+      "lecturers": [
+        "Khairunnisa, S.Tr.Kom.,MT",
+        "Ondo Tobesakti Syahri, S.Kom., M.Kom."
+      ],
+      "studentCount": 43,
+      "dayNum": 2,
+      "dayName": "Selasa",
+      "roomCode": "C.III.10",
+      "roomName": "Lab. Komputer 02",
+      "roomType": "LABORATORY",
+      "periods": [
+        "Jam ke-4",
+        "Jam ke-5",
+        "Jam ke-6"
+      ],
+      "sks": 3
+    },
+    {
+      "spadaCode": "R2026155201MKKD1010B",
+      "rawCourseName": "Pengantar Basis Data - Rombel B",
+      "cleanCourseName": "Pengantar Basis Data",
+      "cohort": "B",
+      "prodi": "S1 ILKOM",
+      "lecturerRaw": "Khairunnisa, S.Tr.Kom.,MT / Nur Aynun Siregar, S.kom., M.Kom",
+      "lecturers": [
+        "Khairunnisa, S.Tr.Kom.,MT",
+        "Nur Aynun Siregar, S.kom., M.Kom"
+      ],
+      "studentCount": 48,
+      "dayNum": 2,
+      "dayName": "Selasa",
+      "roomCode": "C.III.10",
+      "roomName": "Lab. Komputer 02",
+      "roomType": "LABORATORY",
+      "periods": [
+        "Jam ke-7",
+        "Jam ke-8",
+        "Jam ke-9"
+      ],
+      "sks": 3
+    },
+    {
+      "spadaCode": "R2026155201MKKL1001A",
+      "rawCourseName": "Desain dan Analisis Algoritma - Rombel A",
+      "cleanCourseName": "Desain dan Analisis Algoritma",
+      "cohort": "A",
+      "prodi": "S1 ILKOM",
+      "lecturerRaw": "Mulyati, S.Si, M.Kom / Ir Muhibul Jamal, S.T., M.T.",
+      "lecturers": [
+        "Mulyati, S.Si, M.Kom",
+        "Ir Muhibul Jamal, S.T., M.T."
+      ],
+      "studentCount": 45,
+      "dayNum": 2,
+      "dayName": "Selasa",
+      "roomCode": "C.III.11",
+      "roomName": "Lab. Komputer 01",
+      "roomType": "LABORATORY",
+      "periods": [
+        "Jam ke-1",
+        "Jam ke-2",
+        "Jam ke-3"
+      ],
+      "sks": 3
+    },
+    {
+      "spadaCode": "R2026155201MKKD1012C",
+      "rawCourseName": "Rekayasa Perangkat Lunak - Rombel C",
+      "cleanCourseName": "Rekayasa Perangkat Lunak",
+      "cohort": "C",
+      "prodi": "S1 ILKOM",
+      "lecturerRaw": "Mukhroji, S.ST., M.T. / Teuku Muhammad Mirza Keumala, S.Kom, M.T",
+      "lecturers": [
+        "Mukhroji, S.ST., M.T.",
+        "Teuku Muhammad Mirza Keumala, S.Kom, M.T"
+      ],
+      "studentCount": 43,
+      "dayNum": 2,
+      "dayName": "Selasa",
+      "roomCode": "C.III.11",
+      "roomName": "Lab. Komputer 01",
+      "roomType": "LABORATORY",
+      "periods": [
+        "Jam ke-4",
+        "Jam ke-5",
+        "Jam ke-6"
+      ],
+      "sks": 3
+    },
+    {
+      "spadaCode": "R2026155201MKKD1017F",
+      "rawCourseName": "Etika Profesi - Rombel F",
+      "cleanCourseName": "Etika Profesi",
+      "cohort": "F",
+      "prodi": "S1 ILKOM",
+      "lecturerRaw": "Bismar Fadli, S.Kom.,M.Kom / Munandar, ST., MT",
+      "lecturers": [
+        "Bismar Fadli, S.Kom.,M.Kom",
+        "Munandar, ST., MT"
+      ],
+      "studentCount": 40,
+      "dayNum": 2,
+      "dayName": "Selasa",
+      "roomCode": "C.III.11",
+      "roomName": "Lab. Komputer 01",
+      "roomType": "LABORATORY",
+      "periods": [
+        "Jam ke-7",
+        "Jam ke-8",
+        "Jam ke-9"
+      ],
+      "sks": 3
+    },
+    {
+      "spadaCode": "R2026155201MKKL1006A",
+      "rawCourseName": "Teori Peluang - Rombel A",
+      "cleanCourseName": "Teori Peluang",
+      "cohort": "A",
+      "prodi": "S1 ILKOM",
+      "lecturerRaw": "Cut Rina Rossalina, M.Pd / Ir Muhibul Jamal, S.T., M.T.",
+      "lecturers": [
+        "Cut Rina Rossalina, M.Pd",
+        "Ir Muhibul Jamal, S.T., M.T."
+      ],
+      "studentCount": 48,
+      "dayNum": 2,
+      "dayName": "Selasa",
+      "roomCode": "D.II.02",
+      "roomName": "Ruang Kuliah D.II.02",
+      "roomType": "THEORY",
+      "periods": [
+        "Jam ke-1",
+        "Jam ke-2"
+      ],
+      "sks": 2
+    },
+    {
+      "spadaCode": "R2026155201MKKL1006B",
+      "rawCourseName": "Teori Peluang - Rombel B",
+      "cleanCourseName": "Teori Peluang",
+      "cohort": "B",
+      "prodi": "S1 ILKOM",
+      "lecturerRaw": "Cut Rina Rossalina, M.Pd / Ir Muhibul Jamal, S.T., M.T.",
+      "lecturers": [
+        "Cut Rina Rossalina, M.Pd",
+        "Ir Muhibul Jamal, S.T., M.T."
+      ],
+      "studentCount": 39,
+      "dayNum": 2,
+      "dayName": "Selasa",
+      "roomCode": "D.II.04",
+      "roomName": "Ruang Kuliah D.II.04",
+      "roomType": "THEORY",
+      "periods": [
+        "Jam ke-8",
+        "Jam ke-9"
+      ],
+      "sks": 2
+    },
+    {
+      "spadaCode": "R2026155201MKKL1019A",
+      "rawCourseName": "Requirement Engineering(*)- Rombel A",
+      "cleanCourseName": "Requirement Engineering",
+      "cohort": "A",
+      "prodi": "S1 ILKOM",
+      "lecturerRaw": "Mukhroji, S.ST., M.T. / Satria Prayudi, S.TI, M.Kom",
+      "lecturers": [
+        "Mukhroji, S.ST., M.T.",
+        "Satria Prayudi, S.TI, M.Kom"
+      ],
+      "studentCount": 39,
+      "dayNum": 2,
+      "dayName": "Selasa",
+      "roomCode": "D.II.06",
+      "roomName": "Ruang Kuliah D.II.06",
+      "roomType": "THEORY",
+      "periods": [
+        "Jam ke-7",
+        "Jam ke-8",
+        "Jam ke-9"
+      ],
+      "sks": 3
+    },
+    {
+      "spadaCode": "R2026155201MKKD1005C",
+      "rawCourseName": "Matematika Diskrit - Rombel C",
+      "cleanCourseName": "Matematika Diskrit",
+      "cohort": "C",
+      "prodi": "S1 ILKOM",
+      "lecturerRaw": "Rossiana Br Ginting, S.Kom, M.Pd / Ully Muzakir, MT",
+      "lecturers": [
+        "Rossiana Br Ginting, S.Kom, M.Pd",
+        "Ully Muzakir, MT"
+      ],
+      "studentCount": 45,
+      "dayNum": 2,
+      "dayName": "Selasa",
+      "roomCode": "D.III.06",
+      "roomName": "Ruang Kuliah D.III.06",
+      "roomType": "THEORY",
+      "periods": [
+        "Jam ke-1",
+        "Jam ke-2",
+        "Jam ke-3"
+      ],
+      "sks": 3
+    },
+    {
+      "spadaCode": "R2026155201MKKD1005B",
+      "rawCourseName": "Matematika Diskrit - Rombel B",
+      "cleanCourseName": "Matematika Diskrit",
+      "cohort": "B",
+      "prodi": "S1 ILKOM",
+      "lecturerRaw": "Ir Muhibul Jamal, S.T., M.T. / Ully Muzakir, MT",
+      "lecturers": [
+        "Ir Muhibul Jamal, S.T., M.T.",
+        "Ully Muzakir, MT"
+      ],
+      "studentCount": 44,
+      "dayNum": 2,
+      "dayName": "Selasa",
+      "roomCode": "D.III.06",
+      "roomName": "Ruang Kuliah D.III.06",
+      "roomType": "THEORY",
+      "periods": [
+        "Jam ke-7",
+        "Jam ke-8",
+        "Jam ke-9"
+      ],
+      "sks": 3
+    },
+    {
+      "spadaCode": "R2026155201MKKD1002D",
+      "rawCourseName": "Pengantar Sistem Digital - Rombel D",
+      "cleanCourseName": "Pengantar Sistem Digital",
+      "cohort": "D",
+      "prodi": "S1 ILKOM",
+      "lecturerRaw": "Munandar, ST., MT / Khairunnisa, S.Tr.Kom.,MT",
+      "lecturers": [
+        "Munandar, ST., MT",
+        "Khairunnisa, S.Tr.Kom.,MT"
+      ],
+      "studentCount": 58,
+      "dayNum": 2,
+      "dayName": "Selasa",
+      "roomCode": "D.III.07",
+      "roomName": "Ruang Kuliah D.III.07",
+      "roomType": "THEORY",
+      "periods": [
+        "Jam ke-5",
+        "Jam ke-6",
+        "Jam ke-7"
+      ],
+      "sks": 3
+    },
+    {
+      "spadaCode": "R2026155201MKKL1006E",
+      "rawCourseName": "Teori Peluang - Rombel E",
+      "cleanCourseName": "Teori Peluang",
+      "cohort": "E",
+      "prodi": "S1 ILKOM",
+      "lecturerRaw": "Cut Rina Rossalina, M.Pd / Rossiana Br Ginting, S.Kom, M.Pd",
+      "lecturers": [
+        "Cut Rina Rossalina, M.Pd",
+        "Rossiana Br Ginting, S.Kom, M.Pd"
+      ],
+      "studentCount": 43,
+      "dayNum": 2,
+      "dayName": "Selasa",
+      "roomCode": "D.III.07",
+      "roomName": "Ruang Kuliah D.III.07",
+      "roomType": "THEORY",
+      "periods": [
+        "Jam ke-8",
+        "Jam ke-9"
+      ],
+      "sks": 2
+    },
+    {
+      "spadaCode": "R2026155201MKKD1021",
+      "rawCourseName": "Cloud Computing(*)",
+      "cleanCourseName": "Cloud Computing",
+      "cohort": "A",
+      "prodi": "S1 ILKOM",
+      "lecturerRaw": "Ondo Tobesakti Syahri, S.Kom., M.Kom. / Aji Teguh Prihatno, S.T. M.Sc / / Ondo Tobesakti Syahri, S.Kom., M.Kom. /",
+      "lecturers": [
+        "Ondo Tobesakti Syahri, S.Kom., M.Kom.",
+        "Aji Teguh Prihatno, S.T. M.Sc",
+        "Ondo Tobesakti Syahri, S.Kom., M.Kom."
+      ],
+      "studentCount": 28,
+      "dayNum": 2,
+      "dayName": "Selasa",
+      "roomCode": "D.IV.03",
+      "roomName": "Smart Room D.IV.03",
+      "roomType": "THEORY",
+      "periods": [
+        "Jam ke-1",
+        "Jam ke-2",
+        "Jam ke-3"
+      ],
+      "sks": 3
+    },
+    {
+      "spadaCode": "R2026155201MKKL1013A",
+      "rawCourseName": "Metodologi Penelitian - Rombel A",
+      "cleanCourseName": "Metodologi Penelitian",
+      "cohort": "A",
+      "prodi": "S1 ILKOM",
+      "lecturerRaw": "Dr. Sri Wahyuni, S.Pd.I, M.Pd / Ully Muzakir, MT",
+      "lecturers": [
+        "Dr. Sri Wahyuni, S.Pd.I, M.Pd",
+        "Ully Muzakir, MT"
+      ],
+      "studentCount": 45,
+      "dayNum": 2,
+      "dayName": "Selasa",
+      "roomCode": "D.IV.03",
+      "roomName": "Smart Room D.IV.03",
+      "roomType": "THEORY",
+      "periods": [
+        "Jam ke-4",
+        "Jam ke-5",
+        "Jam ke-6"
+      ],
+      "sks": 3
+    },
+    {
+      "spadaCode": "R2026155201MKKD1001B",
+      "rawCourseName": "Dasar Pemrograman - Rombel B",
+      "cleanCourseName": "Dasar Pemrograman",
+      "cohort": "B",
+      "prodi": "S1 ILKOM",
+      "lecturerRaw": "Khairunnisa, S.Tr.Kom.,MT / Bismar Fadli, S.Kom.,M.Kom",
+      "lecturers": [
+        "Khairunnisa, S.Tr.Kom.,MT",
+        "Bismar Fadli, S.Kom.,M.Kom"
+      ],
+      "studentCount": 49,
+      "dayNum": 2,
+      "dayName": "Selasa",
+      "roomCode": "D.IV.03",
+      "roomName": "Smart Room D.IV.03",
+      "roomType": "THEORY",
+      "periods": [
+        "Jam ke-7",
+        "Jam ke-8",
+        "Jam ke-9"
+      ],
+      "sks": 3
+    },
+    {
+      "spadaCode": "R2026155201MKKD1018C",
+      "rawCourseName": "Pengembangan Aplikasi AI(*)- Rombel C",
+      "cleanCourseName": "Pengembangan Aplikasi AI",
+      "cohort": "C",
+      "prodi": "S1 ILKOM",
+      "lecturerRaw": "Atha Irrahman, S.Si., M.T / Ondo Tobesakti Syahri, S.Kom., M.Kom.",
+      "lecturers": [
+        "Atha Irrahman, S.Si., M.T",
+        "Ondo Tobesakti Syahri, S.Kom., M.Kom."
+      ],
+      "studentCount": 36,
+      "dayNum": 3,
+      "dayName": "Rabu",
+      "roomCode": "C.II.01",
+      "roomName": "Lab. CBT 01",
+      "roomType": "LABORATORY",
+      "periods": [
+        "Jam ke-1",
+        "Jam ke-2",
+        "Jam ke-3"
+      ],
+      "sks": 3
+    },
+    {
+      "spadaCode": "R2026155201MKKD1025A",
+      "rawCourseName": "Augmented Reality(*)- Rombel A",
+      "cleanCourseName": "Augmented Reality",
+      "cohort": "A",
+      "prodi": "S1 ILKOM",
+      "lecturerRaw": "Muhajir, M.T",
+      "lecturers": [
+        "Muhajir, M.T"
+      ],
+      "studentCount": 35,
+      "dayNum": 3,
+      "dayName": "Rabu",
+      "roomCode": "C.II.01",
+      "roomName": "Lab. CBT 01",
+      "roomType": "LABORATORY",
+      "periods": [
+        "Jam ke-4",
+        "Jam ke-5",
+        "Jam ke-6"
+      ],
+      "sks": 3
+    },
+    {
+      "spadaCode": "R2026155201MKKD1064",
+      "rawCourseName": "Metode Produksi Multimedia(*)",
+      "cleanCourseName": "Metode Produksi Multimedia",
+      "cohort": "A",
+      "prodi": "S1 ILKOM",
+      "lecturerRaw": "Khairuman, S.Kom, M.Kom",
+      "lecturers": [
+        "Khairuman, S.Kom, M.Kom"
+      ],
+      "studentCount": 18,
+      "dayNum": 3,
+      "dayName": "Rabu",
+      "roomCode": "C.II.01",
+      "roomName": "Lab. CBT 01",
+      "roomType": "LABORATORY",
+      "periods": [
+        "Jam ke-7",
+        "Jam ke-8",
+        "Jam ke-9"
+      ],
+      "sks": 3
+    },
+    {
+      "spadaCode": "R2026155201MKKD1067",
+      "rawCourseName": "Video Art dan Eksperimen Digital(*)",
+      "cleanCourseName": "Video Art dan Eksperimen Digital",
+      "cohort": "A",
+      "prodi": "S1 ILKOM",
+      "lecturerRaw": "Khairuman, S.Kom, M.Kom",
+      "lecturers": [
+        "Khairuman, S.Kom, M.Kom"
+      ],
+      "studentCount": 18,
+      "dayNum": 3,
+      "dayName": "Rabu",
+      "roomCode": "C.II.12",
+      "roomName": "Lab. CBT 02",
+      "roomType": "LABORATORY",
+      "periods": [
+        "Jam ke-1",
+        "Jam ke-2",
+        "Jam ke-3"
+      ],
+      "sks": 3
+    },
+    {
+      "spadaCode": "R2026155201MKKL1019B",
+      "rawCourseName": "Requirement Engineering(*)- Rombel B",
+      "cleanCourseName": "Requirement Engineering",
+      "cohort": "B",
+      "prodi": "S1 ILKOM",
+      "lecturerRaw": "Aga Maulana, S.Kom., M.Kom / Satria Prayudi, S.TI, M.Kom",
+      "lecturers": [
+        "Aga Maulana, S.Kom., M.Kom",
+        "Satria Prayudi, S.TI, M.Kom"
+      ],
+      "studentCount": 25,
+      "dayNum": 3,
+      "dayName": "Rabu",
+      "roomCode": "C.II.12",
+      "roomName": "Lab. CBT 02",
+      "roomType": "LABORATORY",
+      "periods": [
+        "Jam ke-4",
+        "Jam ke-5",
+        "Jam ke-6"
+      ],
+      "sks": 3
+    },
+    {
+      "spadaCode": "R2026155201MKKD1009B",
+      "rawCourseName": "Arsitektur dan Organisasi Komputer - Rombel B",
+      "cleanCourseName": "Arsitektur dan Organisasi Komputer",
+      "cohort": "B",
+      "prodi": "S1 ILKOM",
+      "lecturerRaw": "Nur Aynun Siregar, S.kom., M.Kom / Ir Muhibul Jamal, S.T., M.T.",
+      "lecturers": [
+        "Nur Aynun Siregar, S.kom., M.Kom",
+        "Ir Muhibul Jamal, S.T., M.T."
+      ],
+      "studentCount": 51,
+      "dayNum": 3,
+      "dayName": "Rabu",
+      "roomCode": "C.III.10",
+      "roomName": "Lab. Komputer 02",
+      "roomType": "LABORATORY",
+      "periods": [
+        "Jam ke-1",
+        "Jam ke-2",
+        "Jam ke-3"
+      ],
+      "sks": 3
+    },
+    {
+      "spadaCode": "R2026155201MKKD1071A",
+      "rawCourseName": "Etika dan Regulasi Kecerdasan Buatan(*)- Rombel A",
+      "cleanCourseName": "Etika dan Regulasi Kecerdasan Buatan",
+      "cohort": "A",
+      "prodi": "S1 ILKOM",
+      "lecturerRaw": "Satria Prayudi, S.TI, M.Kom / Waziruddin, S.T., M.T",
+      "lecturers": [
+        "Satria Prayudi, S.TI, M.Kom",
+        "Waziruddin, S.T., M.T"
+      ],
+      "studentCount": 39,
+      "dayNum": 3,
+      "dayName": "Rabu",
+      "roomCode": "C.III.10",
+      "roomName": "Lab. Komputer 02",
+      "roomType": "LABORATORY",
+      "periods": [
+        "Jam ke-4",
+        "Jam ke-5",
+        "Jam ke-6"
+      ],
+      "sks": 3
+    },
+    {
+      "spadaCode": "R2026155201MKKD1009D",
+      "rawCourseName": "Arsitektur dan Organisasi Komputer - Rombel D",
+      "cleanCourseName": "Arsitektur dan Organisasi Komputer",
+      "cohort": "D",
+      "prodi": "S1 ILKOM",
+      "lecturerRaw": "Muhajir, M.T / Rossiana Br Ginting, S.Kom, M.Pd",
+      "lecturers": [
+        "Muhajir, M.T",
+        "Rossiana Br Ginting, S.Kom, M.Pd"
+      ],
+      "studentCount": 53,
+      "dayNum": 3,
+      "dayName": "Rabu",
+      "roomCode": "C.III.10",
+      "roomName": "Lab. Komputer 02",
+      "roomType": "LABORATORY",
+      "periods": [
+        "Jam ke-7",
+        "Jam ke-8",
+        "Jam ke-9"
+      ],
+      "sks": 3
+    },
+    {
+      "spadaCode": "R2026155201MKKD1025B",
+      "rawCourseName": "Augmented Reality(*)- Rombel B",
+      "cleanCourseName": "Augmented Reality",
+      "cohort": "B",
+      "prodi": "S1 ILKOM",
+      "lecturerRaw": "Muhajir, M.T",
+      "lecturers": [
+        "Muhajir, M.T"
+      ],
+      "studentCount": 41,
+      "dayNum": 3,
+      "dayName": "Rabu",
+      "roomCode": "C.III.11",
+      "roomName": "Lab. Komputer 01",
+      "roomType": "LABORATORY",
+      "periods": [
+        "Jam ke-1",
+        "Jam ke-2",
+        "Jam ke-3"
+      ],
+      "sks": 3
+    },
+    {
+      "spadaCode": "R2026155201MKKL1023A",
+      "rawCourseName": "Machine Learning(*)- Rombel A",
+      "cleanCourseName": "Machine Learning",
+      "cohort": "A",
+      "prodi": "S1 ILKOM",
+      "lecturerRaw": "Atha Irrahman, S.Si., M.T / Mulyati, S.Si, M.Kom",
+      "lecturers": [
+        "Atha Irrahman, S.Si., M.T",
+        "Mulyati, S.Si, M.Kom"
+      ],
+      "studentCount": 49,
+      "dayNum": 3,
+      "dayName": "Rabu",
+      "roomCode": "C.III.11",
+      "roomName": "Lab. Komputer 01",
+      "roomType": "LABORATORY",
+      "periods": [
+        "Jam ke-4",
+        "Jam ke-5",
+        "Jam ke-6"
+      ],
+      "sks": 3
+    },
+    {
+      "spadaCode": "R2026155201MKKD1039B",
+      "rawCourseName": "Pengenalan Pola AI(*)- Rombel B",
+      "cleanCourseName": "Pengenalan Pola AI",
+      "cohort": "B",
+      "prodi": "S1 ILKOM",
+      "lecturerRaw": "Mulyati, S.Si, M.Kom / Zharifah Muthi'ah, S.T., M.T",
+      "lecturers": [
+        "Mulyati, S.Si, M.Kom",
+        "Zharifah Muthi'ah, S.T., M.T"
+      ],
+      "studentCount": 52,
+      "dayNum": 3,
+      "dayName": "Rabu",
+      "roomCode": "C.III.11",
+      "roomName": "Lab. Komputer 01",
+      "roomType": "LABORATORY",
+      "periods": [
+        "Jam ke-7",
+        "Jam ke-8",
+        "Jam ke-9"
+      ],
+      "sks": 3
+    },
+    {
+      "spadaCode": "R2026155201MKKD1002C",
+      "rawCourseName": "Pengantar Sistem Digital - Rombel C",
+      "cleanCourseName": "Pengantar Sistem Digital",
+      "cohort": "C",
+      "prodi": "S1 ILKOM",
+      "lecturerRaw": "Munandar, ST., MT / Khairunnisa, S.Tr.Kom.,MT",
+      "lecturers": [
+        "Munandar, ST., MT",
+        "Khairunnisa, S.Tr.Kom.,MT"
+      ],
+      "studentCount": 55,
+      "dayNum": 3,
+      "dayName": "Rabu",
+      "roomCode": "D.II.03",
+      "roomName": "Ruang Kuliah D.II.03",
+      "roomType": "THEORY",
+      "periods": [
+        "Jam ke-1",
+        "Jam ke-2",
+        "Jam ke-3"
+      ],
+      "sks": 3
+    },
+    {
+      "spadaCode": "R2026155201MKKD1002A",
+      "rawCourseName": "Pengantar Sistem Digital - Rombel A",
+      "cleanCourseName": "Pengantar Sistem Digital",
+      "cohort": "A",
+      "prodi": "S1 ILKOM",
+      "lecturerRaw": "Oktalia Triananda Lovita, S.ST. MT / Nur Aynun Siregar, S.kom., M.Kom",
+      "lecturers": [
+        "Oktalia Triananda Lovita, S.ST. MT",
+        "Nur Aynun Siregar, S.kom., M.Kom"
+      ],
+      "studentCount": 55,
+      "dayNum": 3,
+      "dayName": "Rabu",
+      "roomCode": "D.III.07",
+      "roomName": "Ruang Kuliah D.III.07",
+      "roomType": "THEORY",
+      "periods": [
+        "Jam ke-1",
+        "Jam ke-2",
+        "Jam ke-3"
+      ],
+      "sks": 3
+    },
+    {
+      "spadaCode": "R2026155201MKKD1062",
+      "rawCourseName": "Ilustrasi Digital(*)",
+      "cleanCourseName": "Ilustrasi Digital",
+      "cohort": "A",
+      "prodi": "S1 ILKOM",
+      "lecturerRaw": "Khairuman, S.Kom, M.Kom / Muhammad Vicki, S.E.",
+      "lecturers": [
+        "Khairuman, S.Kom, M.Kom",
+        "Muhammad Vicki, S.E."
+      ],
+      "studentCount": 21,
+      "dayNum": 3,
+      "dayName": "Rabu",
+      "roomCode": "D.III.07",
+      "roomName": "Ruang Kuliah D.III.07",
+      "roomType": "THEORY",
+      "periods": [
+        "Jam ke-6"
+      ],
+      "sks": 1
+    },
+    {
+      "spadaCode": "R2026155201MKKD1002B",
+      "rawCourseName": "Pengantar Sistem Digital - Rombel B",
+      "cleanCourseName": "Pengantar Sistem Digital",
+      "cohort": "B",
+      "prodi": "S1 ILKOM",
+      "lecturerRaw": "Oktalia Triananda Lovita, S.ST. MT / Nur Aynun Siregar, S.kom., M.Kom",
+      "lecturers": [
+        "Oktalia Triananda Lovita, S.ST. MT",
+        "Nur Aynun Siregar, S.kom., M.Kom"
+      ],
+      "studentCount": 49,
+      "dayNum": 3,
+      "dayName": "Rabu",
+      "roomCode": "D.III.07",
+      "roomName": "Ruang Kuliah D.III.07",
+      "roomType": "THEORY",
+      "periods": [
+        "Jam ke-7",
+        "Jam ke-8",
+        "Jam ke-9"
+      ],
+      "sks": 3
+    },
+    {
+      "spadaCode": "R2026155201MKKD1018A",
+      "rawCourseName": "Pengembangan Aplikasi AI(*)- Rombel A",
+      "cleanCourseName": "Pengembangan Aplikasi AI",
+      "cohort": "A",
+      "prodi": "S1 ILKOM",
+      "lecturerRaw": "Mukhroji, S.ST., M.T. / Nazuarsyah, ST, MT",
+      "lecturers": [
+        "Mukhroji, S.ST., M.T.",
+        "Nazuarsyah, ST, MT"
+      ],
+      "studentCount": 46,
+      "dayNum": 3,
+      "dayName": "Rabu",
+      "roomCode": "D.IV.03",
+      "roomName": "Smart Room D.IV.03",
+      "roomType": "THEORY",
+      "periods": [
+        "Jam ke-1",
+        "Jam ke-2",
+        "Jam ke-3"
+      ],
+      "sks": 3
+    },
+    {
+      "spadaCode": "R2026155201MKKD1005A",
+      "rawCourseName": "Matematika Diskrit - Rombel A",
+      "cleanCourseName": "Matematika Diskrit",
+      "cohort": "A",
+      "prodi": "S1 ILKOM",
+      "lecturerRaw": "Ir Muhibul Jamal, S.T., M.T. / Ully Muzakir, MT",
+      "lecturers": [
+        "Ir Muhibul Jamal, S.T., M.T.",
+        "Ully Muzakir, MT"
+      ],
+      "studentCount": 49,
+      "dayNum": 3,
+      "dayName": "Rabu",
+      "roomCode": "D.IV.03",
+      "roomName": "Smart Room D.IV.03",
+      "roomType": "THEORY",
+      "periods": [
+        "Jam ke-4",
+        "Jam ke-5",
+        "Jam ke-6"
+      ],
+      "sks": 3
+    },
+    {
+      "spadaCode": "R2026155201MKKD1018B",
+      "rawCourseName": "Pengembangan Aplikasi AI(*)- Rombel B",
+      "cleanCourseName": "Pengembangan Aplikasi AI",
+      "cohort": "B",
+      "prodi": "S1 ILKOM",
+      "lecturerRaw": "Mukhroji, S.ST., M.T. / Nazuarsyah, ST, MT",
+      "lecturers": [
+        "Mukhroji, S.ST., M.T.",
+        "Nazuarsyah, ST, MT"
+      ],
+      "studentCount": 46,
+      "dayNum": 3,
+      "dayName": "Rabu",
+      "roomCode": "D.IV.03",
+      "roomName": "Smart Room D.IV.03",
+      "roomType": "THEORY",
+      "periods": [
+        "Jam ke-7",
+        "Jam ke-8",
+        "Jam ke-9"
+      ],
+      "sks": 3
+    },
+    {
+      "spadaCode": "R2026155201MKKD1048",
+      "rawCourseName": "Sensor IoT(*)",
+      "cleanCourseName": "Sensor IoT",
+      "cohort": "A",
+      "prodi": "S1 ILKOM",
+      "lecturerRaw": "Aufa Rafiki, S.T., M.T.",
+      "lecturers": [
+        "Aufa Rafiki, S.T., M.T."
+      ],
+      "studentCount": 24,
+      "dayNum": 4,
+      "dayName": "Kamis",
+      "roomCode": "C.II.01",
+      "roomName": "Lab. CBT 01",
+      "roomType": "LABORATORY",
+      "periods": [
+        "Jam ke-1",
+        "Jam ke-2",
+        "Jam ke-3"
+      ],
+      "sks": 3
+    },
+    {
+      "spadaCode": "R2026155201MKKD1063",
+      "rawCourseName": "Storyboard dan Naskah Multimedia(*)",
+      "cleanCourseName": "Storyboard dan Naskah Multimedia",
+      "cohort": "A",
+      "prodi": "S1 ILKOM",
+      "lecturerRaw": "Khairuman, S.Kom, M.Kom",
+      "lecturers": [
+        "Khairuman, S.Kom, M.Kom"
+      ],
+      "studentCount": 19,
+      "dayNum": 4,
+      "dayName": "Kamis",
+      "roomCode": "C.II.01",
+      "roomName": "Lab. CBT 01",
+      "roomType": "LABORATORY",
+      "periods": [
+        "Jam ke-4",
+        "Jam ke-5",
+        "Jam ke-6"
+      ],
+      "sks": 3
+    },
+    {
+      "spadaCode": "R2026155201MKKL1028",
+      "rawCourseName": "Pemrograman Jaringan Kluster(*)",
+      "cleanCourseName": "Pemrograman Jaringan Kluster",
+      "cohort": "A",
+      "prodi": "S1 ILKOM",
+      "lecturerRaw": "Nazuarsyah, ST, MT / / Nazuarsyah, ST, MT /",
+      "lecturers": [
+        "Nazuarsyah, ST, MT",
+        "Nazuarsyah, ST, MT"
+      ],
+      "studentCount": 26,
+      "dayNum": 4,
+      "dayName": "Kamis",
+      "roomCode": "C.II.01",
+      "roomName": "Lab. CBT 01",
+      "roomType": "LABORATORY",
+      "periods": [
+        "Jam ke-7",
+        "Jam ke-8",
+        "Jam ke-9"
+      ],
+      "sks": 3
+    },
+    {
+      "spadaCode": "R2026155201MKKL1011A",
+      "rawCourseName": "Data Mining - Rombel A",
+      "cleanCourseName": "Data Mining",
+      "cohort": "A",
+      "prodi": "S1 ILKOM",
+      "lecturerRaw": "Aufa Rafiki, S.T., M.T. / Khairunnisa, S.Tr.Kom.,MT",
+      "lecturers": [
+        "Aufa Rafiki, S.T., M.T.",
+        "Khairunnisa, S.Tr.Kom.,MT"
+      ],
+      "studentCount": 40,
+      "dayNum": 4,
+      "dayName": "Kamis",
+      "roomCode": "C.II.08",
+      "roomName": "Ruang Kuliah C.II.08",
+      "roomType": "THEORY",
+      "periods": [
+        "Jam ke-3",
+        "Jam ke-4",
+        "Jam ke-5"
+      ],
+      "sks": 3
+    },
+    {
+      "spadaCode": "R2026155201MKKL1017B",
+      "rawCourseName": "Program Profesional - Rombel B",
+      "cleanCourseName": "Program Profesional",
+      "cohort": "B",
+      "prodi": "S1 ILKOM",
+      "lecturerRaw": "Aji Teguh Prihatno, S.T. M.Sc / Aufa Rafiki, S.T., M.T.",
+      "lecturers": [
+        "Aji Teguh Prihatno, S.T. M.Sc",
+        "Aufa Rafiki, S.T., M.T."
+      ],
+      "studentCount": 32,
+      "dayNum": 4,
+      "dayName": "Kamis",
+      "roomCode": "C.II.12",
+      "roomName": "Lab. CBT 02",
+      "roomType": "LABORATORY",
+      "periods": [
+        "Jam ke-1",
+        "Jam ke-2",
+        "Jam ke-3"
+      ],
+      "sks": 3
+    },
+    {
+      "spadaCode": "R2026155201MKKL1018A",
+      "rawCourseName": "Penjaminan Mutu Perangkat Lunak(*)- Rombel A",
+      "cleanCourseName": "Penjaminan Mutu Perangkat Lunak",
+      "cohort": "A",
+      "prodi": "S1 ILKOM",
+      "lecturerRaw": "Nazuarsyah, ST, MT / Aga Maulana, S.Kom., M.Kom",
+      "lecturers": [
+        "Nazuarsyah, ST, MT",
+        "Aga Maulana, S.Kom., M.Kom"
+      ],
+      "studentCount": 38,
+      "dayNum": 4,
+      "dayName": "Kamis",
+      "roomCode": "C.II.12",
+      "roomName": "Lab. CBT 02",
+      "roomType": "LABORATORY",
+      "periods": [
+        "Jam ke-4",
+        "Jam ke-5",
+        "Jam ke-6"
+      ],
+      "sks": 3
+    },
+    {
+      "spadaCode": "R2026155201MKKL1010",
+      "rawCourseName": "Multimedia(*)",
+      "cleanCourseName": "Multimedia",
+      "cohort": "A",
+      "prodi": "S1 ILKOM",
+      "lecturerRaw": "Miftahul Jannah, M.Pd / / Miftahul Jannah, M.Pd /",
+      "lecturers": [
+        "Miftahul Jannah, M.Pd",
+        "Miftahul Jannah, M.Pd"
+      ],
+      "studentCount": 34,
+      "dayNum": 4,
+      "dayName": "Kamis",
+      "roomCode": "C.III.06",
+      "roomName": "Ruang Kuliah C.III.06",
+      "roomType": "THEORY",
+      "periods": [
+        "Jam ke-4",
+        "Jam ke-5",
+        "Jam ke-6"
+      ],
+      "sks": 3
+    },
+    {
+      "spadaCode": "R2026155201MKKD1011",
+      "rawCourseName": "Komunikasi Data",
+      "cleanCourseName": "Komunikasi Data",
+      "cohort": "A",
+      "prodi": "S1 ILKOM",
+      "lecturerRaw": "Ondo Tobesakti Syahri, S.Kom., M.Kom. / Aji Teguh Prihatno, S.T. M.Sc",
+      "lecturers": [
+        "Ondo Tobesakti Syahri, S.Kom., M.Kom.",
+        "Aji Teguh Prihatno, S.T. M.Sc"
+      ],
+      "studentCount": 34,
+      "dayNum": 4,
+      "dayName": "Kamis",
+      "roomCode": "C.III.06",
+      "roomName": "Ruang Kuliah C.III.06",
+      "roomType": "THEORY",
+      "periods": [
+        "Jam ke-7",
+        "Jam ke-8",
+        "Jam ke-9"
+      ],
+      "sks": 3
+    },
+    {
+      "spadaCode": "R2026155201MKKL1009B",
+      "rawCourseName": "Jaringan Saraf Tiruan - Rombel B",
+      "cleanCourseName": "Jaringan Saraf Tiruan",
+      "cohort": "B",
+      "prodi": "S1 ILKOM",
+      "lecturerRaw": "Mukhroji, S.ST., M.T. / Aga Maulana, S.Kom., M.Kom",
+      "lecturers": [
+        "Mukhroji, S.ST., M.T.",
+        "Aga Maulana, S.Kom., M.Kom"
+      ],
+      "studentCount": 50,
+      "dayNum": 4,
+      "dayName": "Kamis",
+      "roomCode": "C.III.10",
+      "roomName": "Lab. Komputer 02",
+      "roomType": "LABORATORY",
+      "periods": [
+        "Jam ke-1",
+        "Jam ke-2",
+        "Jam ke-3"
+      ],
+      "sks": 3
+    },
+    {
+      "spadaCode": "R2026155201MKKD1068",
+      "rawCourseName": "Proyek Jaringan Komputer(*)",
+      "cleanCourseName": "Proyek Jaringan Komputer",
+      "cohort": "A",
+      "prodi": "S1 ILKOM",
+      "lecturerRaw": "Teuku Muhammad Mirza Keumala, S.Kom, M.T / Aga Maulana, S.Kom., M.Kom",
+      "lecturers": [
+        "Teuku Muhammad Mirza Keumala, S.Kom, M.T",
+        "Aga Maulana, S.Kom., M.Kom"
+      ],
+      "studentCount": 25,
+      "dayNum": 4,
+      "dayName": "Kamis",
+      "roomCode": "C.III.10",
+      "roomName": "Lab. Komputer 02",
+      "roomType": "LABORATORY",
+      "periods": [
+        "Jam ke-4",
+        "Jam ke-5",
+        "Jam ke-6"
+      ],
+      "sks": 3
+    },
+    {
+      "spadaCode": "R2026155201MKKL1023B",
+      "rawCourseName": "Machine Learning(*)- Rombel B",
+      "cleanCourseName": "Machine Learning",
+      "cohort": "B",
+      "prodi": "S1 ILKOM",
+      "lecturerRaw": "Atha Irrahman, S.Si., M.T / Mulyati, S.Si, M.Kom",
+      "lecturers": [
+        "Atha Irrahman, S.Si., M.T",
+        "Mulyati, S.Si, M.Kom"
+      ],
+      "studentCount": 47,
+      "dayNum": 4,
+      "dayName": "Kamis",
+      "roomCode": "C.III.10",
+      "roomName": "Lab. Komputer 02",
+      "roomType": "LABORATORY",
+      "periods": [
+        "Jam ke-7",
+        "Jam ke-8",
+        "Jam ke-9"
+      ],
+      "sks": 3
+    },
+    {
+      "spadaCode": "R2026155201MKKL1022A",
+      "rawCourseName": "Pemrograman Mobile(*)- Rombel A",
+      "cleanCourseName": "Pemrograman Mobile",
+      "cohort": "A",
+      "prodi": "S1 ILKOM",
+      "lecturerRaw": "Satria Prayudi, S.TI, M.Kom / Ully Muzakir, MT",
+      "lecturers": [
+        "Satria Prayudi, S.TI, M.Kom",
+        "Ully Muzakir, MT"
+      ],
+      "studentCount": 40,
+      "dayNum": 4,
+      "dayName": "Kamis",
+      "roomCode": "C.III.11",
+      "roomName": "Lab. Komputer 01",
+      "roomType": "LABORATORY",
+      "periods": [
+        "Jam ke-1",
+        "Jam ke-2",
+        "Jam ke-3"
+      ],
+      "sks": 3
+    },
+    {
+      "spadaCode": "R2026155201MKKL1013C",
+      "rawCourseName": "Metodologi Penelitian - Rombel C",
+      "cleanCourseName": "Metodologi Penelitian",
+      "cohort": "C",
+      "prodi": "S1 ILKOM",
+      "lecturerRaw": "Ully Muzakir, MT / Dr. Zaki Al Fuad, M.Pd.",
+      "lecturers": [
+        "Ully Muzakir, MT",
+        "Dr. Zaki Al Fuad, M.Pd."
+      ],
+      "studentCount": 54,
+      "dayNum": 4,
+      "dayName": "Kamis",
+      "roomCode": "C.III.11",
+      "roomName": "Lab. Komputer 01",
+      "roomType": "LABORATORY",
+      "periods": [
+        "Jam ke-4",
+        "Jam ke-5"
+      ],
+      "sks": 2
+    },
+    {
+      "spadaCode": "R2026155201MKKL1012",
+      "rawCourseName": "Technopreneurship",
+      "cleanCourseName": "Technopreneurship",
+      "cohort": "A",
+      "prodi": "S1 ILKOM",
+      "lecturerRaw": "Khairuman, S.Kom, M.Kom / Miftahul Jannah, M.Pd /",
+      "lecturers": [
+        "Khairuman, S.Kom, M.Kom",
+        "Miftahul Jannah, M.Pd"
+      ],
+      "studentCount": 37,
+      "dayNum": 4,
+      "dayName": "Kamis",
+      "roomCode": "C.III.11",
+      "roomName": "Lab. Komputer 01",
+      "roomType": "LABORATORY",
+      "periods": [
+        "Jam ke-6",
+        "Jam ke-8",
+        "Jam ke-9"
+      ],
+      "sks": 3
+    },
+    {
+      "spadaCode": "R2026155201MKKL1012AProdi harap membuka rombel MK ini di kelas REG-01 melalui menu kurikulum",
+      "rawCourseName": "Technopreneurship - Rombel A",
+      "cleanCourseName": "Technopreneurship",
+      "cohort": "A",
+      "prodi": "S1 ILKOM",
+      "lecturerRaw": "",
+      "lecturers": [],
+      "studentCount": 35,
+      "dayNum": 4,
+      "dayName": "Kamis",
+      "roomCode": "C.III.11",
+      "roomName": "Lab. Komputer 01",
+      "roomType": "LABORATORY",
+      "periods": [
+        "Jam ke-7"
+      ],
+      "sks": 1
+    },
+    {
+      "spadaCode": "R2026155201MKKL1006C",
+      "rawCourseName": "Teori Peluang - Rombel C",
+      "cleanCourseName": "Teori Peluang",
+      "cohort": "C",
+      "prodi": "S1 ILKOM",
+      "lecturerRaw": "Cut Rina Rossalina, M.Pd / Rossiana Br Ginting, S.Kom, M.Pd",
+      "lecturers": [
+        "Cut Rina Rossalina, M.Pd",
+        "Rossiana Br Ginting, S.Kom, M.Pd"
+      ],
+      "studentCount": 43,
+      "dayNum": 4,
+      "dayName": "Kamis",
+      "roomCode": "D.II.04",
+      "roomName": "Ruang Kuliah D.II.04",
+      "roomType": "THEORY",
+      "periods": [
+        "Jam ke-8",
+        "Jam ke-9"
+      ],
+      "sks": 2
+    },
+    {
+      "spadaCode": "R2026155201MKKD511B",
+      "rawCourseName": "Statistika Dasar - Rombel B",
+      "cleanCourseName": "Statistika Dasar",
+      "cohort": "B",
+      "prodi": "S1 ILKOM",
+      "lecturerRaw": "Farhan Adami, S.Mat., M.Mat. / Fitriati, S.Pd.I, M.Ed, PhD",
+      "lecturers": [
+        "Farhan Adami, S.Mat., M.Mat.",
+        "Fitriati, S.Pd.I, M.Ed, PhD"
+      ],
+      "studentCount": 58,
+      "dayNum": 4,
+      "dayName": "Kamis",
+      "roomCode": "D.III.08",
+      "roomName": "Ruang Kuliah D.III.08",
+      "roomType": "THEORY",
+      "periods": [
+        "Jam ke-4",
+        "Jam ke-5"
+      ],
+      "sks": 2
+    },
+    {
+      "spadaCode": "R2026155201MKKL1013B",
+      "rawCourseName": "Metodologi Penelitian - Rombel B",
+      "cleanCourseName": "Metodologi Penelitian",
+      "cohort": "B",
+      "prodi": "S1 ILKOM",
+      "lecturerRaw": "Dr. Sri Wahyuni, S.Pd.I, M.Pd / Ully Muzakir, MT",
+      "lecturers": [
+        "Dr. Sri Wahyuni, S.Pd.I, M.Pd",
+        "Ully Muzakir, MT"
+      ],
+      "studentCount": 44,
+      "dayNum": 4,
+      "dayName": "Kamis",
+      "roomCode": "D.IV.03",
+      "roomName": "Smart Room D.IV.03",
+      "roomType": "THEORY",
+      "periods": [
+        "Jam ke-3",
+        "Jam ke-4",
+        "Jam ke-5"
+      ],
+      "sks": 3
+    },
+    {
+      "spadaCode": "R2026155201MKKD1012A",
+      "rawCourseName": "Rekayasa Perangkat Lunak - Rombel A",
+      "cleanCourseName": "Rekayasa Perangkat Lunak",
+      "cohort": "A",
+      "prodi": "S1 ILKOM",
+      "lecturerRaw": "Mukhroji, S.ST., M.T. / Nazuarsyah, ST, MT",
+      "lecturers": [
+        "Mukhroji, S.ST., M.T.",
+        "Nazuarsyah, ST, MT"
+      ],
+      "studentCount": 49,
+      "dayNum": 4,
+      "dayName": "Kamis",
+      "roomCode": "D.IV.03",
+      "roomName": "Smart Room D.IV.03",
+      "roomType": "THEORY",
+      "periods": [
+        "Jam ke-7",
+        "Jam ke-8",
+        "Jam ke-9"
+      ],
+      "sks": 3
+    },
+    {
+      "spadaCode": "R2026155201MKKD511C",
+      "rawCourseName": "Statistika Dasar - Rombel C",
+      "cleanCourseName": "Statistika Dasar",
+      "cohort": "C",
+      "prodi": "S1 ILKOM",
+      "lecturerRaw": "Ir Muhibul Jamal, S.T., M.T. / Farhan Adami, S.Mat., M.Mat.",
+      "lecturers": [
+        "Ir Muhibul Jamal, S.T., M.T.",
+        "Farhan Adami, S.Mat., M.Mat."
+      ],
+      "studentCount": 54,
+      "dayNum": 5,
+      "dayName": "Jumat",
+      "roomCode": "C.II.01",
+      "roomName": "Lab. CBT 01",
+      "roomType": "LABORATORY",
+      "periods": [
+        "Jam ke-1",
+        "Jam ke-2",
+        "Jam ke-3"
+      ],
+      "sks": 3
+    },
+    {
+      "spadaCode": "R2026155201MKKD1039C",
+      "rawCourseName": "Pengenalan Pola AI(*)- Rombel C",
+      "cleanCourseName": "Pengenalan Pola AI",
+      "cohort": "C",
+      "prodi": "S1 ILKOM",
+      "lecturerRaw": "Mukhroji, S.ST., M.T. / Aga Maulana, S.Kom., M.Kom",
+      "lecturers": [
+        "Mukhroji, S.ST., M.T.",
+        "Aga Maulana, S.Kom., M.Kom"
+      ],
+      "studentCount": 28,
+      "dayNum": 5,
+      "dayName": "Jumat",
+      "roomCode": "C.II.01",
+      "roomName": "Lab. CBT 01",
+      "roomType": "LABORATORY",
+      "periods": [
+        "Jam ke-5",
+        "Jam ke-6",
+        "Jam ke-7"
+      ],
+      "sks": 3
+    },
+    {
+      "spadaCode": "R2026155201MKKL1022B",
+      "rawCourseName": "Pemrograman Mobile(*)- Rombel B",
+      "cleanCourseName": "Pemrograman Mobile",
+      "cohort": "B",
+      "prodi": "S1 ILKOM",
+      "lecturerRaw": "Irfandi Djailani, M.B.A., PhD / Ully Muzakir, MT",
+      "lecturers": [
+        "Irfandi Djailani, M.B.A., PhD",
+        "Ully Muzakir, MT"
+      ],
+      "studentCount": 28,
+      "dayNum": 5,
+      "dayName": "Jumat",
+      "roomCode": "C.II.08",
+      "roomName": "Ruang Kuliah C.II.08",
+      "roomType": "THEORY",
+      "periods": [
+        "Jam ke-5",
+        "Jam ke-6",
+        "Jam ke-7"
+      ],
+      "sks": 3
+    },
+    {
+      "spadaCode": "R2026155201MKKD1047",
+      "rawCourseName": "Teknologi IoT(*)",
+      "cleanCourseName": "Teknologi IoT",
+      "cohort": "A",
+      "prodi": "S1 ILKOM",
+      "lecturerRaw": "Aufa Rafiki, S.T., M.T. / Bismar Fadli, S.Kom.,M.Kom",
+      "lecturers": [
+        "Aufa Rafiki, S.T., M.T.",
+        "Bismar Fadli, S.Kom.,M.Kom"
+      ],
+      "studentCount": 24,
+      "dayNum": 5,
+      "dayName": "Jumat",
+      "roomCode": "C.II.12",
+      "roomName": "Lab. CBT 02",
+      "roomType": "LABORATORY",
+      "periods": [
+        "Jam ke-1",
+        "Jam ke-2",
+        "Jam ke-3"
+      ],
+      "sks": 3
+    },
+    {
+      "spadaCode": "R2026155201MKKD1010D",
+      "rawCourseName": "Pengantar Basis Data - Rombel D",
+      "cleanCourseName": "Pengantar Basis Data",
+      "cohort": "D",
+      "prodi": "S1 ILKOM",
+      "lecturerRaw": "Oktalia Triananda Lovita, S.ST. MT / Nur Aynun Siregar, S.kom., M.Kom",
+      "lecturers": [
+        "Oktalia Triananda Lovita, S.ST. MT",
+        "Nur Aynun Siregar, S.kom., M.Kom"
+      ],
+      "studentCount": 43,
+      "dayNum": 5,
+      "dayName": "Jumat",
+      "roomCode": "C.II.12",
+      "roomName": "Lab. CBT 02",
+      "roomType": "LABORATORY",
+      "periods": [
+        "Jam ke-5",
+        "Jam ke-6",
+        "Jam ke-7"
+      ],
+      "sks": 3
+    },
+    {
+      "spadaCode": "R2026155201MKKL1008C",
+      "rawCourseName": "Manajemen Proyek - Rombel C",
+      "cleanCourseName": "Manajemen Proyek",
+      "cohort": "C",
+      "prodi": "S1 ILKOM",
+      "lecturerRaw": "Khairuman, S.Kom, M.Kom",
+      "lecturers": [
+        "Khairuman, S.Kom, M.Kom"
+      ],
+      "studentCount": 48,
+      "dayNum": 5,
+      "dayName": "Jumat",
+      "roomCode": "C.III.06",
+      "roomName": "Ruang Kuliah C.III.06",
+      "roomType": "THEORY",
+      "periods": [
+        "Jam ke-1",
+        "Jam ke-2",
+        "Jam ke-3"
+      ],
+      "sks": 3
+    },
+    {
+      "spadaCode": "R2026155201MKKD1044",
+      "rawCourseName": "Teknologi Media Visual(*)",
+      "cleanCourseName": "Teknologi Media Visual",
+      "cohort": "A",
+      "prodi": "S1 ILKOM",
+      "lecturerRaw": "Khairuman, S.Kom, M.Kom / Mirshal Arief, S.T., M.T",
+      "lecturers": [
+        "Khairuman, S.Kom, M.Kom",
+        "Mirshal Arief, S.T., M.T"
+      ],
+      "studentCount": 34,
+      "dayNum": 5,
+      "dayName": "Jumat",
+      "roomCode": "C.III.06",
+      "roomName": "Ruang Kuliah C.III.06",
+      "roomType": "THEORY",
+      "periods": [
+        "Jam ke-5",
+        "Jam ke-6",
+        "Jam ke-7"
+      ],
+      "sks": 3
+    },
+    {
+      "spadaCode": "R2026155201MKKL1001D",
+      "rawCourseName": "Desain dan Analisis Algoritma - Rombel D",
+      "cleanCourseName": "Desain dan Analisis Algoritma",
+      "cohort": "D",
+      "prodi": "S1 ILKOM",
+      "lecturerRaw": "Oktalia Triananda Lovita, S.ST. MT / Nur Aynun Siregar, S.kom., M.Kom",
+      "lecturers": [
+        "Oktalia Triananda Lovita, S.ST. MT",
+        "Nur Aynun Siregar, S.kom., M.Kom"
+      ],
+      "studentCount": 38,
+      "dayNum": 5,
+      "dayName": "Jumat",
+      "roomCode": "C.III.10",
+      "roomName": "Lab. Komputer 02",
+      "roomType": "LABORATORY",
+      "periods": [
+        "Jam ke-1",
+        "Jam ke-2",
+        "Jam ke-3"
+      ],
+      "sks": 3
+    },
+    {
+      "spadaCode": "R2026155201MKKD1005F",
+      "rawCourseName": "Matematika Diskrit - Rombel F",
+      "cleanCourseName": "Matematika Diskrit",
+      "cohort": "F",
+      "prodi": "S1 ILKOM",
+      "lecturerRaw": "Cut Rina Rossalina, M.Pd / Rossiana Br Ginting, S.Kom, M.Pd",
+      "lecturers": [
+        "Cut Rina Rossalina, M.Pd",
+        "Rossiana Br Ginting, S.Kom, M.Pd"
+      ],
+      "studentCount": 39,
+      "dayNum": 5,
+      "dayName": "Jumat",
+      "roomCode": "C.III.11",
+      "roomName": "Lab. Komputer 01",
+      "roomType": "LABORATORY",
+      "periods": [
+        "Jam ke-1",
+        "Jam ke-2",
+        "Jam ke-3"
+      ],
+      "sks": 3
+    },
+    {
+      "spadaCode": "R2026155201MKKD1012D",
+      "rawCourseName": "Rekayasa Perangkat Lunak - Rombel D",
+      "cleanCourseName": "Rekayasa Perangkat Lunak",
+      "cohort": "D",
+      "prodi": "S1 ILKOM",
+      "lecturerRaw": "Mukhroji, S.ST., M.T. / Teuku Muhammad Mirza Keumala, S.Kom, M.T",
+      "lecturers": [
+        "Mukhroji, S.ST., M.T.",
+        "Teuku Muhammad Mirza Keumala, S.Kom, M.T"
+      ],
+      "studentCount": 36,
+      "dayNum": 5,
+      "dayName": "Jumat",
+      "roomCode": "C.III.11",
+      "roomName": "Lab. Komputer 01",
+      "roomType": "LABORATORY",
+      "periods": [
+        "Jam ke-5",
+        "Jam ke-6",
+        "Jam ke-7"
+      ],
+      "sks": 3
+    },
+    {
+      "spadaCode": "R2026155201MKKD1005E",
+      "rawCourseName": "Matematika Diskrit - Rombel E",
+      "cleanCourseName": "Matematika Diskrit",
+      "cohort": "E",
+      "prodi": "S1 ILKOM",
+      "lecturerRaw": "Rossiana Br Ginting, S.Kom, M.Pd / Farhan Adami, S.Mat., M.Mat.",
+      "lecturers": [
+        "Rossiana Br Ginting, S.Kom, M.Pd",
+        "Farhan Adami, S.Mat., M.Mat."
+      ],
+      "studentCount": 49,
+      "dayNum": 5,
+      "dayName": "Jumat",
+      "roomCode": "D.II.04",
+      "roomName": "Ruang Kuliah D.II.04",
+      "roomType": "THEORY",
+      "periods": [
+        "Jam ke-7",
+        "Jam ke-8",
+        "Jam ke-9"
+      ],
+      "sks": 3
+    },
+    {
+      "spadaCode": "R2026155201MKKL1017A",
+      "rawCourseName": "Program Profesional - Rombel A",
+      "cleanCourseName": "Program Profesional",
+      "cohort": "A",
+      "prodi": "S1 ILKOM",
+      "lecturerRaw": "Aji Teguh Prihatno, S.T. M.Sc / Aufa Rafiki, S.T., M.T.",
+      "lecturers": [
+        "Aji Teguh Prihatno, S.T. M.Sc",
+        "Aufa Rafiki, S.T., M.T."
+      ],
+      "studentCount": 37,
+      "dayNum": 5,
+      "dayName": "Jumat",
+      "roomCode": "D.II.05",
+      "roomName": "Ruang Kuliah D.II.05",
+      "roomType": "THEORY",
+      "periods": [
+        "Jam ke-5",
+        "Jam ke-6"
+      ],
+      "sks": 2
+    },
+    {
+      "spadaCode": "R2026155201MKKD1005D",
+      "rawCourseName": "Matematika Diskrit - Rombel D",
+      "cleanCourseName": "Matematika Diskrit",
+      "cohort": "D",
+      "prodi": "S1 ILKOM",
+      "lecturerRaw": "Rossiana Br Ginting, S.Kom, M.Pd / Ully Muzakir, MT",
+      "lecturers": [
+        "Rossiana Br Ginting, S.Kom, M.Pd",
+        "Ully Muzakir, MT"
+      ],
+      "studentCount": 36,
+      "dayNum": 5,
+      "dayName": "Jumat",
+      "roomCode": "D.II.06",
+      "roomName": "Ruang Kuliah D.II.06",
+      "roomType": "THEORY",
+      "periods": [
+        "Jam ke-1",
+        "Jam ke-2",
+        "Jam ke-3"
+      ],
+      "sks": 3
+    },
+    {
+      "spadaCode": "R2026155201MKKD511D",
+      "rawCourseName": "Statistika Dasar - Rombel D",
+      "cleanCourseName": "Statistika Dasar",
+      "cohort": "D",
+      "prodi": "S1 ILKOM",
+      "lecturerRaw": "Rossiana Br Ginting, S.Kom, M.Pd / Farhan Adami, S.Mat., M.Mat.",
+      "lecturers": [
+        "Rossiana Br Ginting, S.Kom, M.Pd",
+        "Farhan Adami, S.Mat., M.Mat."
+      ],
+      "studentCount": 47,
+      "dayNum": 5,
+      "dayName": "Jumat",
+      "roomCode": "D.III.03",
+      "roomName": "Ruang Kuliah D.III.03",
+      "roomType": "THEORY",
+      "periods": [
+        "Jam ke-7",
+        "Jam ke-8",
+        "Jam ke-9"
+      ],
+      "sks": 3
+    },
+    {
+      "spadaCode": "R2026155201MKKL1006D",
+      "rawCourseName": "Teori Peluang - Rombel D",
+      "cleanCourseName": "Teori Peluang",
+      "cohort": "D",
+      "prodi": "S1 ILKOM",
+      "lecturerRaw": "Farhan Adami, S.Mat., M.Mat. / Rossiana Br Ginting, S.Kom, M.Pd",
+      "lecturers": [
+        "Farhan Adami, S.Mat., M.Mat.",
+        "Rossiana Br Ginting, S.Kom, M.Pd"
+      ],
+      "studentCount": 46,
+      "dayNum": 5,
+      "dayName": "Jumat",
+      "roomCode": "D.III.05",
+      "roomName": "Ruang Kuliah D.III.05",
+      "roomType": "THEORY",
+      "periods": [
+        "Jam ke-8",
+        "Jam ke-9"
+      ],
+      "sks": 2
+    },
+    {
+      "spadaCode": "R2026155201MKKL1034A",
+      "rawCourseName": "Teori Bahasa dan Otomata - Rombel A",
+      "cleanCourseName": "Teori Bahasa dan Otomata",
+      "cohort": "A",
+      "prodi": "S1 ILKOM",
+      "lecturerRaw": "Atha Irrahman, S.Si., M.T / Ondo Tobesakti Syahri, S.Kom., M.Kom.",
+      "lecturers": [
+        "Atha Irrahman, S.Si., M.T",
+        "Ondo Tobesakti Syahri, S.Kom., M.Kom."
+      ],
+      "studentCount": 50,
+      "dayNum": 5,
+      "dayName": "Jumat",
+      "roomCode": "D.IV.03",
+      "roomName": "Smart Room D.IV.03",
+      "roomType": "THEORY",
+      "periods": [
+        "Jam ke-5",
+        "Jam ke-6",
+        "Jam ke-7"
+      ],
+      "sks": 3
+    },
+    {
+      "spadaCode": "R2026155201MKKD1022B",
+      "rawCourseName": "Desain Grafis(*)- Rombel B",
+      "cleanCourseName": "Desain Grafis",
+      "cohort": "B",
+      "prodi": "S1 ILKOM",
+      "lecturerRaw": "Muhajir, M.T / Miftahul Jannah, M.Pd",
+      "lecturers": [
+        "Muhajir, M.T",
+        "Miftahul Jannah, M.Pd"
+      ],
+      "studentCount": 47,
+      "dayNum": 6,
+      "dayName": "Sabtu",
+      "roomCode": "C.II.01",
+      "roomName": "Lab. CBT 01",
+      "roomType": "LABORATORY",
+      "periods": [
+        "Jam ke-1",
+        "Jam ke-2",
+        "Jam ke-3"
+      ],
+      "sks": 3
+    },
+    {
+      "spadaCode": "R2026155201MKKD1041",
+      "rawCourseName": "Editing Videografi(*)",
+      "cleanCourseName": "Editing Videografi",
+      "cohort": "A",
+      "prodi": "S1 ILKOM",
+      "lecturerRaw": "Bakruddin, S.Si. M.T / Mirshal Arief, S.T., M.T",
+      "lecturers": [
+        "Bakruddin, S.Si. M.T",
+        "Mirshal Arief, S.T., M.T"
+      ],
+      "studentCount": 34,
+      "dayNum": 6,
+      "dayName": "Sabtu",
+      "roomCode": "C.II.01",
+      "roomName": "Lab. CBT 01",
+      "roomType": "LABORATORY",
+      "periods": [
+        "Jam ke-4",
+        "Jam ke-5",
+        "Jam ke-6"
+      ],
+      "sks": 3
+    },
+    {
+      "spadaCode": "R2026155201MKKL1011C",
+      "rawCourseName": "Data Mining - Rombel C",
+      "cleanCourseName": "Data Mining",
+      "cohort": "C",
+      "prodi": "S1 ILKOM",
+      "lecturerRaw": "Aufa Rafiki, S.T., M.T. / Khairunnisa, S.Tr.Kom.,MT",
+      "lecturers": [
+        "Aufa Rafiki, S.T., M.T.",
+        "Khairunnisa, S.Tr.Kom.,MT"
+      ],
+      "studentCount": 27,
+      "dayNum": 6,
+      "dayName": "Sabtu",
+      "roomCode": "C.II.01",
+      "roomName": "Lab. CBT 01",
+      "roomType": "LABORATORY",
+      "periods": [
+        "Jam ke-7",
+        "Jam ke-8",
+        "Jam ke-9"
+      ],
+      "sks": 3
+    },
+    {
+      "spadaCode": "R2026155201MKKD1045",
+      "rawCourseName": "Sistem dan Aplikasi IoT(*)",
+      "cleanCourseName": "Sistem dan Aplikasi IoT",
+      "cohort": "A",
+      "prodi": "S1 ILKOM",
+      "lecturerRaw": "Zharifah Muthi'ah, S.T., M.T / Teuku Muhammad Mirza Keumala, S.Kom, M.T",
+      "lecturers": [
+        "Zharifah Muthi'ah, S.T., M.T",
+        "Teuku Muhammad Mirza Keumala, S.Kom, M.T"
+      ],
+      "studentCount": 25,
+      "dayNum": 6,
+      "dayName": "Sabtu",
+      "roomCode": "C.II.08",
+      "roomName": "Ruang Kuliah C.II.08",
+      "roomType": "THEORY",
+      "periods": [
+        "Jam ke-3",
+        "Jam ke-4",
+        "Jam ke-5"
+      ],
+      "sks": 3
+    },
+    {
+      "spadaCode": "R2026155201MKKD1019",
+      "rawCourseName": "Keamanan Sistem IoT(*)",
+      "cleanCourseName": "Keamanan Sistem IoT",
+      "cohort": "A",
+      "prodi": "S1 ILKOM",
+      "lecturerRaw": "Teuku Muhammad Mirza Keumala, S.Kom, M.T / Zharifah Muthi'ah, S.T., M.T",
+      "lecturers": [
+        "Teuku Muhammad Mirza Keumala, S.Kom, M.T",
+        "Zharifah Muthi'ah, S.T., M.T"
+      ],
+      "studentCount": 32,
+      "dayNum": 6,
+      "dayName": "Sabtu",
+      "roomCode": "C.II.12",
+      "roomName": "Lab. CBT 02",
+      "roomType": "LABORATORY",
+      "periods": [
+        "Jam ke-1",
+        "Jam ke-2",
+        "Jam ke-3"
+      ],
+      "sks": 3
+    },
+    {
+      "spadaCode": "R2026155201MKKL1008D",
+      "rawCourseName": "Manajemen Proyek - Rombel D",
+      "cleanCourseName": "Manajemen Proyek",
+      "cohort": "D",
+      "prodi": "S1 ILKOM",
+      "lecturerRaw": "Zharifah Muthi'ah, S.T., M.T",
+      "lecturers": [
+        "Zharifah Muthi'ah, S.T., M.T"
+      ],
+      "studentCount": 47,
+      "dayNum": 6,
+      "dayName": "Sabtu",
+      "roomCode": "C.II.12",
+      "roomName": "Lab. CBT 02",
+      "roomType": "LABORATORY",
+      "periods": [
+        "Jam ke-4",
+        "Jam ke-5",
+        "Jam ke-6"
+      ],
+      "sks": 3
+    },
+    {
+      "spadaCode": "R2026155201MKKD1042",
+      "rawCourseName": "Editing Fotografi(*)",
+      "cleanCourseName": "Editing Fotografi",
+      "cohort": "A",
+      "prodi": "S1 ILKOM",
+      "lecturerRaw": "Bakruddin, S.Si. M.T",
+      "lecturers": [
+        "Bakruddin, S.Si. M.T"
+      ],
+      "studentCount": 34,
+      "dayNum": 6,
+      "dayName": "Sabtu",
+      "roomCode": "C.II.12",
+      "roomName": "Lab. CBT 02",
+      "roomType": "LABORATORY",
+      "periods": [
+        "Jam ke-7",
+        "Jam ke-8",
+        "Jam ke-9"
+      ],
+      "sks": 3
+    },
+    {
+      "spadaCode": "R2026155201MKKL1034D",
+      "rawCourseName": "Teori Bahasa dan Otomata - Rombel D",
+      "cleanCourseName": "Teori Bahasa dan Otomata",
+      "cohort": "D",
+      "prodi": "S1 ILKOM",
+      "lecturerRaw": "Ahmad Mujahid Abdurrahman, S.Kom, M.T / Waziruddin, S.T., M.T",
+      "lecturers": [
+        "Ahmad Mujahid Abdurrahman, S.Kom, M.T",
+        "Waziruddin, S.T., M.T"
+      ],
+      "studentCount": 50,
+      "dayNum": 6,
+      "dayName": "Sabtu",
+      "roomCode": "C.III.10",
+      "roomName": "Lab. Komputer 02",
+      "roomType": "LABORATORY",
+      "periods": [
+        "Jam ke-1",
+        "Jam ke-2",
+        "Jam ke-3"
+      ],
+      "sks": 3
+    },
+    {
+      "spadaCode": "R2026155201MKKL1029",
+      "rawCourseName": "Wireless/Mobile Computing(*)",
+      "cleanCourseName": "Wireless/Mobile Computing",
+      "cohort": "A",
+      "prodi": "S1 ILKOM",
+      "lecturerRaw": "Ahmad Mujahid Abdurrahman, S.Kom, M.T / / Ahmad Mujahid Abdurrahman, S.Kom, M.T /",
+      "lecturers": [
+        "Ahmad Mujahid Abdurrahman, S.Kom, M.T",
+        "Ahmad Mujahid Abdurrahman, S.Kom, M.T"
+      ],
+      "studentCount": 26,
+      "dayNum": 6,
+      "dayName": "Sabtu",
+      "roomCode": "C.III.10",
+      "roomName": "Lab. Komputer 02",
+      "roomType": "LABORATORY",
+      "periods": [
+        "Jam ke-4",
+        "Jam ke-5",
+        "Jam ke-6"
+      ],
+      "sks": 3
+    },
+    {
+      "spadaCode": "R2026155201MKKD1040C",
+      "rawCourseName": "Kecerdasan Komputasional(*)- Rombel C",
+      "cleanCourseName": "Kecerdasan Komputasional",
+      "cohort": "C",
+      "prodi": "S1 ILKOM",
+      "lecturerRaw": "Munandar, ST., MT / Bismar Fadli, S.Kom.,M.Kom",
+      "lecturers": [
+        "Munandar, ST., MT",
+        "Bismar Fadli, S.Kom.,M.Kom"
+      ],
+      "studentCount": 17,
+      "dayNum": 6,
+      "dayName": "Sabtu",
+      "roomCode": "C.III.10",
+      "roomName": "Lab. Komputer 02",
+      "roomType": "LABORATORY",
+      "periods": [
+        "Jam ke-7",
+        "Jam ke-8",
+        "Jam ke-9"
+      ],
+      "sks": 3
+    },
+    {
+      "spadaCode": "R2026155201MKKD1040B",
+      "rawCourseName": "Kecerdasan Komputasional(*)- Rombel B",
+      "cleanCourseName": "Kecerdasan Komputasional",
+      "cohort": "B",
+      "prodi": "S1 ILKOM",
+      "lecturerRaw": "Munandar, ST., MT / Bismar Fadli, S.Kom.,M.Kom",
+      "lecturers": [
+        "Munandar, ST., MT",
+        "Bismar Fadli, S.Kom.,M.Kom"
+      ],
+      "studentCount": 53,
+      "dayNum": 6,
+      "dayName": "Sabtu",
+      "roomCode": "C.III.11",
+      "roomName": "Lab. Komputer 01",
+      "roomType": "LABORATORY",
+      "periods": [
+        "Jam ke-1",
+        "Jam ke-2",
+        "Jam ke-3"
+      ],
+      "sks": 3
+    },
+    {
+      "spadaCode": "R2026155201MKKD1020",
+      "rawCourseName": "Dasar-Dasar IoT(*)",
+      "cleanCourseName": "Dasar-Dasar IoT",
+      "cohort": "A",
+      "prodi": "S1 ILKOM",
+      "lecturerRaw": "Miftahul Jannah, M.Pd / Muhajir, M.T / / Miftahul Jannah, M.Pd /",
+      "lecturers": [
+        "Miftahul Jannah, M.Pd",
+        "Muhajir, M.T",
+        "Miftahul Jannah, M.Pd"
+      ],
+      "studentCount": 32,
+      "dayNum": 6,
+      "dayName": "Sabtu",
+      "roomCode": "C.III.11",
+      "roomName": "Lab. Komputer 01",
+      "roomType": "LABORATORY",
+      "periods": [
+        "Jam ke-4",
+        "Jam ke-5",
+        "Jam ke-6"
+      ],
+      "sks": 3
+    },
+    {
+      "spadaCode": "R2026155201MKKL1030",
+      "rawCourseName": "Sistem Paralel dan Terdistribusi(*)",
+      "cleanCourseName": "Sistem Paralel dan Terdistribusi",
+      "cohort": "A",
+      "prodi": "S1 ILKOM",
+      "lecturerRaw": "Ahmad Mujahid Abdurrahman, S.Kom, M.T / Ondo Tobesakti Syahri, S.Kom., M.Kom. / / Ahmad Mujahid Abdurrahman, S.Kom, M.T /",
+      "lecturers": [
+        "Ahmad Mujahid Abdurrahman, S.Kom, M.T",
+        "Ondo Tobesakti Syahri, S.Kom., M.Kom.",
+        "Ahmad Mujahid Abdurrahman, S.Kom, M.T"
+      ],
+      "studentCount": 25,
+      "dayNum": 6,
+      "dayName": "Sabtu",
+      "roomCode": "C.III.11",
+      "roomName": "Lab. Komputer 01",
+      "roomType": "LABORATORY",
+      "periods": [
+        "Jam ke-7",
+        "Jam ke-8",
+        "Jam ke-9"
+      ],
+      "sks": 3
+    },
+    {
+      "spadaCode": "R2026155201MKKL1013D",
+      "rawCourseName": "Metodologi Penelitian - Rombel D",
+      "cleanCourseName": "Metodologi Penelitian",
+      "cohort": "D",
+      "prodi": "S1 ILKOM",
+      "lecturerRaw": "Dr. Mik Salmina, M.Mat / Dr. Zaki Al Fuad, M.Pd.",
+      "lecturers": [
+        "Dr. Mik Salmina, M.Mat",
+        "Dr. Zaki Al Fuad, M.Pd."
+      ],
+      "studentCount": 33,
+      "dayNum": 6,
+      "dayName": "Sabtu",
+      "roomCode": "D.II.03",
+      "roomName": "Ruang Kuliah D.II.03",
+      "roomType": "THEORY",
+      "periods": [
+        "Jam ke-7",
+        "Jam ke-8",
+        "Jam ke-9"
+      ],
+      "sks": 3
+    },
+    {
+      "spadaCode": "R2026155201MKKL1006F",
+      "rawCourseName": "Teori Peluang - Rombel F",
+      "cleanCourseName": "Teori Peluang",
+      "cohort": "F",
+      "prodi": "S1 ILKOM",
+      "lecturerRaw": "Cut Rina Rossalina, M.Pd / Rossiana Br Ginting, S.Kom, M.Pd",
+      "lecturers": [
+        "Cut Rina Rossalina, M.Pd",
+        "Rossiana Br Ginting, S.Kom, M.Pd"
+      ],
+      "studentCount": 46,
+      "dayNum": 6,
+      "dayName": "Sabtu",
+      "roomCode": "D.II.04",
+      "roomName": "Ruang Kuliah D.II.04",
+      "roomType": "THEORY",
+      "periods": [
+        "Jam ke-7",
+        "Jam ke-8"
+      ],
+      "sks": 2
+    },
+    {
+      "spadaCode": "R2026155201MKKD1043",
+      "rawCourseName": "Animasi 3D(*)",
+      "cleanCourseName": "Animasi 3D",
+      "cohort": "A",
+      "prodi": "S1 ILKOM",
+      "lecturerRaw": "Muhajir, M.T / Mirshal Arief, S.T., M.T",
+      "lecturers": [
+        "Muhajir, M.T",
+        "Mirshal Arief, S.T., M.T"
+      ],
+      "studentCount": 34,
+      "dayNum": 6,
+      "dayName": "Sabtu",
+      "roomCode": "D.II.07",
+      "roomName": "Ruang Kuliah D.II.07",
+      "roomType": "THEORY",
+      "periods": [
+        "Jam ke-5",
+        "Jam ke-6",
+        "Jam ke-7"
+      ],
+      "sks": 3
+    },
+    {
+      "spadaCode": "R2026155201MKKL1034F",
+      "rawCourseName": "Teori Bahasa dan Otomata - Rombel F",
+      "cleanCourseName": "Teori Bahasa dan Otomata",
+      "cohort": "F",
+      "prodi": "S1 ILKOM",
+      "lecturerRaw": "Oktalia Triananda Lovita, S.ST. MT / Rossiana Br Ginting, S.Kom, M.Pd",
+      "lecturers": [
+        "Oktalia Triananda Lovita, S.ST. MT",
+        "Rossiana Br Ginting, S.Kom, M.Pd"
+      ],
+      "studentCount": 38,
+      "dayNum": 6,
+      "dayName": "Sabtu",
+      "roomCode": "D.II.09",
+      "roomName": "Ruang Kuliah D.II.09",
+      "roomType": "THEORY",
+      "periods": [
+        "Jam ke-7",
+        "Jam ke-8",
+        "Jam ke-9"
+      ],
+      "sks": 3
+    },
+    {
+      "spadaCode": "R2026155201MKKL1023C",
+      "rawCourseName": "Machine Learning(*)- Rombel C",
+      "cleanCourseName": "Machine Learning",
+      "cohort": "C",
+      "prodi": "S1 ILKOM",
+      "lecturerRaw": "Mirshal Arief, S.T., M.T / Aga Maulana, S.Kom., M.Kom",
+      "lecturers": [
+        "Mirshal Arief, S.T., M.T",
+        "Aga Maulana, S.Kom., M.Kom"
+      ],
+      "studentCount": 21,
+      "dayNum": 6,
+      "dayName": "Sabtu",
+      "roomCode": "D.III.01",
+      "roomName": "Ruang Kuliah D.III.01",
+      "roomType": "THEORY",
+      "periods": [
+        "Jam ke-7",
+        "Jam ke-8",
+        "Jam ke-9"
+      ],
+      "sks": 3
+    },
+    {
+      "spadaCode": "R2026155201MKKD1071B",
+      "rawCourseName": "Etika dan Regulasi Kecerdasan Buatan(*)- Rombel B",
+      "cleanCourseName": "Etika dan Regulasi Kecerdasan Buatan",
+      "cohort": "B",
+      "prodi": "S1 ILKOM",
+      "lecturerRaw": "Khairunnisa, S.Tr.Kom.,MT / Waziruddin, S.T., M.T",
+      "lecturers": [
+        "Khairunnisa, S.Tr.Kom.,MT",
+        "Waziruddin, S.T., M.T"
+      ],
+      "studentCount": 28,
+      "dayNum": 6,
+      "dayName": "Sabtu",
+      "roomCode": "D.III.03",
+      "roomName": "Ruang Kuliah D.III.03",
+      "roomType": "THEORY",
+      "periods": [
+        "Jam ke-1",
+        "Jam ke-2",
+        "Jam ke-3"
+      ],
+      "sks": 3
+    },
+    {
+      "spadaCode": "R2026155201MKKL1018B",
+      "rawCourseName": "Penjaminan Mutu Perangkat Lunak(*)- Rombel B",
+      "cleanCourseName": "Penjaminan Mutu Perangkat Lunak",
+      "cohort": "B",
+      "prodi": "S1 ILKOM",
+      "lecturerRaw": "Irfandi Djailani, M.B.A., PhD / Nazuarsyah, ST, MT",
+      "lecturers": [
+        "Irfandi Djailani, M.B.A., PhD",
+        "Nazuarsyah, ST, MT"
+      ],
+      "studentCount": 24,
+      "dayNum": 6,
+      "dayName": "Sabtu",
+      "roomCode": "D.IV.03",
+      "roomName": "Smart Room D.IV.03",
+      "roomType": "THEORY",
+      "periods": [
+        "Jam ke-1",
+        "Jam ke-2",
+        "Jam ke-3"
+      ],
+      "sks": 3
+    }
+  ]
+}
