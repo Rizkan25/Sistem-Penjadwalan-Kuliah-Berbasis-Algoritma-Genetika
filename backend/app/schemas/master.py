@@ -104,6 +104,8 @@ class CourseBase(BaseModel):
     semester: int = Field(..., ge=1, le=8)
     course_type: str = Field(default="THEORY", description="THEORY or LABORATORY")
     kbk: str = Field(default="GENERAL", description="GENERAL, PEMROGRAMAN, MULTIMEDIA, IOT")
+    jenis_mk: Optional[str] = Field(default="Wajib", description="Wajib or Pilihan")
+    prerequisites: Optional[str] = Field(None, description="Prerequisite course info")
 
 class CourseCreate(CourseBase):
     pass
@@ -115,6 +117,8 @@ class CourseUpdate(BaseModel):
     semester: Optional[int] = Field(None, ge=1, le=8)
     course_type: Optional[str] = None
     kbk: Optional[str] = None
+    jenis_mk: Optional[str] = None
+    prerequisites: Optional[str] = None
 
 class CourseResponse(CourseBase):
     id: UUID

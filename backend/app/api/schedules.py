@@ -16,6 +16,20 @@ from app.api.conflicts import run_feasibility_check
 from app.tasks import run_ga_optimization_task, execute_optimization
 from app.exporter import export_schedule_excel, export_schedule_pdf
 
+import socket
+from urllib.parse import urlparse
+from app.config import settings
+
+def is_celery_broker_available() -> bool:
+    try:
+        parsed = urlparse(settings.CELERY_BROKER_URL)
+        host = parsed.hostname or "127.0.0.1"
+        port = parsed.port or 6379
+        with socket.create_connection((host, port), timeout=0.15):
+            return True
+    except (socket.timeout, ConnectionRefusedError, OSError):
+        return False
+
 router = APIRouter(prefix="/schedules", tags=["Schedules & Optimization"])
 
 @router.post("/generate", response_model=GenerateScheduleResponse, status_code=status.HTTP_202_ACCEPTED)
@@ -64,16 +78,22 @@ def generate_schedule(
     job_id_str = str(new_job.id)
     dispatched = False
 
-    try:
-        # Try Celery async dispatch
-        run_ga_optimization_task.delay(job_id_str, params_dict)
-        dispatched = True
-        print(f"[INFO] Dispatched job {job_id_str} to Celery worker.")
-    except Exception as e:
-        print(f"[INFO] Celery broker not reachable ({e}). Falling back to background executor thread.")
+    if is_celery_broker_available():
+        try:
+            # Try Celery async dispatch with no-retry
+            run_ga_optimization_task.apply_async(
+                args=[job_id_str, params_dict],
+                retry=False,
+                expires=10
+            )
+            dispatched = True
+            print(f"[INFO] Dispatched job {job_id_str} to Celery worker.")
+        except Exception as e:
+            print(f"[INFO] Celery broker not reachable ({e}). Falling back to background executor thread.")
 
     if not dispatched:
         # Local background thread fallback (PRD 3.2 resilient anti-timeout)
+        print(f"[INFO] Running job {job_id_str} via local background thread.")
         threading.Thread(target=execute_optimization, args=(job_id_str, params_dict), daemon=True).start()
 
     return {

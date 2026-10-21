@@ -131,7 +131,12 @@ def execute_optimization(job_id_str: str, params: Dict[str, Any]) -> Dict[str, A
         # First clear old schedules for this job if any
         db.query(Schedule).filter(Schedule.job_id == job_uuid).delete()
 
+        used_room_slots = set()
         for gene in best_chromosome.genes:
+            key = (gene.room_id, gene.time_slot_id)
+            if key in used_room_slots:
+                continue
+            used_room_slots.add(key)
             sch = Schedule(
                 id=uuid.uuid4(),
                 job_id=job_uuid,

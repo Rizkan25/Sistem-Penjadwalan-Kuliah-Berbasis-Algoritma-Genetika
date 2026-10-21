@@ -85,6 +85,8 @@ class Course(Base):
     semester = Column(Integer, nullable=False)
     course_type = Column(String(20), nullable=False, default="THEORY") # THEORY, LABORATORY
     kbk = Column(String(30), nullable=False, default="GENERAL") # GENERAL, PEMROGRAMAN, MULTIMEDIA, IOT
+    jenis_mk = Column(String(20), nullable=True, default="Wajib") # Wajib, Pilihan
+    prerequisites = Column(String(255), nullable=True)
 
     __table_args__ = (
         CheckConstraint("credits BETWEEN 1 AND 6", name="check_course_credits"),

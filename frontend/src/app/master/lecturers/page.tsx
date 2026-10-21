@@ -1,7 +1,10 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
-import { Users, Plus, Trash2, Clock, CheckCircle2, AlertTriangle, RefreshCw } from 'lucide-react';
+import React, { useState, useEffect, useMemo } from 'react';
+import { 
+  Users, Plus, Trash2, Clock, CheckCircle2, AlertTriangle, RefreshCw, 
+  Search, Filter, UserCheck, Briefcase 
+} from 'lucide-react';
 import { Lecturer, TimeSlot, LecturerPreference } from '@/lib/types';
 import { api } from '@/lib/api';
 
@@ -19,6 +22,10 @@ export default function LecturersPage() {
   const [timeSlots, setTimeSlots] = useState<TimeSlot[]>([]);
   const [preferences, setPreferences] = useState<LecturerPreference[]>([]);
   const [loading, setLoading] = useState(true);
+
+  // Search & Filter state
+  const [searchQuery, setSearchQuery] = useState('');
+  const [filterStatus, setFilterStatus] = useState<'ALL' | 'TETAP' | 'TAMU'>('ALL');
 
   // New Lecturer Form
   const [showAddModal, setShowAddModal] = useState(false);
@@ -60,9 +67,9 @@ export default function LecturersPage() {
   const handleCreateLecturer = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
-      await api.createLecturer({ 
-        nidn: newNidn.trim() || undefined, 
-        name: newName.trim(), 
+      await api.createLecturer({
+        nidn: newNidn.trim() || undefined,
+        name: newName.trim(),
         email: newEmail.trim(),
         jabatan: newJabatan.trim() || undefined,
         is_guest: newIsGuest,
@@ -75,28 +82,29 @@ export default function LecturersPage() {
       setNewIsGuest(false);
       loadData();
     } catch (err: any) {
-      alert(`Gagal: ${err.message}`);
+      alert(`Gagal membuat dosen: ${err.message}`);
     }
   };
 
   const handleDeleteLecturer = async (id: string) => {
-    if (!confirm('Apakah Anda yakin ingin menghapus data dosen ini?')) return;
+    if (!confirm('Hapus dosen ini? Pastikan tidak ada kelas perkuliahan aktif yang mengikat dosen ini.')) return;
     try {
       await api.deleteLecturer(id);
       loadData();
     } catch (err: any) {
-      alert(`Gagal menghapus: ${err.message}`);
+      alert(`Gagal: ${err.message}`);
     }
   };
 
   const handleCreatePreference = async (e: React.FormEvent) => {
     e.preventDefault();
+    if (!selectedLecId || !selectedSlotId) return;
     try {
       await api.createPreference({
         lecturer_id: selectedLecId,
         time_slot_id: selectedSlotId,
         preference_type: prefType,
-        reason: prefReason,
+        reason: prefReason.trim() || undefined,
       });
       setShowPrefModal(false);
       setPrefReason('');
@@ -115,8 +123,37 @@ export default function LecturersPage() {
     }
   };
 
+  // Filtered lecturers
+  const filteredLecturers = useMemo(() => {
+    return lecturers.filter((l) => {
+      // Status filter
+      if (filterStatus === 'TETAP' && l.is_guest) return false;
+      if (filterStatus === 'TAMU' && !l.is_guest) return false;
+
+      // Search query
+      if (searchQuery.trim()) {
+        const q = searchQuery.toLowerCase();
+        const matchName = l.name.toLowerCase().includes(q);
+        const matchNidn = (l.nidn || '').toLowerCase().includes(q);
+        const matchJabatan = (l.jabatan || '').toLowerCase().includes(q);
+        const matchEmail = (l.email || '').toLowerCase().includes(q);
+        if (!matchName && !matchNidn && !matchJabatan && !matchEmail) return false;
+      }
+      return true;
+    });
+  }, [lecturers, filterStatus, searchQuery]);
+
+  // Statistics
+  const stats = useMemo(() => {
+    const total = lecturers.length;
+    const guestCount = lecturers.filter((l) => l.is_guest).length;
+    const permanentCount = total - guestCount;
+    const unavailableCount = preferences.filter((p) => p.preference_type === 'UNAVAILABLE').length;
+    return { total, guestCount, permanentCount, unavailableCount, totalPrefs: preferences.length };
+  }, [lecturers, preferences]);
+
   return (
-    <div className="max-w-6xl mx-auto space-y-6">
+    <div className="max-w-7xl mx-auto space-y-6">
       {/* Title */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between pb-4 border-b border-slate-200 gap-3">
         <div>
@@ -125,7 +162,7 @@ export default function LecturersPage() {
             <span>Data Master Dosen & Preferensi Waktu</span>
           </h2>
           <p className="text-xs text-slate-500 mt-1">
-            Mengatur daftar dosen pengampu Prodi Ilmu Komputer UBBG dan preferensi waktu mengajar (HC_6 & SC_1).
+            Mengatur daftar dosen pengampu Prodi S1 Ilmu Komputer UBBG serta preferensi dan ketersediaan waktu mengajar.
           </p>
         </div>
 
@@ -138,7 +175,7 @@ export default function LecturersPage() {
                 setShowPrefModal(true);
               }
             }}
-            className="flex items-center space-x-1.5 px-3 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-lg text-xs font-semibold cursor-pointer"
+            className="flex items-center space-x-1.5 px-3 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-lg text-xs font-semibold cursor-pointer transition-colors"
           >
             <Clock className="w-3.5 h-3.5 text-amber-600" />
             <span>Tambah Preferensi</span>
@@ -146,11 +183,54 @@ export default function LecturersPage() {
 
           <button
             onClick={() => setShowAddModal(true)}
-            className="flex items-center space-x-1.5 px-3.5 py-2 bg-[#1D8699] hover:bg-[#166978] text-white rounded-lg text-xs font-bold shadow-xs cursor-pointer"
+            className="flex items-center space-x-1.5 px-3.5 py-2 bg-[#1D8699] hover:bg-[#166978] text-white rounded-lg text-xs font-bold shadow-xs cursor-pointer transition-colors"
           >
             <Plus className="w-3.5 h-3.5" />
             <span>Tambah Dosen</span>
           </button>
+        </div>
+      </div>
+
+      {/* Summary Statistic Cards */}
+      <div className="grid grid-cols-2 lg:grid-cols-4 gap-3">
+        <div className="bg-white p-3.5 rounded-xl border border-slate-200 shadow-xs flex items-center justify-between gap-2">
+          <div className="min-w-0">
+            <div className="text-[11px] font-semibold text-slate-500 uppercase tracking-wider truncate">Total Dosen</div>
+            <div className="text-base sm:text-lg lg:text-xl font-extrabold text-slate-800 mt-0.5 whitespace-nowrap">{stats.total} Orang</div>
+          </div>
+          <div className="w-9 h-9 rounded-lg bg-[#1D8699]/10 text-[#1D8699] flex items-center justify-center font-bold text-xs shrink-0">
+            <Users className="w-4 h-4" />
+          </div>
+        </div>
+
+        <div className="bg-white p-3.5 rounded-xl border border-slate-200 shadow-xs flex items-center justify-between gap-2">
+          <div className="min-w-0">
+            <div className="text-[11px] font-semibold text-slate-500 uppercase tracking-wider truncate">Dosen Tetap</div>
+            <div className="text-base sm:text-lg lg:text-xl font-extrabold text-emerald-700 mt-0.5 whitespace-nowrap">{stats.permanentCount} Orang</div>
+          </div>
+          <div className="w-9 h-9 rounded-lg bg-emerald-50 text-emerald-700 flex items-center justify-center font-bold text-xs shrink-0">
+            <UserCheck className="w-4 h-4" />
+          </div>
+        </div>
+
+        <div className="bg-white p-3.5 rounded-xl border border-slate-200 shadow-xs flex items-center justify-between gap-2">
+          <div className="min-w-0">
+            <div className="text-[11px] font-semibold text-slate-500 uppercase tracking-wider truncate">Dosen Tamu</div>
+            <div className="text-base sm:text-lg lg:text-xl font-extrabold text-amber-700 mt-0.5 whitespace-nowrap">{stats.guestCount} Orang</div>
+          </div>
+          <div className="w-9 h-9 rounded-lg bg-amber-50 text-amber-700 flex items-center justify-center font-bold text-xs shrink-0">
+            <Briefcase className="w-4 h-4" />
+          </div>
+        </div>
+
+        <div className="bg-white p-3.5 rounded-xl border border-slate-200 shadow-xs flex items-center justify-between gap-2">
+          <div className="min-w-0">
+            <div className="text-[11px] font-semibold text-slate-500 uppercase tracking-wider truncate">Aturan Waktu</div>
+            <div className="text-base sm:text-lg lg:text-xl font-extrabold text-indigo-700 mt-0.5 whitespace-nowrap">{stats.totalPrefs} Aturan</div>
+          </div>
+          <div className="w-9 h-9 rounded-lg bg-indigo-50 text-indigo-700 flex items-center justify-center font-bold text-xs shrink-0">
+            <Clock className="w-4 h-4" />
+          </div>
         </div>
       </div>
 
@@ -163,54 +243,94 @@ export default function LecturersPage() {
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
           {/* Lecturers Table */}
           <div className="lg:col-span-2 bg-white rounded-xl border border-slate-200 shadow-xs overflow-hidden">
-            <div className="p-4 border-b border-slate-100 font-bold text-slate-800 text-xs">
-              Daftar Dosen Pengampu ({lecturers.length})
+            {/* Table Header Filter & Search */}
+            <div className="p-3.5 border-b border-slate-100 flex flex-wrap items-center justify-between gap-2.5">
+              <div className="flex items-center gap-2 flex-1 min-w-[200px]">
+                <div className="relative flex-1 max-w-xs">
+                  <Search className="w-3.5 h-3.5 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2" />
+                  <input
+                    type="text"
+                    placeholder="Cari dosen, NIDN, jabatan..."
+                    value={searchQuery}
+                    onChange={(e) => setSearchQuery(e.target.value)}
+                    className="w-full pl-8 pr-3 py-1.5 rounded-lg border border-slate-300 text-xs bg-white text-slate-800 focus:outline-none focus:ring-2 focus:ring-[#1D8699]/20 focus:border-[#1D8699]"
+                  />
+                </div>
+
+                <select
+                  value={filterStatus}
+                  onChange={(e) => setFilterStatus(e.target.value as any)}
+                  className="px-2.5 py-1.5 rounded-lg border border-slate-300 text-xs bg-white text-slate-700 focus:outline-none focus:ring-1 focus:ring-[#1D8699]"
+                >
+                  <option value="ALL">Semua Status</option>
+                  <option value="TETAP">Dosen Tetap</option>
+                  <option value="TAMU">Dosen Tamu</option>
+                </select>
+              </div>
+
+              <div className="text-[11px] font-bold text-slate-500">
+                Menampilkan <span className="text-[#1D8699] font-extrabold">{filteredLecturers.length}</span> dari {lecturers.length} Dosen
+              </div>
             </div>
+
             <div className="overflow-x-auto">
               <table className="w-full text-left border-collapse text-xs">
                 <thead>
-                  <tr className="bg-slate-50 text-slate-600 text-[11px] font-bold uppercase border-b border-slate-200">
-                    <th className="py-2.5 px-4">NIDN</th>
-                    <th className="py-2.5 px-4">Nama & Jabatan</th>
-                    <th className="py-2.5 px-4">Status</th>
-                    <th className="py-2.5 px-4">Email</th>
-                    <th className="py-2.5 px-4 text-center">Aksi</th>
+                  <tr className="bg-slate-50 text-slate-600 text-[11px] font-bold uppercase border-b border-slate-200 tracking-wider">
+                    <th className="py-3 px-4 whitespace-nowrap">NIDN</th>
+                    <th className="py-3 px-4">Nama & Jabatan</th>
+                    <th className="py-3 px-4 whitespace-nowrap">Status Kepegawaian</th>
+                    <th className="py-3 px-4">Email</th>
+                    <th className="py-3 px-4 text-center whitespace-nowrap">Aksi</th>
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-slate-100">
-                  {lecturers.map((lec) => (
-                    <tr key={lec.id} className="hover:bg-slate-50/60">
-                      <td className="py-3 px-4 font-mono-metrics font-semibold text-slate-600">
-                        {lec.nidn || '-'}
-                      </td>
-                      <td className="py-3 px-4">
-                        <div className="font-bold text-slate-800">{lec.name}</div>
-                        {lec.jabatan && (
-                          <div className="text-[11px] text-slate-500 mt-0.5 line-clamp-1">{lec.jabatan}</div>
-                        )}
-                      </td>
-                      <td className="py-3 px-4">
-                        <span className={`px-2 py-0.5 rounded-full text-[10px] font-bold inline-flex items-center ${
-                          lec.is_guest 
-                            ? 'bg-amber-100 text-amber-800 border border-amber-200' 
-                            : 'bg-emerald-100 text-emerald-800 border border-emerald-200'
-                        }`}>
-                          {lec.is_guest ? 'Dosen Tamu' : 'Dosen Tetap'}
-                        </span>
-                      </td>
-                      <td className="py-3 px-4 text-slate-500 font-mono text-[11px]">
-                        {lec.email}
-                      </td>
-                      <td className="py-3 px-4 text-center">
-                        <button
-                          onClick={() => handleDeleteLecturer(lec.id)}
-                          className="p-1 text-rose-500 hover:text-rose-700 hover:bg-rose-50 rounded-md cursor-pointer"
-                        >
-                          <Trash2 className="w-4 h-4" />
-                        </button>
+                  {filteredLecturers.length === 0 ? (
+                    <tr>
+                      <td colSpan={5} className="py-8 text-center text-slate-400">
+                        Tidak ada dosen yang cocok dengan pencarian.
                       </td>
                     </tr>
-                  ))}
+                  ) : (
+                    filteredLecturers.map((lec) => (
+                      <tr key={lec.id} className="hover:bg-slate-50/70 transition-colors">
+                        <td className="py-3 px-4 font-mono-metrics font-bold text-slate-700 whitespace-nowrap">
+                          {lec.nidn || <span className="text-slate-400 font-normal italic">-</span>}
+                        </td>
+                        <td className="py-3 px-4">
+                          <div className="font-bold text-slate-800 text-[13px]">{lec.name}</div>
+                          {lec.jabatan && (
+                            <div className="text-[11px] text-slate-500 mt-0.5 line-clamp-1">{lec.jabatan}</div>
+                          )}
+                        </td>
+                        <td className="py-3 px-4 whitespace-nowrap">
+                          {lec.is_guest ? (
+                            <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[11px] font-semibold bg-amber-50 text-amber-800 border border-amber-200/80 shadow-2xs whitespace-nowrap">
+                              <span className="w-1.5 h-1.5 rounded-full bg-amber-500 ring-2 ring-amber-200/60 shrink-0" />
+                              Dosen Tamu
+                            </span>
+                          ) : (
+                            <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[11px] font-semibold bg-emerald-50 text-emerald-800 border border-emerald-200/80 shadow-2xs whitespace-nowrap">
+                              <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 ring-2 ring-emerald-200/60 shrink-0" />
+                              Dosen Tetap
+                            </span>
+                          )}
+                        </td>
+                        <td className="py-3 px-4 text-slate-600 font-mono text-[11px]">
+                          {lec.email}
+                        </td>
+                        <td className="py-3 px-4 text-center whitespace-nowrap">
+                          <button
+                            onClick={() => handleDeleteLecturer(lec.id)}
+                            title="Hapus Dosen"
+                            className="p-1 text-rose-500 hover:text-rose-700 hover:bg-rose-50 rounded-md cursor-pointer transition-colors"
+                          >
+                            <Trash2 className="w-4 h-4" />
+                          </button>
+                        </td>
+                      </tr>
+                    ))
+                  )}
                 </tbody>
               </table>
             </div>
@@ -218,16 +338,19 @@ export default function LecturersPage() {
 
           {/* Preferences List */}
           <div className="bg-white rounded-xl border border-slate-200 shadow-xs p-4 space-y-4">
-            <div className="font-bold text-slate-800 text-xs border-b border-slate-100 pb-2 flex items-center justify-between">
-              <span>Waktu Berhalangan & Prioritas</span>
-              <span className="px-2 py-0.5 rounded-full bg-slate-100 text-slate-600 text-[10px]">
+            <div className="font-bold text-slate-800 text-xs border-b border-slate-100 pb-2.5 flex items-center justify-between">
+              <span className="flex items-center space-x-1.5">
+                <Clock className="w-4 h-4 text-[#1D8699]" />
+                <span>Waktu Berhalangan & Prioritas</span>
+              </span>
+              <span className="px-2 py-0.5 rounded-full bg-slate-100 text-slate-600 text-[10px] font-bold">
                 {preferences.length} Aturan
               </span>
             </div>
 
-            <div className="space-y-2.5 max-h-[500px] overflow-y-auto">
+            <div className="space-y-2.5 max-h-[500px] overflow-y-auto pr-1">
               {preferences.length === 0 ? (
-                <div className="text-center py-6 text-slate-400 text-xs">
+                <div className="text-center py-8 text-slate-400 text-xs">
                   Belum ada preferensi dosen yang diatur.
                 </div>
               ) : (
@@ -239,21 +362,23 @@ export default function LecturersPage() {
                   return (
                     <div
                       key={pref.id}
-                      className={`p-3 rounded-xl border text-xs flex items-start justify-between ${
+                      className={`p-3 rounded-xl border text-xs flex items-start justify-between shadow-2xs transition-all ${
                         isUnavailable
-                          ? 'bg-rose-50 border-rose-200 text-rose-900'
-                          : 'bg-emerald-50 border-emerald-200 text-emerald-900'
+                          ? 'bg-rose-50/70 border-rose-200 text-rose-900'
+                          : 'bg-emerald-50/70 border-emerald-200 text-emerald-900'
                       }`}
                     >
                       <div className="space-y-1">
-                        <div className="font-bold">{lec?.name || 'Dosen'}</div>
-                        <div className="text-[11px] font-mono-metrics">
+                        <div className="font-bold text-slate-900">{lec?.name || 'Dosen'}</div>
+                        <div className="text-[11px] font-mono-metrics font-medium text-slate-700">
                           {slot ? `${DAY_NAMES[slot.day_of_week]}, Sesi ${slot.period_order} (${slot.start_time.slice(0, 5)} - ${slot.end_time.slice(0, 5)})` : '-'}
                         </div>
                         <div className="text-[10px] flex items-center space-x-1 font-semibold">
-                          <span>Status:</span>
-                          <span className={`px-1.5 py-0.2 rounded-sm ${isUnavailable ? 'bg-rose-200 text-rose-800' : 'bg-emerald-200 text-emerald-800'}`}>
-                            {isUnavailable ? 'UNAVAILABLE (HC_6)' : 'PREFERRED (SC_1)'}
+                          <span>Kategori:</span>
+                          <span className={`px-1.5 py-0.5 rounded-md font-bold text-[9px] ${
+                            isUnavailable ? 'bg-rose-200/80 text-rose-800' : 'bg-emerald-200/80 text-emerald-800'
+                          }`}>
+                            {isUnavailable ? 'Berhalangan Hadir' : 'Prioritas Mengajar'}
                           </span>
                         </div>
                         {pref.reason && (
@@ -265,7 +390,8 @@ export default function LecturersPage() {
 
                       <button
                         onClick={() => handleDeletePreference(pref.id)}
-                        className="text-slate-400 hover:text-rose-600 p-1 cursor-pointer"
+                        title="Hapus Aturan"
+                        className="text-slate-400 hover:text-rose-600 p-1 cursor-pointer transition-colors"
                       >
                         ✕
                       </button>
@@ -282,7 +408,10 @@ export default function LecturersPage() {
       {showAddModal && (
         <div className="fixed inset-0 bg-slate-900/50 backdrop-blur-xs flex items-center justify-center z-50 p-4">
           <div className="bg-white rounded-2xl max-w-md w-full p-6 shadow-xl border border-slate-200">
-            <h3 className="text-sm font-bold text-slate-800 mb-4">Tambah Dosen Baru</h3>
+            <h3 className="text-sm font-bold text-slate-800 mb-4 flex items-center space-x-2">
+              <Users className="w-4 h-4 text-[#1D8699]" />
+              <span>Tambah Dosen Baru</span>
+            </h3>
             <form onSubmit={handleCreateLecturer} className="space-y-3 text-xs">
               <div>
                 <label className="font-semibold text-slate-700 block mb-1">
@@ -293,7 +422,7 @@ export default function LecturersPage() {
                   value={newNidn}
                   onChange={(e) => setNewNidn(e.target.value)}
                   placeholder="Contoh: 1318018001"
-                  className="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-[#1D8699]/20"
+                  className="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-[#1D8699]/20 font-mono-metrics"
                 />
               </div>
 
@@ -349,15 +478,15 @@ export default function LecturersPage() {
                 <button
                   type="button"
                   onClick={() => setShowAddModal(false)}
-                  className="px-4 py-2 border rounded-lg text-slate-700 cursor-pointer"
+                  className="px-4 py-2 border rounded-lg text-slate-700 hover:bg-slate-50 cursor-pointer"
                 >
                   Batal
                 </button>
                 <button
                   type="submit"
-                  className="px-4 py-2 bg-[#1D8699] text-white rounded-lg font-bold cursor-pointer"
+                  className="px-4 py-2 bg-[#1D8699] hover:bg-[#166978] text-white rounded-lg font-bold cursor-pointer"
                 >
-                  Simpan
+                  Simpan Dosen
                 </button>
               </div>
             </form>
@@ -369,7 +498,10 @@ export default function LecturersPage() {
       {showPrefModal && (
         <div className="fixed inset-0 bg-slate-900/50 backdrop-blur-xs flex items-center justify-center z-50 p-4">
           <div className="bg-white rounded-2xl max-w-md w-full p-6 shadow-xl border border-slate-200">
-            <h3 className="text-sm font-bold text-slate-800 mb-4">Atur Preferensi Waktu Dosen</h3>
+            <h3 className="text-sm font-bold text-slate-800 mb-4 flex items-center space-x-2">
+              <Clock className="w-4 h-4 text-[#1D8699]" />
+              <span>Atur Preferensi Waktu Dosen</span>
+            </h3>
             <form onSubmit={handleCreatePreference} className="space-y-3 text-xs">
               <div>
                 <label className="font-semibold text-slate-700 block mb-1">Pilih Dosen:</label>
@@ -380,7 +512,7 @@ export default function LecturersPage() {
                 >
                   {lecturers.map((l) => (
                     <option key={l.id} value={l.id}>
-                      {l.name}
+                      {l.name} {l.is_guest ? '(Dosen Tamu)' : ''}
                     </option>
                   ))}
                 </select>
@@ -408,8 +540,8 @@ export default function LecturersPage() {
                   onChange={(e) => setPrefType(e.target.value as any)}
                   className="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-[#1D8699]/20"
                 >
-                  <option value="UNAVAILABLE">UNAVAILABLE — Dosen Berhalangan (Hard Constraint HC_6)</option>
-                  <option value="PREFERRED">PREFERRED — Waktu Prioritas (Soft Constraint SC_1)</option>
+                  <option value="UNAVAILABLE">Berhalangan Hadir (Tidak Boleh Dijadwalkan)</option>
+                  <option value="PREFERRED">Prioritas Mengajar (Diutamakan Jika Tersedia)</option>
                 </select>
               </div>
 
@@ -428,13 +560,13 @@ export default function LecturersPage() {
                 <button
                   type="button"
                   onClick={() => setShowPrefModal(false)}
-                  className="px-4 py-2 border rounded-lg text-slate-700 cursor-pointer"
+                  className="px-4 py-2 border rounded-lg text-slate-700 hover:bg-slate-50 cursor-pointer"
                 >
                   Batal
                 </button>
                 <button
                   type="submit"
-                  className="px-4 py-2 bg-[#1D8699] text-white rounded-lg font-bold cursor-pointer"
+                  className="px-4 py-2 bg-[#1D8699] hover:bg-[#166978] text-white rounded-lg font-bold cursor-pointer"
                 >
                   Simpan Preferensi
                 </button>

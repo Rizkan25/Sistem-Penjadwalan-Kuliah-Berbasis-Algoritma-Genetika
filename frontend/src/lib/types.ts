@@ -33,6 +33,8 @@ export interface Course {
   semester: number;
   course_type: 'THEORY' | 'LABORATORY';
   kbk: 'GENERAL' | 'PEMROGRAMAN' | 'MULTIMEDIA' | 'IOT';
+  jenis_mk?: string;
+  prerequisites?: string | null;
 }
 
 export interface AcademicClass {

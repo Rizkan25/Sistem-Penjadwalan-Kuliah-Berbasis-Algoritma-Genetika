@@ -16,4 +16,7 @@ celery_app.conf.update(
     enable_utc=True,
     task_time_limit=settings.CELERY_TASK_TIME_LIMIT,
     task_track_started=True,
+    broker_connection_timeout=0.2,
+    broker_connection_retry=False,
+    broker_connection_max_retries=0,
 )
