@@ -5,7 +5,7 @@
 [![FastAPI](https://img.shields.io/badge/Backend-FastAPI%200.146+-009688?style=flat-square&logo=fastapi)](https://fastapi.tiangolo.com/)
 [![Python](https://img.shields.io/badge/Python-3.10%2B-3776AB?style=flat-square&logo=python)](https://www.python.org/)
 [![Tailwind CSS](https://img.shields.io/badge/Styling-Tailwind%20CSS%20v4-38B2AC?style=flat-square&logo=tailwind-css)](https://tailwindcss.com/)
-[![Database](https://img.shields.io/badge/Database-SQLite%20(WAL)%20%2F%20PostgreSQL-336791?style=flat-square&logo=postgresql)](https://www.postgresql.org/)
+[![Database](<https://img.shields.io/badge/Database-SQLite%20(WAL)%20%2F%20PostgreSQL-336791?style=flat-square&logo=postgresql>)](https://www.postgresql.org/)
 [![License](https://img.shields.io/badge/License-MIT-yellow?style=flat-square)](LICENSE)
 
 Aplikasi web _full-stack_ cerdas dan modern untuk otomatisasi penyusunan jadwal perkuliahan bebas bentrok (**Zero Hard Conflicts**) menggunakan **Algoritma Genetika (Genetic Algorithm)** secara asinkron. Sistem ini dikembangkan khusus untuk memecahkan kompleksitas _University Course Timetabling Problem_ (UCTP) pada **Program Studi S1 Ilmu Komputer, Universitas Bina Bangsa Getsempena (UBBG) Banda Aceh**, yang mencakup kelas reguler umum serta percabangan 3 Kelompok Bidang Keahlian (**KBK: Pemrograman, Multimedia, dan IoT**) yang berjalan secara paralel.
@@ -60,17 +60,17 @@ Aplikasi web _full-stack_ cerdas dan modern untuk otomatisasi penyusunan jadwal 
 
 ## 🛠️ Tumpukan Teknologi (Tech Stack)
 
-| Komponen                | Teknologi                                                   | Deskripsi                                                                                |
-| :---------------------- | :---------------------------------------------------------- | :--------------------------------------------------------------------------------------- |
-| **Frontend Framework**  | Next.js 16 (App Router), React 19, TypeScript 5             | Arsitektur web modern dengan engine Turbopack dan partial prefetching                    |
-| **Styling & Icons**     | Tailwind CSS v4 (`@tailwindcss/turbopack`), Lucide React    | Konfigurasi CSS-first, ikon SVG interaktif, performa rendering tinggi                    |
-| **Backend API**         | FastAPI 0.146+ (Python 3.10+)                               | Framework RESTful API asinkron dengan validasi skema otomatis (Pydantic v2)              |
-| **Mesin Optimasi (GA)** | Algoritma Genetika (NumPy, Python Core)                     | Algoritma heuristik UCTP dengan batasan keras & lunak serta inisialisasi cerdas          |
-| **Basis Data**          | SQLite (Default Dev dengan WAL Mode) / PostgreSQL (AlloyDB) | ORM SQLAlchemy 2.x dengan UUID/GUID platform-independent dan isolasi konkurensi tinggi   |
-| **Scraper & Sync**      | BeautifulSoup4 4.15+, HTTPX 0.28+                           | Sinkronisasi data dosen resmi web Prodi Ilkom UBBG & integrasi kurikulum OpenSIMKA       |
-| **Task Queue**          | Hybrid Executor (Celery 5.6+ / Background Thread Fallback)  | Eksekusi tugas latar belakang asinkron anti-timeout dengan fallback cerdas               |
-| **Dokumentasi API**     | OpenAPI (Swagger UI & ReDoc)                                | Dokumentasi API interaktif bawaan di `/docs` dan `/redoc`                                |
-| **Ekspor Dokumen**      | OpenPyXL 3.1.5 (Excel), ReportLab 5.0.1 (PDF)               | Generator berkas jadwal perkuliahan resmi siap edar dan arsip akademik                   |
+| Komponen                | Teknologi                                                   | Deskripsi                                                                              |
+| :---------------------- | :---------------------------------------------------------- | :------------------------------------------------------------------------------------- |
+| **Frontend Framework**  | Next.js 16 (App Router), React 19, TypeScript 5             | Arsitektur web modern dengan engine Turbopack dan partial prefetching                  |
+| **Styling & Icons**     | Tailwind CSS v4 (`@tailwindcss/turbopack`), Lucide React    | Konfigurasi CSS-first, ikon SVG interaktif, performa rendering tinggi                  |
+| **Backend API**         | FastAPI 0.146+ (Python 3.10+)                               | Framework RESTful API asinkron dengan validasi skema otomatis (Pydantic v2)            |
+| **Mesin Optimasi (GA)** | Algoritma Genetika (NumPy, Python Core)                     | Algoritma heuristik UCTP dengan batasan keras & lunak serta inisialisasi cerdas        |
+| **Basis Data**          | SQLite (Default Dev dengan WAL Mode) / PostgreSQL (AlloyDB) | ORM SQLAlchemy 2.x dengan UUID/GUID platform-independent dan isolasi konkurensi tinggi |
+| **Scraper & Sync**      | BeautifulSoup4 4.15+, HTTPX 0.28+                           | Sinkronisasi data dosen resmi web Prodi Ilkom UBBG & integrasi kurikulum OpenSIMKA     |
+| **Task Queue**          | Hybrid Executor (Celery 5.6+ / Background Thread Fallback)  | Eksekusi tugas latar belakang asinkron anti-timeout dengan fallback cerdas             |
+| **Dokumentasi API**     | OpenAPI (Swagger UI & ReDoc)                                | Dokumentasi API interaktif bawaan di `/docs` dan `/redoc`                              |
+| **Ekspor Dokumen**      | OpenPyXL 3.1.5 (Excel), ReportLab 5.0.1 (PDF)               | Generator berkas jadwal perkuliahan resmi siap edar dan arsip akademik                 |
 
 ---
 
@@ -166,38 +166,38 @@ Seluruh endpoint backend berada di bawah prefix `/api/v1` dan dapat diuji secara
 
 ### 1. Manajemen Data Master (`/api/v1/master`)
 
-| Metode | Endpoint | Deskripsi |
-| :--- | :--- | :--- |
-| `GET` / `POST` | `/api/v1/master/lecturers` | Menampilkan seluruh dosen / Menambahkan dosen baru |
-| `PUT` / `DELETE` | `/api/v1/master/lecturers/{id}` | Memperbarui / Menghapus data dosen |
-| `GET` / `POST` | `/api/v1/master/rooms` | Menampilkan seluruh ruangan / Menambahkan ruang baru |
-| `PUT` / `DELETE` | `/api/v1/master/rooms/{id}` | Memperbarui / Menghapus data ruangan |
-| `GET` / `POST` | `/api/v1/master/time-slots` | Menampilkan seluruh slot waktu / Menambahkan slot baru |
-| `PUT` / `DELETE` | `/api/v1/master/time-slots/{id}` | Memperbarui / Menghapus slot waktu perkuliahan |
-| `GET` / `POST` | `/api/v1/master/courses` | Menampilkan katalog mata kuliah / Menambah MK baru |
-| `PUT` / `DELETE` | `/api/v1/master/courses/{id}` | Memperbarui / Menghapus data mata kuliah |
-| `GET` / `POST` | `/api/v1/master/classes` | Menampilkan rombel kelas / Menambahkan rombel kelas baru |
-| `PUT` / `DELETE` | `/api/v1/master/classes/{id}` | Memperbarui / Menghapus rombel kelas perkuliahan |
-| `GET` / `POST` | `/api/v1/master/preferences` | Menampilkan preferensi waktu dosen / Menambah preferensi |
-| `DELETE` | `/api/v1/master/preferences/{id}` | Menghapus preferensi waktu dosen |
+| Metode           | Endpoint                          | Deskripsi                                                |
+| :--------------- | :-------------------------------- | :------------------------------------------------------- |
+| `GET` / `POST`   | `/api/v1/master/lecturers`        | Menampilkan seluruh dosen / Menambahkan dosen baru       |
+| `PUT` / `DELETE` | `/api/v1/master/lecturers/{id}`   | Memperbarui / Menghapus data dosen                       |
+| `GET` / `POST`   | `/api/v1/master/rooms`            | Menampilkan seluruh ruangan / Menambahkan ruang baru     |
+| `PUT` / `DELETE` | `/api/v1/master/rooms/{id}`       | Memperbarui / Menghapus data ruangan                     |
+| `GET` / `POST`   | `/api/v1/master/time-slots`       | Menampilkan seluruh slot waktu / Menambahkan slot baru   |
+| `PUT` / `DELETE` | `/api/v1/master/time-slots/{id}`  | Memperbarui / Menghapus slot waktu perkuliahan           |
+| `GET` / `POST`   | `/api/v1/master/courses`          | Menampilkan katalog mata kuliah / Menambah MK baru       |
+| `PUT` / `DELETE` | `/api/v1/master/courses/{id}`     | Memperbarui / Menghapus data mata kuliah                 |
+| `GET` / `POST`   | `/api/v1/master/classes`          | Menampilkan rombel kelas / Menambahkan rombel kelas baru |
+| `PUT` / `DELETE` | `/api/v1/master/classes/{id}`     | Memperbarui / Menghapus rombel kelas perkuliahan         |
+| `GET` / `POST`   | `/api/v1/master/preferences`      | Menampilkan preferensi waktu dosen / Menambah preferensi |
+| `DELETE`         | `/api/v1/master/preferences/{id}` | Menghapus preferensi waktu dosen                         |
 
 ### 2. Validasi Kelayakan & Pencegahan Konflik (`/api/v1/conflicts`)
 
-| Metode | Endpoint | Deskripsi |
-| :--- | :--- | :--- |
-| `GET` | `/api/v1/conflicts/pre-check` | Validasi kelayakan rasio kapasitas ruangan, slot waktu, dan beban dosen sebelum GA dijalankan (`200 OK` / `422 Unprocessable Entity`) |
+| Metode | Endpoint                      | Deskripsi                                                                                                                             |
+| :----- | :---------------------------- | :------------------------------------------------------------------------------------------------------------------------------------ |
+| `GET`  | `/api/v1/conflicts/pre-check` | Validasi kelayakan rasio kapasitas ruangan, slot waktu, dan beban dosen sebelum GA dijalankan (`200 OK` / `422 Unprocessable Entity`) |
 
 ### 3. Penjadwalan & Algoritma Genetika (`/api/v1/schedules`)
 
-| Metode | Endpoint | Deskripsi |
-| :--- | :--- | :--- |
-| `POST` | `/api/v1/schedules/generate` | Memicu optimasi GA asinkron di latar belakang (`202 Accepted` + `job_id`) |
-| `GET` | `/api/v1/schedules/jobs/{job_id}/status` | Polling status eksekusi GA (persentase progres, generasi saat ini, fitness, konflik) |
-| `GET` | `/api/v1/schedules/jobs/{job_id}/result` | Mengambil matriks jadwal (mendukung filter `semester`, `kbk`, `lecturer_id`, `room_id`) |
-| `GET` | `/api/v1/schedules/jobs` | Menampilkan daftar riwayat seluruh pekerjaan optimasi jadwal yang pernah dijalankan |
-| `PATCH` | `/api/v1/schedules/jobs/{job_id}/publish` | Menetapkan hasil generasi jadwal sebagai jadwal perkuliahan resmi aktif (`is_published`) |
-| `POST` | `/api/v1/schedules/{schedule_id}/manual-swap` | Validasi bentrok dan penukaran slot waktu/ruangan secara manual pasca-generasi |
-| `GET` | `/api/v1/schedules/jobs/{job_id}/export` | Mengunduh jadwal resmi ke format binary (`?format=excel` untuk `.xlsx` atau `?format=pdf` untuk `.pdf`) |
+| Metode  | Endpoint                                      | Deskripsi                                                                                               |
+| :------ | :-------------------------------------------- | :------------------------------------------------------------------------------------------------------ |
+| `POST`  | `/api/v1/schedules/generate`                  | Memicu optimasi GA asinkron di latar belakang (`202 Accepted` + `job_id`)                               |
+| `GET`   | `/api/v1/schedules/jobs/{job_id}/status`      | Polling status eksekusi GA (persentase progres, generasi saat ini, fitness, konflik)                    |
+| `GET`   | `/api/v1/schedules/jobs/{job_id}/result`      | Mengambil matriks jadwal (mendukung filter `semester`, `kbk`, `lecturer_id`, `room_id`)                 |
+| `GET`   | `/api/v1/schedules/jobs`                      | Menampilkan daftar riwayat seluruh pekerjaan optimasi jadwal yang pernah dijalankan                     |
+| `PATCH` | `/api/v1/schedules/jobs/{job_id}/publish`     | Menetapkan hasil generasi jadwal sebagai jadwal perkuliahan resmi aktif (`is_published`)                |
+| `POST`  | `/api/v1/schedules/{schedule_id}/manual-swap` | Validasi bentrok dan penukaran slot waktu/ruangan secara manual pasca-generasi                          |
+| `GET`   | `/api/v1/schedules/jobs/{job_id}/export`      | Mengunduh jadwal resmi ke format binary (`?format=excel` untuk `.xlsx` atau `?format=pdf` untuk `.pdf`) |
 
 ---
 
@@ -208,6 +208,7 @@ Ikuti panduan langkah demi langkah di bawah ini untuk memasang dan menjalankan s
 ### 1. Prasyarat Sistem
 
 Pastikan perangkat Anda telah terpasang:
+
 - **Git:** Versi terbaru ([Unduh Git](https://git-scm.com/))
 - **Python:** Versi 3.10 atau lebih baru ([Unduh Python](https://www.python.org/))
 - **Node.js:** Versi 18.x atau 20.x+ beserta **npm** ([Unduh Node.js](https://nodejs.org/))
@@ -324,6 +325,7 @@ start-all.bat
 
 > [!TIP]
 > Skrip otomatis meluncurkan dua jendela terminal terpisah:
+>
 > 1. Terminal Backend: FastAPI di `http://127.0.0.1:8000` (Docs: `http://127.0.0.1:8000/docs`)
 > 2. Terminal Frontend: Next.js di `http://localhost:3000`
 
@@ -376,10 +378,10 @@ Sistem telah dirancang agar dapat diuji langsung dari berbagai perangkat (laptop
 
 ## 📊 Hasil Uji Konvergensi Algoritma Genetika
 
-| Skenario Pengujian                      | Jumlah Kelas | Ukuran Populasi | Maks. Generasi | Waktu Komputasi | Pelanggaran Mutlak (_Hard Conflicts_) | Pelanggaran Lunak (_Soft Conflicts_) |      Skor Fitness      |
-| :-------------------------------------- | :----------: | :-------------: | :------------: | :-------------: | :-----------------------------------: | :----------------------------------: | :--------------------: |
-| **Dataset Kurikulum Inti (Sem 1–5)**    | **52 Kelas** |   60 individu   |  150 generasi  | **~2.4 detik**  |      **0 (Nol / Zero Conflict)**      |             **0 (Ideal)**             | **1.0 (Optimal Sempurna)** |
-| **Dataset Skala Penuh Semester Ganjil** | **122 Kelas**|  100 individu   |  500 generasi  | **~34 detik**   |      **Minimal / Terkendali**         |             **Rendah**                | **Konvergen Teroptimasi** |
+| Skenario Pengujian                      | Jumlah Kelas  | Ukuran Populasi | Maks. Generasi | Waktu Komputasi | Pelanggaran Mutlak (_Hard Conflicts_) | Pelanggaran Lunak (_Soft Conflicts_) |        Skor Fitness        |
+| :-------------------------------------- | :-----------: | :-------------: | :------------: | :-------------: | :-----------------------------------: | :----------------------------------: | :------------------------: |
+| **Dataset Kurikulum Inti (Sem 1–5)**    | **52 Kelas**  |   60 individu   |  150 generasi  | **~2.4 detik**  |      **0 (Nol / Zero Conflict)**      |            **0 (Ideal)**             | **1.0 (Optimal Sempurna)** |
+| **Dataset Skala Penuh Semester Ganjil** | **122 Kelas** |  100 individu   |  500 generasi  |  **~34 detik**  |       **Minimal / Terkendali**        |              **Rendah**              | **Konvergen Teroptimasi**  |
 
 - ✅ **100% Bebas Bentrok Mutlak:** Seluruh dosen, 28 ruangan kelas/lab kampus, dan rombel mahasiswa berhasil terjadwal tanpa tumpang tindih ($HC_1$ s/d $HC_6$ = 0).
 - ✅ **Paralel Multi-KBK Berjalan Sempurna:** Kelas peminatan spesifik (Pemrograman, Multimedia, dan IoT) pada cohort yang sama sukses dialokasikan pada slot jam yang bersamaan di laboratorium berbeda tanpa konflik rombel.
@@ -407,23 +409,4 @@ Kontribusi dan kolaborasi terbuka bagi siapa saja! Jika Anda ingin memperbaiki _
    ```
 5. **Buka Pull Request (PR):** Masuk ke repositori GitHub asli dan klik **"New Pull Request"**. Jelaskan perubahan yang Anda buat secara jelas dan rinci.
 
-### Rencana Pengembangan Mendatang (Roadmap)
-
-- [x] Inisialisasi heuristik penempatan ruangan & mutasi adaptif anti-stagnasi.
-- [x] Matriks kalender 2D ruangan vs sesi waktu (_Room-Time Grid_).
-- [x] Fitur penyesuaian jadwal manual pasca-generasi (_Manual Swap_) dengan proteksi bentrok.
-- [x] Ekspor jadwal resmi ke format Excel (`.xlsx`) dan PDF (`.pdf`).
-- [x] Dukungan multi-device & pengujian via jaringan lokal (LAN binding dinamis).
-- [x] Sinkronisasi otomatis data dosen dari website resmi prodi S1 Ilmu Komputer UBBG (`ilkom.bbg.ac.id`).
-- [x] Integrasi kurikulum 71+ mata kuliah lengkap berbasis portal OpenSIMKA UBBG.
-- [x] Optimalisasi isolasi konkurensi database SQLite dengan mode WAL (_Write-Ahead Logging_).
-- [ ] Penambahan sistem autentikasi multi-peran (Admin Akademik, Dosen, Mahasiswa) berbasis JWT / OAuth2.
-- [ ] Integrasi notifikasi email otomatis ke dosen saat jadwal resmi dipublikasikan (`is_published = True`).
-- [ ] Fitur _Drag-and-Drop Schedule Adjustment_ langsung pada tampilan kalender matriks ruangan.
-- [ ] Ekspor ke format Kalender Google (`.ics`) untuk sinkronisasi jadwal dosen dan mahasiswa ke smartphone.
-
 ---
-
-## 📜 Lisensi
-
-Proyek ini didistribusikan di bawah lisensi **MIT License**. Silakan gunakan, pelajari, dan kembangkan untuk keperluan riset akademik maupun implementasi institusi perguruan tinggi.
