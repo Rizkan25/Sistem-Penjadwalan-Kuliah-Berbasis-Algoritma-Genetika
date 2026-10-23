@@ -98,8 +98,8 @@ export default function RoomMatrixGrid({
       <div className="overflow-x-auto border border-slate-200 rounded-xl">
         <table className="w-full border-collapse min-w-[900px]">
           <thead>
-            <tr className="bg-[#1E293B] text-white text-[11px] font-bold">
-              <th className="py-3 px-3 w-32 border-r border-slate-700 text-center uppercase tracking-wider sticky left-0 z-10 bg-[#1E293B]">
+            <tr className="bg-[#2F4050] text-white text-[11px] font-bold">
+              <th className="py-3 px-3 w-32 border-r border-slate-700 text-center uppercase tracking-wider sticky left-0 z-10 bg-[#2F4050]">
                 Waktu / Sesi
               </th>
               {rooms.map((room) => (

@@ -67,30 +67,55 @@ export default function Sidebar() {
         className={`
           ${isCollapsed ? 'w-0 -translate-x-full md:translate-x-0 md:w-[72px]' : 'w-64 translate-x-0 shadow-2xl md:shadow-none'} 
           fixed md:relative inset-y-0 left-0 z-40 md:z-20
-          bg-[#1E293B] text-slate-300 flex flex-col shrink-0 h-full border-r border-slate-700 overflow-x-hidden
+          bg-[#2F4050] text-slate-300 flex flex-col shrink-0 h-full border-r border-[#3b4f63] overflow-x-hidden
           transition-all duration-300 ease-in-out select-none
         `}
       >
-        {/* Brand Header */}
-        <div className={`border-b border-slate-700/80 bg-[#0F172A]/60 ${isCollapsed ? 'p-3.5 flex justify-center' : 'p-4'}`}>
+        {/* Brand Header with UBBG Wings Motif */}
+        <div className={`relative overflow-hidden border-b border-[#3b4f63] bg-[#243340]/90 ${isCollapsed ? 'p-3 flex justify-center' : 'p-3.5'}`}>
+          {/* Subtle Ambient Background Watermark (Sayap Supergraphic UBBG) */}
+          {!isCollapsed && (
+            <div className="absolute -right-5 -bottom-3 opacity-15 pointer-events-none select-none">
+              <img
+                src="/ubbg-wings-blue.png"
+                alt=""
+                className="w-28 h-auto filter brightness-150 contrast-125 rotate-[-6deg]"
+              />
+            </div>
+          )}
+
           <Link 
             href="/"
             onClick={handleNavClick}
-            className={`flex items-center space-x-3 group ${isCollapsed ? 'justify-center' : ''}`}
+            className={`flex items-center space-x-3 group relative z-10 ${isCollapsed ? 'justify-center' : ''}`}
             title="Kembali ke Dashboard Utama"
           >
+            {/* Logo Emblem with UBBG Wings Motif */}
             <div 
-              className="w-9 h-9 rounded-lg bg-[#1D8699] group-hover:bg-[#166d7d] flex items-center justify-center font-bold text-white shadow-md shadow-[#1D8699]/30 shrink-0 transition"
+              className="w-10 h-10 rounded-xl bg-gradient-to-br from-[#1E5F8A] via-[#1D8699] to-[#0E4D6E] p-1 flex items-center justify-center ring-1 ring-cyan-400/40 shadow-md shadow-cyan-950/50 shrink-0 group-hover:ring-cyan-300 group-hover:scale-105 transition-all duration-300 relative overflow-hidden"
             >
-              AG
+              <div className="absolute inset-0 bg-[radial-gradient(circle_at_top,_rgba(255,255,255,0.35),_transparent)] pointer-events-none" />
+              <img 
+                src="/ubbg-wings-icon.png" 
+                alt="UBBG Wings Emblem" 
+                className="w-8 h-auto object-contain filter drop-shadow-[0_1px_3px_rgba(0,0,0,0.5)] brightness-110"
+              />
             </div>
+
             {!isCollapsed && (
-              <div className="overflow-hidden transition-all duration-300">
-                <h1 className="text-sm font-bold text-white tracking-wide leading-tight whitespace-nowrap group-hover:text-cyan-400 transition">
-                  SIM-JADWAL GA
-                </h1>
-                <p className="text-[11px] text-cyan-400 font-medium whitespace-nowrap">
-                  FSTIK — UBBG Banda Aceh
+              <div className="overflow-hidden transition-all duration-300 min-w-0">
+                <div className="flex items-center space-x-1.5">
+                  <h1 className="text-sm font-black text-white tracking-wide leading-tight whitespace-nowrap group-hover:text-cyan-200 transition">
+                    SIM-JADWAL
+                  </h1>
+                  <span className="px-1.5 py-0.2 rounded bg-cyan-400/20 text-cyan-300 text-[10px] font-black tracking-wider border border-cyan-400/30">
+                    GA
+                  </span>
+                </div>
+                <p className="text-[11px] text-cyan-300/90 font-medium whitespace-nowrap flex items-center space-x-1 mt-0.5">
+                  <span>FSTIK</span>
+                  <span className="text-slate-400">•</span>
+                  <span>UBBG Banda Aceh</span>
                 </p>
               </div>
             )}
@@ -103,9 +128,9 @@ export default function Sidebar() {
             <div key={gIdx} className="space-y-1">
               {/* Group Header or Divider */}
               {isCollapsed ? (
-                gIdx > 0 && <div className="border-t border-slate-700/50 my-2 mx-1" />
+                gIdx > 0 && <div className="border-t border-[#3b4f63]/80 my-2 mx-1" />
               ) : (
-                <h2 className="px-3 text-[10px] font-semibold tracking-wider text-slate-400 uppercase whitespace-nowrap">
+                <h2 className="px-3 text-[10px] font-bold tracking-wider text-slate-300/80 uppercase whitespace-nowrap">
                   {group.title}
                 </h2>
               )}
@@ -125,10 +150,10 @@ export default function Sidebar() {
                           className={`w-11 h-11 flex items-center justify-center rounded-xl transition-all duration-200 cursor-pointer ${
                             isActive
                               ? 'bg-[#1D8699] text-white shadow-md shadow-[#1D8699]/30 font-bold scale-105'
-                              : 'text-slate-400 hover:text-white hover:bg-slate-700/60'
+                              : 'text-slate-300 hover:text-white hover:bg-white/10'
                           }`}
                         >
-                          <Icon className={`w-5 h-5 ${isActive ? 'text-white' : 'text-slate-400 group-hover:text-white'}`} />
+                          <Icon className={`w-5 h-5 ${isActive ? 'text-white' : 'text-slate-300 group-hover:text-white'}`} />
                         </Link>
                       </div>
                     );
@@ -142,7 +167,7 @@ export default function Sidebar() {
                       className={`flex items-center justify-between px-3 py-2 rounded-lg text-xs font-medium transition-colors cursor-pointer ${
                         isActive
                           ? 'bg-[#1D8699] text-white shadow-sm shadow-[#1D8699]/20 font-semibold'
-                          : 'text-slate-300 hover:bg-slate-700/60 hover:text-white'
+                          : 'text-slate-200 hover:bg-white/10 hover:text-white'
                       }`}
                     >
                       <div className="flex items-center space-x-2.5 overflow-hidden">
@@ -159,7 +184,7 @@ export default function Sidebar() {
         </nav>
 
         {/* Academic Year Badge */}
-        <div className={`border-t border-slate-700/80 bg-slate-900/60 ${isCollapsed ? 'p-2 flex justify-center m-1 rounded-xl' : 'p-3 m-2 rounded-xl'}`}>
+        <div className={`border-t border-[#3b4f63] bg-[#243340]/80 ${isCollapsed ? 'p-2 flex justify-center m-1 rounded-xl' : 'p-3 m-2 rounded-xl'}`}>
           {isCollapsed ? (
             <div 
               className="w-8 h-8 rounded-lg bg-emerald-500/10 border border-emerald-500/30 flex items-center justify-center cursor-pointer group relative"
@@ -174,7 +199,7 @@ export default function Sidebar() {
             </div>
           ) : (
             <div className="flex items-center justify-between text-[11px]">
-              <span className="text-slate-400">Semester Aktif:</span>
+              <span className="text-slate-300">Semester Aktif:</span>
               <span className="font-semibold text-emerald-400 flex items-center space-x-1">
                 <CheckCircle2 className="w-3 h-3 text-emerald-400" />
                 <span>Ganjil 2026/2027</span>

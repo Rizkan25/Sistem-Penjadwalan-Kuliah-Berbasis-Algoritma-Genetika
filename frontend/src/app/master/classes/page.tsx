@@ -249,7 +249,7 @@ export default function ClassesPage() {
       const matchCode = (c.course?.code || '').toLowerCase().includes(q);
       const matchLecturer = (c.lecturer?.name || '').toLowerCase().includes(q);
       const matchKbk = c.kbk.toLowerCase().includes(q);
-      const matchCohort = `kelas ${c.cohort.toLowerCase()}`.includes(q);
+      const matchCohort = `rombel ${c.cohort.toLowerCase()}`.includes(q) || `kelas ${c.cohort.toLowerCase()}`.includes(q);
       if (!matchName && !matchCourse && !matchCode && !matchLecturer && !matchKbk && !matchCohort) {
         return false;
       }
@@ -326,38 +326,59 @@ export default function ClassesPage() {
       ) : (
         <div className="bg-white rounded-xl border border-slate-200 shadow-xs overflow-hidden">
           {/* Table Header & Controls (Quick Search & Semester Filter) */}
-          <div className="p-4 border-b border-slate-100 flex flex-col gap-3">
-            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
-              <div>
-                <div className="font-bold text-slate-800 text-xs flex items-center space-x-2">
-                  <span>Daftar Kelas Semester Ganjil 2026/2027</span>
-                  <span className="px-2 py-0.5 rounded-full bg-slate-100 text-slate-600 text-[10px] font-semibold">
-                    {sortedClasses.length} dari {classes.length} Kelas
-                  </span>
-                </div>
-                <div className="text-[10px] text-slate-500 mt-0.5 flex items-center space-x-1.5">
-                  <span>Urutan:</span>
-                  <span className="font-bold text-[#1D8699]">
+          <div className="p-4 border-b border-slate-100 flex flex-col md:flex-row md:items-center justify-between gap-3.5 bg-white">
+            {/* Left Info: Title, Badge, and Sort indicator */}
+            <div className="min-w-0 flex-1">
+              <div className="flex flex-wrap items-center gap-2">
+                <h3 className="font-bold text-slate-800 text-xs sm:text-sm">
+                  Daftar Rombel Semester Ganjil 2026/2027
+                </h3>
+                <span className="px-2.5 py-0.5 rounded-full bg-slate-100 text-slate-700 text-[10px] font-bold border border-slate-200">
+                  {sortedClasses.length} dari {classes.length} Rombel
+                </span>
+              </div>
+              <div className="text-[11px] text-slate-500 mt-1 flex flex-wrap items-center gap-x-2 gap-y-0.5">
+                <span>
+                  Urutan: <strong className="text-[#1D8699] font-bold">
                     {sortField === 'class_name' && 'Nama Kelas'}
                     {sortField === 'course' && 'Mata Kuliah'}
                     {sortField === 'lecturer' && 'Dosen Pengampu'}
-                    {sortField === 'semester' && 'Semester & Cohort'}
+                    {sortField === 'semester' && 'Semester & Rombel'}
                     {sortField === 'kbk' && 'Jalur KBK'}
                     {sortField === 'student_count' && 'Jumlah Mahasiswa'}
-                  </span>
-                  <span>({sortDirection === 'asc' ? 'Menaik / A-Z' : 'Menurun / Z-A'})</span>
-                  <span className="text-slate-400">• Klik header kolom untuk mengganti urutan</span>
-                </div>
+                  </strong> ({sortDirection === 'asc' ? 'Menaik / A-Z' : 'Menurun / Z-A'})
+                </span>
+                <span className="hidden sm:inline text-slate-300">•</span>
+                <span className="text-slate-400 text-[10px]">Klik header kolom untuk mengganti urutan</span>
+              </div>
+            </div>
+
+            {/* Right Controls: Filter Semester + Quick Search in one sleek row */}
+            <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-2.5 shrink-0">
+              {/* Semester Filter */}
+              <div className="flex items-center space-x-1.5 bg-slate-50 border border-slate-200 rounded-lg px-2.5 py-1.5 focus-within:border-[#1D8699] focus-within:bg-white focus-within:ring-2 focus-within:ring-[#1D8699]/20 transition shadow-2xs">
+                <Filter className="w-3.5 h-3.5 text-[#1D8699] shrink-0" />
+                <span className="text-[11px] font-semibold text-slate-500 shrink-0">Semester:</span>
+                <select
+                  value={tableSemesterFilter === 'ALL' ? 'ALL' : tableSemesterFilter}
+                  onChange={(e) => setTableSemesterFilter(e.target.value === 'ALL' ? 'ALL' : Number(e.target.value))}
+                  className="bg-transparent text-xs font-bold text-slate-700 outline-none cursor-pointer pr-1"
+                >
+                  <option value="ALL">Semua</option>
+                  {[1, 2, 3, 4, 5, 6, 7, 8].map((s) => (
+                    <option key={s} value={s}>Sem {s}</option>
+                  ))}
+                </select>
               </div>
 
               {/* Quick Search Input */}
-              <div className="relative w-full sm:w-72">
+              <div className="relative w-full sm:w-64">
                 <Search className="w-3.5 h-3.5 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2" />
                 <input
                   type="text"
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
-                  placeholder="Cari kelas, MK, dosen, KBK..."
+                  placeholder="Cari rombel, MK, dosen, KBK..."
                   className="w-full pl-8 pr-7 py-1.5 bg-slate-50 hover:bg-white focus:bg-white border border-slate-200 rounded-lg text-xs text-slate-800 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-[#1D8699]/30 focus:border-[#1D8699] transition shadow-2xs"
                 />
                 {searchQuery && (
@@ -369,26 +390,6 @@ export default function ClassesPage() {
                     <X className="w-3.5 h-3.5" />
                   </button>
                 )}
-              </div>
-            </div>
-
-            {/* Semester Filter Dropdown (Gambar 5 style: rapi, ringkas, responsif) */}
-            <div className="flex items-center gap-2 pt-1">
-              <span className="text-[11px] font-semibold text-slate-500 flex items-center space-x-1 shrink-0">
-                <Filter className="w-3.5 h-3.5 text-[#1D8699]" />
-                <span>Filter Semester:</span>
-              </span>
-              <div className="relative inline-block w-48">
-                <select
-                  value={tableSemesterFilter === 'ALL' ? 'ALL' : tableSemesterFilter}
-                  onChange={(e) => setTableSemesterFilter(e.target.value === 'ALL' ? 'ALL' : Number(e.target.value))}
-                  className="w-full px-3 py-1.5 rounded-lg border border-slate-300 text-xs font-semibold text-slate-700 bg-white hover:border-[#1D8699] focus:outline-none focus:ring-2 focus:ring-[#1D8699]/20 transition cursor-pointer shadow-2xs"
-                >
-                  <option value="ALL">Semua Semester</option>
-                  {[1, 2, 3, 4, 5, 6, 7, 8].map((s) => (
-                    <option key={s} value={s}>Semester {s}</option>
-                  ))}
-                </select>
               </div>
             </div>
           </div>
@@ -433,14 +434,14 @@ export default function ClassesPage() {
                     </div>
                   </th>
 
-                  {/* Kolom 4: Semester / Cohort */}
+                  {/* Kolom 4: Semester / Rombel */}
                   <th 
                     onClick={() => handleSort('semester')}
                     className="py-2.5 px-4 text-center cursor-pointer hover:bg-slate-100 transition group"
-                    title="Klik untuk mengurutkan berdasarkan Semester & Cohort"
+                    title="Klik untuk mengurutkan berdasarkan Semester & Rombel"
                   >
                     <div className="flex items-center justify-center space-x-1">
-                      <span className={sortField === 'semester' ? 'text-[#1D8699]' : ''}>Semester / Cohort</span>
+                      <span className={sortField === 'semester' ? 'text-[#1D8699]' : ''}>Semester / Rombel</span>
                       {renderSortIcon('semester')}
                     </div>
                   </th>
@@ -509,7 +510,7 @@ export default function ClassesPage() {
                         </td>
                         <td className="py-3 px-4 text-center">
                           <span className="font-bold text-slate-800">Sem {c.semester}</span>
-                          <span className="text-[10px] text-slate-500 block">Kelas {c.cohort}</span>
+                          <span className="text-[10px] text-slate-500 block">Rombel {c.cohort}</span>
                         </td>
                         <td className="py-3 px-4">
                           <span className={`px-2 py-0.5 rounded-full text-[10px] font-bold ${
@@ -567,7 +568,7 @@ export default function ClassesPage() {
                   <p className="text-[11px] text-slate-500">
                     {editingClassId
                       ? 'Perbarui mata kuliah, dosen pengampu, nama kelas, semester, atau kelompok'
-                      : 'Gunakan tombol semester untuk menyaring mata kuliah agar mudah dipilih'}
+                      : 'Pilih semester untuk menyaring mata kuliah agar mudah dipilih'}
                   </p>
                 </div>
               </div>
@@ -584,67 +585,27 @@ export default function ClassesPage() {
             </div>
 
             <form onSubmit={handleSubmitClass} className="space-y-4 text-xs">
-              {/* 1. SEMESTER SELECTOR BUTTONS */}
+              {/* 1. SEMESTER SELECTOR DROPDOWN */}
               <div>
-                <div className="flex items-center justify-between mb-1.5">
-                  <label className="font-bold text-slate-700 flex items-center space-x-1.5">
-                    <Filter className="w-3.5 h-3.5 text-[#1D8699]" />
-                    <span>Pilih Semester (Penyaring MK):</span>
-                  </label>
-                  <span className="text-[11px] text-slate-500 font-medium">
-                    {modalFilterSemester === 'ALL'
-                      ? 'Semua Semester'
-                      : `Semester ${modalFilterSemester}`}
-                  </span>
-                </div>
+                <label className="font-bold text-slate-700 flex items-center space-x-1.5 mb-1.5">
+                  <Filter className="w-3.5 h-3.5 text-[#1D8699]" />
+                  <span>Pilih Semester (Penyaring MK):</span>
+                </label>
 
-                <div className="flex flex-wrap gap-1.5 p-1.5 bg-slate-100/90 rounded-xl border border-slate-200">
-                  <button
-                    type="button"
-                    onClick={() => handleSelectModalSemester('ALL')}
-                    className={`px-3 py-1.5 rounded-lg text-xs font-bold transition cursor-pointer ${
-                      modalFilterSemester === 'ALL'
-                        ? 'bg-[#1D8699] text-white shadow-xs'
-                        : 'bg-white text-slate-600 hover:bg-slate-50 border border-slate-200'
-                    }`}
-                  >
-                    Semua ({courses.length})
-                  </button>
-
-                  {[1, 2, 3, 4, 5, 6, 7, 8].map((s) => {
-                    const count = courses.filter((c) => c.semester === s).length;
-                    const isActive = modalFilterSemester === s;
-                    const hasCourses = count > 0;
-
-                    return (
-                      <button
-                        key={s}
-                        type="button"
-                        disabled={!hasCourses}
-                        onClick={() => handleSelectModalSemester(s)}
-                        title={hasCourses ? `${count} mata kuliah tersedia` : 'Tidak ada mata kuliah aktif di semester ini'}
-                        className={`px-2.5 py-1.5 rounded-lg text-xs font-semibold transition cursor-pointer flex items-center space-x-1 ${
-                          !hasCourses
-                            ? 'bg-slate-100 text-slate-300 border border-slate-200/40 cursor-not-allowed opacity-60'
-                            : isActive
-                            ? 'bg-[#1D8699] text-white shadow-xs font-bold'
-                            : 'bg-white text-slate-700 hover:bg-slate-50 border border-slate-200'
-                        }`}
-                      >
-                        <span>Sem {s}</span>
-                        {hasCourses && (
-                          <span
-                            className={`text-[10px] px-1.5 py-0.2 rounded-full font-bold ${
-                              isActive ? 'bg-white/25 text-white' : 'bg-slate-100 text-slate-500'
-                            }`}
-                          >
-                            {count}
-                          </span>
-                        )}
-                      </button>
-                    );
-                  })}
-                </div>
+                <select
+                  value={modalFilterSemester}
+                  onChange={(e) =>
+                    handleSelectModalSemester(e.target.value === 'ALL' ? 'ALL' : Number(e.target.value))
+                  }
+                  className="w-full px-3 py-2.5 bg-white border border-slate-300 rounded-lg text-xs font-semibold text-slate-800 focus:outline-none focus:ring-2 focus:ring-[#1D8699]/30 focus:border-[#1D8699] transition shadow-2xs cursor-pointer"
+                >
+                  <option value="ALL">Semua Semester</option>
+                  {[1, 2, 3, 4, 5, 6, 7, 8].map((s) => (
+                    <option key={s} value={s}>
+                      Semester {s}
+                    </option>
+                  ))}
+                </select>
               </div>
 
               {/* 2. REVISED COURSE SELECT DROPDOWN */}
@@ -777,14 +738,16 @@ export default function ClassesPage() {
                 </div>
 
                 <div>
-                  <label className="font-bold text-slate-700 block mb-1">Kelompok (Cohort):</label>
+                  <label className="font-bold text-slate-700 block mb-1">Rombel:</label>
                   <select
                     value={cohort}
                     onChange={(e) => handleCohortChange(e.target.value)}
-                    className="w-full px-3 py-2 bg-white border border-slate-300 rounded-lg text-xs font-medium text-slate-800 focus:outline-none focus:ring-2 focus:ring-[#1D8699]/30"
+                    className="w-full px-3 py-2 bg-white border border-slate-300 rounded-lg text-xs font-semibold text-slate-800 focus:outline-none focus:ring-2 focus:ring-[#1D8699]/30"
                   >
-                    <option value="A">Kelas A (Reguler A)</option>
-                    <option value="B">Kelas B (Reguler B)</option>
+                    <option value="A">Rombel A</option>
+                    <option value="B">Rombel B</option>
+                    <option value="C">Rombel C</option>
+                    <option value="D">Rombel D</option>
                   </select>
                 </div>
 
