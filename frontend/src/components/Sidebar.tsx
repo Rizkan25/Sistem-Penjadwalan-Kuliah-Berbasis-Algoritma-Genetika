@@ -73,29 +73,22 @@ export default function Sidebar() {
       >
         {/* Brand Header with UBBG Motif */}
         <div className={`relative overflow-hidden border-b border-[#3b4f63] bg-[#243340]/90 ${isCollapsed ? 'p-3 flex justify-center' : 'p-3.5'}`}>
-          {/* Subtle Ambient Background Watermark (UBBG Graphic) */}
-          {!isCollapsed && (
-            <div className="absolute -right-1 -bottom-2 opacity-20 pointer-events-none select-none flex items-end">
-              <span className="font-black text-4xl tracking-tighter text-cyan-200 select-none">
-                UBBG
-              </span>
-            </div>
-          )}
-
           <Link 
             href="/"
             onClick={handleNavClick}
             className={`flex items-center space-x-3 group relative z-10 ${isCollapsed ? 'justify-center' : ''}`}
             title="Kembali ke Dashboard Utama"
           >
-            {/* Logo Emblem with UBBG Branding */}
+            {/* Official UBBG Logo Emblem */}
             <div 
-              className="w-10 h-10 rounded-xl bg-gradient-to-br from-[#1E5F8A] via-[#1D8699] to-[#0E4D6E] flex items-center justify-center ring-1 ring-cyan-400/40 shadow-md shadow-cyan-950/50 shrink-0 group-hover:ring-cyan-300 group-hover:scale-105 transition-all duration-300 relative overflow-hidden"
+              className="w-10 h-10 rounded-xl bg-gradient-to-br from-[#1E5F8A] via-[#1D8699] to-[#0E4D6E] p-1.5 flex items-center justify-center ring-1 ring-cyan-400/40 shadow-md shadow-cyan-950/50 shrink-0 group-hover:ring-cyan-300 group-hover:scale-105 transition-all duration-300 relative overflow-hidden"
             >
               <div className="absolute inset-0 bg-[radial-gradient(circle_at_top,_rgba(255,255,255,0.35),_transparent)] pointer-events-none" />
-              <span className="font-black text-[11px] tracking-tight text-white drop-shadow-[0_1px_2px_rgba(0,0,0,0.6)]">
-                UBBG
-              </span>
+              <img 
+                src="/ubbg-logo.png" 
+                alt="Logo UBBG" 
+                className="w-7 h-7 object-contain drop-shadow-[0_1px_2px_rgba(0,0,0,0.5)]"
+              />
             </div>
 
             {!isCollapsed && (

@@ -132,7 +132,7 @@ export default function CoursesPage() {
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-3">
         <div className="bg-white p-3.5 rounded-xl border border-slate-200 shadow-xs flex items-center justify-between gap-2">
           <div className="min-w-0">
-            <div className="text-[11px] font-semibold text-slate-500 uppercase tracking-wider truncate">Total Mata Kuliah</div>
+            <div className="text-[10px] sm:text-[11px] font-semibold text-slate-500 uppercase tracking-wider">Total Mata Kuliah</div>
             <div className="text-lg sm:text-xl font-extrabold text-slate-800 mt-0.5 whitespace-nowrap">{stats.total} MK</div>
           </div>
           <div className="w-9 h-9 rounded-lg bg-[#1D8699]/10 text-[#1D8699] flex items-center justify-center font-bold text-xs shrink-0">
@@ -142,7 +142,7 @@ export default function CoursesPage() {
 
         <div className="bg-white p-3.5 rounded-xl border border-slate-200 shadow-xs flex items-center justify-between gap-2">
           <div className="min-w-0">
-            <div className="text-[11px] font-semibold text-slate-500 uppercase tracking-wider truncate">Total Beban SKS</div>
+            <div className="text-[10px] sm:text-[11px] font-semibold text-slate-500 uppercase tracking-wider">Total Beban SKS</div>
             <div className="text-lg sm:text-xl font-extrabold text-slate-800 mt-0.5 whitespace-nowrap">{stats.totalSks} SKS</div>
           </div>
           <div className="w-9 h-9 rounded-lg bg-teal-50 text-teal-700 flex items-center justify-center font-bold text-xs shrink-0">
@@ -151,10 +151,12 @@ export default function CoursesPage() {
         </div>
 
         <div className="bg-white p-3.5 rounded-xl border border-slate-200 shadow-xs flex items-center justify-between gap-2">
-          <div className="min-w-0">
-            <div className="text-[11px] font-semibold text-slate-500 uppercase tracking-wider truncate">Teori vs Praktikum</div>
-            <div className="text-xs sm:text-sm font-bold text-slate-800 mt-0.5">
-              <span className="text-purple-700">{stats.theoryCount} Teori</span> <span className="text-slate-400">/</span> <span className="text-blue-700">{stats.labCount} Lab</span>
+          <div className="min-w-0 flex-1">
+            <div className="text-[10px] sm:text-[11px] font-semibold text-slate-500 uppercase tracking-wider">Teori / Praktikum</div>
+            <div className="text-xs sm:text-sm font-bold text-slate-800 mt-1 flex flex-wrap items-center gap-x-1.5 gap-y-0.5">
+              <span className="text-purple-700 whitespace-nowrap">{stats.theoryCount} Teori</span>
+              <span className="text-slate-400">/</span>
+              <span className="text-blue-700 whitespace-nowrap">{stats.labCount} Praktikum</span>
             </div>
           </div>
           <div className="w-9 h-9 rounded-lg bg-purple-50 text-purple-700 flex items-center justify-center font-bold text-xs shrink-0">
@@ -163,10 +165,12 @@ export default function CoursesPage() {
         </div>
 
         <div className="bg-white p-3.5 rounded-xl border border-slate-200 shadow-xs flex items-center justify-between gap-2">
-          <div className="min-w-0">
-            <div className="text-[11px] font-semibold text-slate-500 uppercase tracking-wider truncate">Wajib vs Pilihan</div>
-            <div className="text-xs sm:text-sm font-bold text-slate-800 mt-0.5">
-              <span className="text-slate-800">{stats.wajibCount} Wajib</span> <span className="text-slate-400">/</span> <span className="text-emerald-700">{stats.total - stats.wajibCount} Pil</span>
+          <div className="min-w-0 flex-1">
+            <div className="text-[10px] sm:text-[11px] font-semibold text-slate-500 uppercase tracking-wider">Wajib / Pilihan</div>
+            <div className="text-xs sm:text-sm font-bold text-slate-800 mt-1 flex flex-wrap items-center gap-x-1.5 gap-y-0.5">
+              <span className="text-slate-800 whitespace-nowrap">{stats.wajibCount} Wajib</span>
+              <span className="text-slate-400">/</span>
+              <span className="text-emerald-700 whitespace-nowrap">{stats.total - stats.wajibCount} Pilihan</span>
             </div>
           </div>
           <div className="w-9 h-9 rounded-lg bg-emerald-50 text-emerald-700 flex items-center justify-center font-bold text-xs shrink-0">
