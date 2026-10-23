@@ -36,8 +36,8 @@ export default function TopNav({
         <div className="min-w-0 flex-1 overflow-hidden">
           <Link href="/" className="group block" title="Menuju Dashboard">
             <h1 className="text-xs sm:text-sm md:text-base font-bold text-slate-800 leading-tight truncate group-hover:text-[#1D8699] transition">
-              <span className="lg:hidden">SIM-JADWAL GA</span>
-              <span className="hidden lg:inline xl:hidden">Sistem Penjadwalan Kuliah GA</span>
+              <span className="lg:hidden">Penjadwalan Kuliah</span>
+              <span className="hidden lg:inline xl:hidden">Sistem Penjadwalan Kuliah</span>
               <span className="hidden xl:inline">{title}</span>
             </h1>
             <p className="text-[10px] sm:text-xs text-slate-500 font-medium truncate hidden lg:block">

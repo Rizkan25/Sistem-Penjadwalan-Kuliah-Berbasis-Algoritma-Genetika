@@ -71,16 +71,14 @@ export default function Sidebar() {
           transition-all duration-300 ease-in-out select-none
         `}
       >
-        {/* Brand Header with UBBG Wings Motif */}
+        {/* Brand Header with UBBG Motif */}
         <div className={`relative overflow-hidden border-b border-[#3b4f63] bg-[#243340]/90 ${isCollapsed ? 'p-3 flex justify-center' : 'p-3.5'}`}>
-          {/* Subtle Ambient Background Watermark (Sayap Supergraphic UBBG) */}
+          {/* Subtle Ambient Background Watermark (UBBG Graphic) */}
           {!isCollapsed && (
-            <div className="absolute -right-5 -bottom-3 opacity-15 pointer-events-none select-none">
-              <img
-                src="/ubbg-wings-blue.png"
-                alt=""
-                className="w-28 h-auto filter brightness-150 contrast-125 rotate-[-6deg]"
-              />
+            <div className="absolute -right-1 -bottom-2 opacity-20 pointer-events-none select-none flex items-end">
+              <span className="font-black text-4xl tracking-tighter text-cyan-200 select-none">
+                UBBG
+              </span>
             </div>
           )}
 
@@ -90,33 +88,21 @@ export default function Sidebar() {
             className={`flex items-center space-x-3 group relative z-10 ${isCollapsed ? 'justify-center' : ''}`}
             title="Kembali ke Dashboard Utama"
           >
-            {/* Logo Emblem with UBBG Wings Motif */}
+            {/* Logo Emblem with UBBG Branding */}
             <div 
-              className="w-10 h-10 rounded-xl bg-gradient-to-br from-[#1E5F8A] via-[#1D8699] to-[#0E4D6E] p-1 flex items-center justify-center ring-1 ring-cyan-400/40 shadow-md shadow-cyan-950/50 shrink-0 group-hover:ring-cyan-300 group-hover:scale-105 transition-all duration-300 relative overflow-hidden"
+              className="w-10 h-10 rounded-xl bg-gradient-to-br from-[#1E5F8A] via-[#1D8699] to-[#0E4D6E] flex items-center justify-center ring-1 ring-cyan-400/40 shadow-md shadow-cyan-950/50 shrink-0 group-hover:ring-cyan-300 group-hover:scale-105 transition-all duration-300 relative overflow-hidden"
             >
               <div className="absolute inset-0 bg-[radial-gradient(circle_at_top,_rgba(255,255,255,0.35),_transparent)] pointer-events-none" />
-              <img 
-                src="/ubbg-wings-icon.png" 
-                alt="UBBG Wings Emblem" 
-                className="w-8 h-auto object-contain filter drop-shadow-[0_1px_3px_rgba(0,0,0,0.5)] brightness-110"
-              />
+              <span className="font-black text-[11px] tracking-tight text-white drop-shadow-[0_1px_2px_rgba(0,0,0,0.6)]">
+                UBBG
+              </span>
             </div>
 
             {!isCollapsed && (
               <div className="overflow-hidden transition-all duration-300 min-w-0">
-                <div className="flex items-center space-x-1.5">
-                  <h1 className="text-sm font-black text-white tracking-wide leading-tight whitespace-nowrap group-hover:text-cyan-200 transition">
-                    SIM-JADWAL
-                  </h1>
-                  <span className="px-1.5 py-0.2 rounded bg-cyan-400/20 text-cyan-300 text-[10px] font-black tracking-wider border border-cyan-400/30">
-                    GA
-                  </span>
-                </div>
-                <p className="text-[11px] text-cyan-300/90 font-medium whitespace-nowrap flex items-center space-x-1 mt-0.5">
-                  <span>FSTIK</span>
-                  <span className="text-slate-400">•</span>
-                  <span>UBBG Banda Aceh</span>
-                </p>
+                <h1 className="text-sm font-bold text-white tracking-wide leading-tight whitespace-nowrap group-hover:text-cyan-200 transition">
+                  Penjadwalan Kuliah
+                </h1>
               </div>
             )}
           </Link>
