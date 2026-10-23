@@ -89,7 +89,7 @@ export default function RoomMatrixGrid({
         <div className="mb-4 p-3 bg-amber-50 border border-amber-200 rounded-xl text-amber-800 text-xs flex items-center space-x-2">
           <Lock className="w-4 h-4 text-amber-600 shrink-0" />
           <span>
-            <strong>Aturan Khusus Hari Jumat (Banda Aceh):</strong> Rentang waktu 11:30 - 14:00 WIB dikunci untuk pelaksanaan ibadah Sholat Jumat (Zero Class Activity).
+            <strong>Aturan Khusus Hari Jumat (Banda Aceh):</strong> Rentang waktu 12:00 - 14:00 WIB dikunci untuk pelaksanaan ibadah Sholat Jumat (Zero Class Activity).
           </span>
         </div>
       )}
@@ -100,7 +100,7 @@ export default function RoomMatrixGrid({
           <thead>
             <tr className="bg-[#2F4050] text-white text-[11px] font-bold">
               <th className="py-3 px-3 w-32 border-r border-slate-700 text-center uppercase tracking-wider sticky left-0 z-10 bg-[#2F4050]">
-                Waktu / Sesi
+                Waktu / Jam Ke
               </th>
               {rooms.map((room) => (
                 <th key={room.id} className="py-3 px-2 border-r border-slate-700 text-center min-w-[140px]">
@@ -127,7 +127,7 @@ export default function RoomMatrixGrid({
                   <td className="py-4 px-3 bg-slate-50 border-r border-slate-200 text-center align-middle sticky left-0 z-10">
                     <div className="flex flex-col items-center justify-center space-y-1">
                       <span className="font-bold text-xs text-slate-800 font-mono-metrics">
-                        Sesi {slot.period_order}
+                        Jam Ke-{slot.period_order}
                       </span>
                       <span className="text-[11px] text-slate-500 font-mono-metrics flex items-center space-x-1">
                         <Clock className="w-3 h-3 text-[#1D8699]" />

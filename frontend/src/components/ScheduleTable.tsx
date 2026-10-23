@@ -67,7 +67,7 @@ export default function ScheduleTable({ schedules, onOpenSwapModal }: ScheduleTa
                         {timeStr} WIB
                       </span>
                       <span className="text-[10px] text-slate-400">
-                        Sesi ke-{item.period_order}
+                        Jam ke-{item.period_order}
                       </span>
                     </div>
                   </td>

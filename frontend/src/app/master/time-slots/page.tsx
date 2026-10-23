@@ -80,10 +80,10 @@ export default function TimeSlotsPage() {
         <div>
           <h2 className="text-xl font-bold text-slate-800 flex items-center space-x-2">
             <Clock className="w-5 h-5 text-[#1D8699]" />
-            <span>Data Master Slot Waktu Pembelajaran (Macro-Slot)</span>
+            <span>Data Master Slot Waktu Pembelajaran</span>
           </h2>
           <p className="text-xs text-slate-500 mt-1">
-            Definisi blok sesi waktu perkuliahan mingguan (Senin–Sabtu) dengan aturan kunci ibadah Sholat Jumat.
+            Definisi jam perkuliahan mingguan (Jam 1 s.d 9, Senin–Sabtu) dengan aturan kunci ibadah Sholat Jumat (12:00–14:00 WIB).
           </p>
         </div>
 
@@ -118,7 +118,7 @@ export default function TimeSlotsPage() {
                 <div className="p-3.5 bg-slate-50 border-b border-slate-200 font-bold text-slate-800 text-xs flex items-center justify-between">
                   <span>{DAY_NAMES[dayNum]}</span>
                   <span className="px-2 py-0.5 rounded-full bg-slate-200 text-slate-700 text-[10px]">
-                    {slotsForDay.length} Sesi
+                    {slotsForDay.length} Jam Perkuliahan
                   </span>
                 </div>
 
@@ -132,7 +132,7 @@ export default function TimeSlotsPage() {
                       >
                         <div>
                           <div className="font-bold text-slate-800">
-                            Sesi ke-{slot.period_order}
+                            Jam ke-{slot.period_order}
                           </div>
                           <div className="font-mono-metrics text-slate-600 text-[11px]">
                             {timeRange}
@@ -154,7 +154,7 @@ export default function TimeSlotsPage() {
                     <div className="p-2.5 rounded-lg border border-amber-200 bg-amber-50 text-amber-800 text-[11px] flex items-center space-x-2">
                       <Lock className="w-4 h-4 text-amber-600 shrink-0" />
                       <div>
-                        <strong>11:30 - 14:00 WIB Dikunci:</strong>
+                        <strong>12:00 - 14:00 WIB Dikunci:</strong>
                         <div className="text-[10px] text-amber-700">Ibadah Sholat Jumat (Zero Class)</div>
                       </div>
                     </div>

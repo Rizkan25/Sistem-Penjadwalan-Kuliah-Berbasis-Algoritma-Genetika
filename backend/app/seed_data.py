@@ -102,20 +102,29 @@ def seed_database():
         db.flush()
 
         # 3. Seed Time Slots
-        # Days 1=Senin to 6=Sabtu. Friday (5) has locked break 11:30 - 14:00
+        # Days 1=Senin to 6=Sabtu (Jam 1 s.d 9 sesuai dataset resmi perkuliahan UBBG)
         created_slots = []
         regular_periods = [
-            (1, time(8, 0), time(10, 0)),
-            (2, time(10, 15), time(12, 0)),
-            (3, time(14, 0), time(16, 0)),
-            (4, time(16, 15), time(18, 0)),
+            (1, time(9, 0), time(9, 50)),
+            (2, time(9, 50), time(10, 40)),
+            (3, time(10, 40), time(11, 30)),
+            (4, time(11, 30), time(12, 20)),
+            (5, time(14, 0), time(14, 50)),
+            (6, time(14, 50), time(15, 40)),
+            (7, time(15, 40), time(16, 30)),
+            (8, time(16, 30), time(17, 20)),
+            (9, time(17, 20), time(18, 10)),
         ]
         friday_periods = [
-            (1, time(8, 0), time(9, 40)),
-            (2, time(9, 45), time(11, 15)),
-            # 11:30 - 14:00 is Friday Prayer locked!
-            (3, time(14, 0), time(15, 40)),
-            (4, time(15, 45), time(17, 30)),
+            (1, time(9, 0), time(9, 45)),
+            (2, time(9, 45), time(10, 30)),
+            (3, time(10, 30), time(11, 15)),
+            (4, time(11, 15), time(12, 0)),
+            (5, time(14, 0), time(14, 50)),
+            (6, time(14, 50), time(15, 40)),
+            (7, time(15, 40), time(16, 30)),
+            (8, time(16, 30), time(17, 20)),
+            (9, time(17, 20), time(18, 10)),
         ]
 
         for day in range(1, 7):
