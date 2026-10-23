@@ -72,11 +72,11 @@ export default function Sidebar() {
         `}
       >
         {/* Brand Header with UBBG Motif */}
-        <div className={`relative overflow-hidden border-b border-[#3b4f63] bg-[#243340]/90 ${isCollapsed ? 'p-3 flex justify-center' : 'p-3.5'}`}>
+        <div className="relative overflow-hidden border-b border-[#3b4f63] bg-[#243340]/90 h-16 flex items-center px-4 shrink-0">
           <Link 
             href="/"
             onClick={handleNavClick}
-            className={`flex items-center space-x-3 group relative z-10 ${isCollapsed ? 'justify-center' : ''}`}
+            className="flex items-center space-x-3 group relative z-10 w-full"
             title="Kembali ke Dashboard Utama"
           >
             {/* Official UBBG Logo Emblem */}
@@ -87,73 +87,56 @@ export default function Sidebar() {
               <img 
                 src="/ubbg-logo.png" 
                 alt="Logo UBBG" 
-                className="w-7 h-7 object-contain drop-shadow-[0_1px_2px_rgba(0,0,0,0.5)]"
+                className="w-7 h-7 object-contain drop-shadow-[0_1px_2px_rgba(0,0,0,0.5)] shrink-0"
               />
             </div>
 
-            {!isCollapsed && (
-              <div className="overflow-hidden transition-all duration-300 min-w-0">
-                <h1 className="text-sm font-bold text-white tracking-wide leading-tight whitespace-nowrap group-hover:text-cyan-200 transition">
-                  Penjadwalan Kuliah
-                </h1>
-              </div>
-            )}
+            <div className={`overflow-hidden transition-all duration-300 min-w-0 ${isCollapsed ? 'w-0 opacity-0 -translate-x-2' : 'w-auto opacity-100 translate-x-0'}`}>
+              <h1 className="text-sm font-bold text-white tracking-wide leading-tight whitespace-nowrap group-hover:text-cyan-200 transition">
+                Penjadwalan Kuliah
+              </h1>
+            </div>
           </Link>
         </div>
 
         {/* Navigation List */}
-        <nav className={`flex-1 overflow-y-auto overflow-x-hidden no-scrollbar ${isCollapsed ? 'p-2 space-y-3' : 'p-3 space-y-5'}`}>
+        <nav className="flex-1 overflow-y-auto overflow-x-hidden no-scrollbar px-3 py-4 space-y-4">
           {navGroups.map((group, gIdx) => (
             <div key={gIdx} className="space-y-1">
               {/* Group Header or Divider */}
-              {isCollapsed ? (
-                gIdx > 0 && <div className="border-t border-[#3b4f63]/80 my-2 mx-1" />
-              ) : (
-                <h2 className="px-3 text-[10px] font-bold tracking-wider text-slate-300/80 uppercase whitespace-nowrap">
+              <div className={`overflow-hidden transition-all duration-300 ${isCollapsed ? 'h-0 opacity-0 my-0' : 'h-4 opacity-100 mb-1'}`}>
+                <h2 className="px-2 text-[10px] font-bold tracking-wider text-slate-300/80 uppercase whitespace-nowrap">
                   {group.title}
                 </h2>
-              )}
+              </div>
+              {isCollapsed && gIdx > 0 && <div className="border-t border-[#3b4f63]/80 my-2 mx-1" />}
 
-              <div className="space-y-1 pt-0.5">
+              <div className="space-y-1">
                 {group.items.map((item) => {
                   const isActive = pathname === item.href;
                   const Icon = item.icon;
-
-                  if (isCollapsed) {
-                    return (
-                      <div key={item.href} className="flex justify-center">
-                        <Link
-                          href={item.href}
-                          onClick={handleNavClick}
-                          title={item.label}
-                          className={`w-11 h-11 flex items-center justify-center rounded-xl transition-all duration-200 cursor-pointer ${
-                            isActive
-                              ? 'bg-[#1D8699] text-white shadow-md shadow-[#1D8699]/30 font-bold scale-105'
-                              : 'text-slate-300 hover:text-white hover:bg-white/10'
-                          }`}
-                        >
-                          <Icon className={`w-5 h-5 ${isActive ? 'text-white' : 'text-slate-300 group-hover:text-white'}`} />
-                        </Link>
-                      </div>
-                    );
-                  }
 
                   return (
                     <Link
                       key={item.href}
                       href={item.href}
                       onClick={handleNavClick}
-                      className={`flex items-center justify-between px-3 py-2 rounded-lg text-xs font-medium transition-colors cursor-pointer ${
+                      title={item.label}
+                      className={`flex items-center rounded-xl transition-all duration-200 cursor-pointer h-10 px-2.5 group ${
                         isActive
-                          ? 'bg-[#1D8699] text-white shadow-sm shadow-[#1D8699]/20 font-semibold'
+                          ? 'bg-[#1D8699] text-white shadow-md shadow-[#1D8699]/30 font-semibold'
                           : 'text-slate-200 hover:bg-white/10 hover:text-white'
                       }`}
                     >
-                      <div className="flex items-center space-x-2.5 overflow-hidden">
-                        <Icon className={`w-4 h-4 shrink-0 ${isActive ? 'text-white' : 'text-slate-400'}`} />
-                        <span className="truncate">{item.label}</span>
+                      <div className="w-5 h-5 flex items-center justify-center shrink-0">
+                        <Icon className={`w-5 h-5 shrink-0 transition-colors ${isActive ? 'text-white' : 'text-slate-300 group-hover:text-white'}`} />
                       </div>
-                      {isActive && <ChevronRight className="w-3.5 h-3.5 text-white/70 shrink-0" />}
+                      <div className={`overflow-hidden whitespace-nowrap transition-all duration-300 ml-3 flex-1 flex items-center justify-between ${
+                        isCollapsed ? 'w-0 opacity-0 -translate-x-2 pointer-events-none' : 'w-auto opacity-100 translate-x-0'
+                      }`}>
+                        <span className="truncate text-xs font-medium">{item.label}</span>
+                        {isActive && <ChevronRight className="w-3.5 h-3.5 text-white/70 shrink-0 ml-1" />}
+                      </div>
                     </Link>
                   );
                 })}
@@ -163,28 +146,25 @@ export default function Sidebar() {
         </nav>
 
         {/* Academic Year Badge */}
-        <div className={`border-t border-[#3b4f63] bg-[#243340]/80 ${isCollapsed ? 'p-2 flex justify-center m-1 rounded-xl' : 'p-3 m-2 rounded-xl'}`}>
-          {isCollapsed ? (
+        <div className="border-t border-[#3b4f63] bg-[#243340]/80 p-2.5 m-2 rounded-xl shrink-0 overflow-hidden">
+          <div className="flex items-center space-x-2.5">
             <div 
-              className="w-8 h-8 rounded-lg bg-emerald-500/10 border border-emerald-500/30 flex items-center justify-center cursor-pointer group relative"
+              className="w-8 h-8 rounded-lg bg-emerald-500/10 border border-emerald-500/30 flex items-center justify-center shrink-0 cursor-pointer group relative"
               title="Semester Aktif: Ganjil 2026/2027"
             >
-              <CheckCircle2 className="w-4 h-4 text-emerald-400" />
-              {/* Tooltip on Hover */}
-              <div className="absolute left-full ml-3 bottom-0 px-2.5 py-1.5 bg-slate-900 text-white text-[11px] font-semibold rounded-lg shadow-xl border border-slate-700 whitespace-nowrap opacity-0 pointer-events-none group-hover:opacity-100 transition-opacity duration-200 z-50">
-                <span className="text-emerald-400 font-bold block">Semester Aktif:</span>
-                <span>Ganjil 2026/2027</span>
-              </div>
+              <CheckCircle2 className="w-4 h-4 text-emerald-400 shrink-0" />
+              {isCollapsed && (
+                <div className="absolute left-full ml-3 bottom-0 px-2.5 py-1.5 bg-slate-900 text-white text-[11px] font-semibold rounded-lg shadow-xl border border-slate-700 whitespace-nowrap opacity-0 pointer-events-none group-hover:opacity-100 transition-opacity duration-200 z-50">
+                  <span className="text-emerald-400 font-bold block">Semester Aktif:</span>
+                  <span>Ganjil 2026/2027</span>
+                </div>
+              )}
             </div>
-          ) : (
-            <div className="flex items-center justify-between text-[11px]">
-              <span className="text-slate-300">Semester Aktif:</span>
-              <span className="font-semibold text-emerald-400 flex items-center space-x-1">
-                <CheckCircle2 className="w-3 h-3 text-emerald-400" />
-                <span>Ganjil 2026/2027</span>
-              </span>
+            <div className={`overflow-hidden transition-all duration-300 whitespace-nowrap ${isCollapsed ? 'w-0 opacity-0 -translate-x-2' : 'w-auto opacity-100 translate-x-0'}`}>
+              <span className="text-[10px] text-slate-300 block leading-tight">Semester Aktif:</span>
+              <span className="text-xs font-bold text-emerald-400 leading-tight">Ganjil 2026/2027</span>
             </div>
-          )}
+          </div>
         </div>
       </aside>
     </>

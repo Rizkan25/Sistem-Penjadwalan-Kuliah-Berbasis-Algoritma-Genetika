@@ -79,9 +79,9 @@ export default function HistoryPage() {
       {/* Top Header */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 bg-white p-5 rounded-2xl border border-slate-200/80 shadow-xs">
         <div>
-          <div className="flex items-center space-x-2.5">
-            <div className="w-10 h-10 rounded-xl bg-[#1D8699]/10 border border-[#1D8699]/20 flex items-center justify-center text-[#1D8699]">
-              <History className="w-5 h-5" />
+          <div className="flex items-center space-x-3">
+            <div className="w-10 h-10 min-w-10 min-h-10 max-w-10 max-h-10 aspect-square shrink-0 rounded-xl bg-[#1D8699]/10 border border-[#1D8699]/20 flex items-center justify-center text-[#1D8699] self-start sm:self-center shadow-2xs">
+              <History className="w-5 h-5 shrink-0" />
             </div>
             <div>
               <h1 className="text-lg font-bold text-slate-800 tracking-tight">

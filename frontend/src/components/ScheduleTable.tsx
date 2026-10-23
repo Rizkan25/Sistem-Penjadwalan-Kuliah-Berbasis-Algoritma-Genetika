@@ -66,8 +66,8 @@ export default function ScheduleTable({ schedules, onOpenSwapModal }: ScheduleTa
                       <span className="font-mono-metrics font-bold text-slate-800 text-xs">
                         {timeStr} WIB
                       </span>
-                      <span className="text-[10px] text-slate-400">
-                        Jam ke-{item.period_order}
+                      <span className="text-[10px] text-slate-500 font-medium">
+                        Jam ke-{item.period_order}{item.credits > 1 ? ` s/d ${item.period_order + item.credits - 1}` : ''} ({item.credits} SKS • {item.credits * 50} Menit)
                       </span>
                     </div>
                   </td>

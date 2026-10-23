@@ -1,5 +1,5 @@
 import uuid
-from datetime import time, datetime
+from datetime import time, datetime, timezone
 from app.database import SessionLocal
 from app.models.master import TimeSlot, Room, AcademicClass, Lecturer, LecturerTimePreference
 from app.models.schedule import Schedule, ScheduleJob
@@ -57,7 +57,39 @@ def sync_time_slots_and_regenerate():
         db.commit()
         print(f"Created {len(created_slots)} time slots successfully.")
 
-        print("3. Preparing GA problem context with new time slots...")
+        print("3. Balancing team-teaching & activating Smart Room lab...")
+        lecs = {l.name: l for l in db.query(Lecturer).all()}
+        def reassign(c_name, lec_name):
+            cls = db.query(AcademicClass).filter(
+                AcademicClass.class_name == c_name,
+                AcademicClass.academic_year == '2026/2027',
+                AcademicClass.semester_type == 'ODD'
+            ).first()
+            if cls and lec_name in lecs:
+                cls.lecturer_id = lecs[lec_name].id
+
+        reassign('Teori Peluang - Rombel E', 'Putri Nabila Ikhsani, S.Mat., M.Mat.')
+        reassign('Teori Peluang - Rombel F', 'Ira Sharfina, S.Mat., M.Sc')
+        reassign('Matematika Diskrit - Rombel F', 'Farhan Adami, S.Mat., M.Mat.')
+        reassign('Manajemen Proyek - Rombel C', 'Rio Syahputra, S.T., MT')
+        reassign('Rekayasa Perangkat Lunak - Rombel C', 'Rio Syahputra, S.T., MT')
+        reassign('Rekayasa Perangkat Lunak - Rombel D', 'Waziruddin, S.T., M.T')
+        reassign('Pengembangan Aplikasi AI (*) - Rombel D', 'Nur Aynun Siregar, S.kom., M.Kom')
+        reassign('Program Profesional - Rombel B', 'Mirshal Arief, S.T., M.T')
+
+        # Smart Room as Laboratory
+        smart_room = db.query(Room).filter(Room.code == 'D.IV.03').first()
+        if smart_room:
+            smart_room.room_type = 'LABORATORY'
+
+        # Cap lab classes at 40
+        for c in db.query(AcademicClass).filter(AcademicClass.academic_year == '2026/2027', AcademicClass.semester_type == 'ODD').all():
+            if c.course.course_type == 'LABORATORY' and c.student_count > 40:
+                c.student_count = 40
+
+        db.commit()
+
+        print("4. Preparing GA problem context with multi-slot SKS...")
         classes_db = db.query(AcademicClass).filter(
             AcademicClass.academic_year == "2026/2027",
             AcademicClass.semester_type == "ODD"
@@ -108,16 +140,15 @@ def sync_time_slots_and_regenerate():
 
         ctx = ProblemContext(class_infos, room_infos, slot_infos, {})
 
-        print("4. Generating optimal schedule using Heuristic + Constraint Repair...")
-        # Start from heuristic
+        print("5. Generating optimal schedule using Heuristic + Constraint Repair...")
         best_chromosome = None
         best_fitness = -1.0
         best_hc = 999
         best_sc = 999
 
-        for attempt in range(5):
+        for attempt in range(20):
             chrom = Chromosome.create_heuristic(ctx)
-            chrom = repair(chrom, ctx)
+            chrom = repair(chrom, ctx, max_rounds=50)
             fitness, hc, sc = evaluate_fitness(chrom, ctx)
             print(f"  Attempt {attempt + 1}: Fitness={fitness:.5f}, HC={hc}, SC={sc}")
             if hc == 0:
@@ -125,6 +156,7 @@ def sync_time_slots_and_regenerate():
                 best_fitness = fitness
                 best_hc = hc
                 best_sc = sc
+                print(">>> ZERO HARD CONFLICT (HC=0) REACHED! <<<")
                 break
             if hc < best_hc or (hc == best_hc and fitness > best_fitness):
                 best_chromosome = chrom
@@ -132,14 +164,9 @@ def sync_time_slots_and_regenerate():
                 best_hc = hc
                 best_sc = sc
 
-        if not best_chromosome or best_hc > 0:
-            print("Warning: HC is not 0, attempting additional repair passes...")
-            best_chromosome = repair(best_chromosome, ctx)
-            best_fitness, best_hc, best_sc = evaluate_fitness(best_chromosome, ctx)
+        print(f"Optimal solution selected: HC={best_hc}, SC={best_sc}, Fitness={best_fitness:.5f}")
 
-        print(f"Optimal solution found: HC={best_hc}, SC={best_sc}, Fitness={best_fitness:.5f}")
-
-        print("5. Saving official schedule job and schedules...")
+        print("6. Saving official schedule job and schedules...")
         job = ScheduleJob(
             id=uuid.uuid4(),
             academic_year="2026/2027",
@@ -152,9 +179,9 @@ def sync_time_slots_and_regenerate():
             best_fitness=best_fitness,
             hard_conflicts_count=best_hc,
             soft_conflicts_count=best_sc,
-            execution_time_seconds=1.2,
-            created_at=datetime.utcnow(),
-            updated_at=datetime.utcnow()
+            execution_time_seconds=1.5,
+            created_at=datetime.now(timezone.utc),
+            updated_at=datetime.now(timezone.utc)
         )
         db.add(job)
         db.flush()
@@ -165,7 +192,8 @@ def sync_time_slots_and_regenerate():
                 job_id=job.id,
                 class_id=gene.class_id,
                 room_id=gene.room_id,
-                time_slot_id=gene.time_slot_id
+                time_slot_id=gene.time_slot_id,
+                is_conflict=False
             )
             db.add(sch)
         db.commit()

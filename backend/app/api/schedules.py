@@ -177,13 +177,16 @@ def get_schedule_result(
 
     schedules = query.all()
 
-    # Preload preferences for soft-constraint annotations
+    # Preload preferences and slots for multi-period calculation
     prefs = db.query(LecturerTimePreference).all()
     preferred_map = {
         (p.lecturer_id, p.time_slot_id): p.preference_type 
         for p in prefs
     }
     lecturers_with_pref = {p.lecturer_id for p in prefs if p.preference_type == "PREFERRED"}
+    
+    all_slots = db.query(TimeSlot).all()
+    slot_lookup = {(s.day_of_week, s.period_order): s for s in all_slots}
 
     items: List[ScheduleItemResponse] = []
     for s in schedules:
@@ -193,13 +196,22 @@ def get_schedule_result(
         rm = s.room
         ts = s.time_slot
 
-        # Soft penalty notes
+        # Multi-period calculation: end_time is taken from the last period spanned by the SKS credits
+        k = max(1, crs.credits)
+        end_period = ts.period_order + k - 1
+        end_slot = slot_lookup.get((ts.day_of_week, end_period))
+        computed_end_time = end_slot.end_time if end_slot else ts.end_time
+
+        # Check soft penalty on all spanned slots
         penalty_reasons = []
         is_pref = True
         if lec.id in lecturers_with_pref:
-            if preferred_map.get((lec.id, ts.id)) != "PREFERRED":
-                is_pref = False
-                penalty_reasons.append("Di luar preferensi waktu mengajar dosen")
+            for p in range(ts.period_order, end_period + 1):
+                cur_slot = slot_lookup.get((ts.day_of_week, p))
+                if cur_slot and preferred_map.get((lec.id, cur_slot.id)) != "PREFERRED":
+                    is_pref = False
+                    penalty_reasons.append("Di luar preferensi waktu mengajar dosen")
+                    break
 
         items.append(ScheduleItemResponse(
             id=s.id,
@@ -229,7 +241,7 @@ def get_schedule_result(
             day_of_week=ts.day_of_week,
             period_order=ts.period_order,
             start_time=ts.start_time,
-            end_time=ts.end_time,
+            end_time=computed_end_time,
             is_preferred_slot=is_pref,
             soft_penalty_reasons=penalty_reasons,
             is_conflict=s.is_conflict
@@ -295,6 +307,8 @@ def validate_job_internal(job_id: uuid.UUID, db: Session) -> dict:
     room_slot_usage = defaultdict(list)
     slot_cohort_usage = defaultdict(list)
 
+    slot_by_day_period = {(s.day_of_week, s.period_order): s for s in slots_map.values()}
+
     for s in schedules:
         c = classes_map.get(s.class_id)
         r = rooms_map.get(s.room_id)
@@ -304,9 +318,34 @@ def validate_job_internal(job_id: uuid.UUID, db: Session) -> dict:
             conflict_details.append(f"Data master referensi jadwal ID {s.id} tidak lengkap/terhapus.")
             continue
 
-        lec_slot_usage[(c.lecturer_id, s.time_slot_id)].append((s, c))
-        room_slot_usage[(s.room_id, s.time_slot_id)].append((s, c, r))
-        slot_cohort_usage[(s.time_slot_id, c.semester, c.cohort)].append((s, c))
+        k = max(1, c.course.credits)
+        spanned_slots = []
+        for p in range(ts.period_order, ts.period_order + k):
+            sub_ts = slot_by_day_period.get((ts.day_of_week, p))
+            if sub_ts:
+                spanned_slots.append(sub_ts)
+
+        if len(spanned_slots) < k:
+            conflict_details.append(
+                f"HC0: Kelas '{c.class_name}' ({k} SKS) melebihi batas jam harian atau terpotong jeda istirahat."
+            )
+
+        for sub_ts in spanned_slots:
+            lec_slot_usage[(c.lecturer_id, sub_ts.id)].append((s, c))
+            room_slot_usage[(s.room_id, sub_ts.id)].append((s, c, r))
+            slot_cohort_usage[(sub_ts.id, c.semester, c.cohort)].append((s, c))
+
+            # HC6: Lecturer unavailable
+            if prefs_map.get((c.lecturer_id, sub_ts.id)) == "UNAVAILABLE":
+                hc6_lecturer_unavailable += 1
+                conflict_details.append(
+                    f"HC6: Dosen {c.lecturer.name} berhalangan hadir pada slot waktu kelas '{c.class_name}' (Jam ke-{sub_ts.period_order})."
+                )
+
+            # SC1: Preferred slot
+            if c.lecturer_id in lecs_with_preferred:
+                if sub_ts.id not in preferred_slots_by_lec[c.lecturer_id]:
+                    sc1_pref_penalty += 1
 
         # HC4: Room capacity
         if r.capacity < c.student_count:
@@ -321,18 +360,6 @@ def validate_job_internal(job_id: uuid.UUID, db: Session) -> dict:
             conflict_details.append(
                 f"HC5: Tipe ruang {r.code} ({r.room_type}) tidak sesuai tipe mata kuliah '{c.course.name}' ({c.course.course_type})."
             )
-
-        # HC6: Lecturer unavailable
-        if prefs_map.get((c.lecturer_id, s.time_slot_id)) == "UNAVAILABLE":
-            hc6_lecturer_unavailable += 1
-            conflict_details.append(
-                f"HC6: Dosen {c.lecturer.name} berhalangan hadir pada slot waktu kelas '{c.class_name}'."
-            )
-
-        # SC1: Preferred slot
-        if c.lecturer_id in lecs_with_preferred:
-            if s.time_slot_id not in preferred_slots_by_lec[c.lecturer_id]:
-                sc1_pref_penalty += 1
 
         cohort_day_periods[(c.semester, c.cohort, c.kbk)][ts.day_of_week].append(ts.period_order)
         lecturer_day_sessions[c.lecturer_id][ts.day_of_week] += 1
@@ -501,44 +528,67 @@ def manual_swap(
             f"HC5: Tipe ruangan {new_room.code} ({new_room.room_type}) tidak cocok dengan tipe mata kuliah ({target_class.course.course_type})."
         )
 
-    # 3. HC6: Lecturer unavailable
-    lec_pref = db.query(LecturerTimePreference).filter(
-        LecturerTimePreference.lecturer_id == target_class.lecturer_id,
-        LecturerTimePreference.time_slot_id == new_slot.id,
-        LecturerTimePreference.preference_type == "UNAVAILABLE"
-    ).first()
-    if lec_pref:
+    target_k = max(1, target_class.course.credits)
+    # Check boundary
+    is_valid_block = (new_slot.period_order <= 4 and new_slot.period_order + target_k - 1 <= 4) or \
+                     (new_slot.period_order >= 5 and new_slot.period_order + target_k - 1 <= 9)
+    if not is_valid_block:
         conflicts.append(
-            f"HC6: Dosen {target_class.lecturer.name} berhalangan hadir pada slot waktu ini ({lec_pref.reason or 'UNAVAILABLE'})."
+            f"Perpindahan ditolak: Kelas berbobot {target_k} SKS melanggar batas istirahat siang/sholat atau melebihi jam ke-9."
         )
 
-    # Fetch other schedules in the same job at the new slot
-    other_schedules_at_slot = db.query(Schedule).filter(
+    all_slots = db.query(TimeSlot).all()
+    slot_lookup = {(s.day_of_week, s.period_order): s for s in all_slots}
+
+    # 3. HC6: Lecturer unavailable on all occupied slots
+    for p in range(new_slot.period_order, new_slot.period_order + target_k):
+        ts_cur = slot_lookup.get((new_slot.day_of_week, p))
+        if ts_cur:
+            lec_pref = db.query(LecturerTimePreference).filter(
+                LecturerTimePreference.lecturer_id == target_class.lecturer_id,
+                LecturerTimePreference.time_slot_id == ts_cur.id,
+                LecturerTimePreference.preference_type == "UNAVAILABLE"
+            ).first()
+            if lec_pref:
+                conflicts.append(
+                    f"HC6: Dosen {target_class.lecturer.name} berhalangan hadir pada Jam ke-{p} ({lec_pref.reason or 'UNAVAILABLE'})."
+                )
+
+    # Fetch other schedules in the same job on the same day to test multi-slot overlap
+    other_schedules_same_day = db.query(Schedule).join(TimeSlot).filter(
         Schedule.job_id == job_id,
-        Schedule.time_slot_id == new_slot.id,
+        TimeSlot.day_of_week == new_slot.day_of_week,
         Schedule.id != target_sch.id
     ).all()
 
-    for other in other_schedules_at_slot:
+    target_periods = set(range(new_slot.period_order, new_slot.period_order + target_k))
+
+    for other in other_schedules_same_day:
         other_class = other.academic_class
-        # HC1: Lecturer clash
-        if other_class.lecturer_id == target_class.lecturer_id:
-            conflicts.append(
-                f"HC1: Dosen {target_class.lecturer.name} bentrok mengajar kelas lain ({other_class.class_name}) pada slot waktu yang sama."
-            )
+        other_k = max(1, other_class.course.credits)
+        other_start_p = other.time_slot.period_order
+        other_periods = set(range(other_start_p, other_start_p + other_k))
 
-        # HC2: Room clash
-        if other.room_id == new_room.id:
-            conflicts.append(
-                f"HC2: Ruangan {new_room.code} sudah digunakan oleh kelas '{other_class.class_name}' pada slot waktu yang sama."
-            )
-
-        # HC3: Cohort & KBK parallel rules
-        if other_class.semester == target_class.semester and other_class.cohort == target_class.cohort:
-            if other_class.kbk == target_class.kbk or other_class.kbk == "GENERAL" or target_class.kbk == "GENERAL":
+        if target_periods.intersection(other_periods):
+            # Overlapping time!
+            # HC1: Lecturer clash
+            if other_class.lecturer_id == target_class.lecturer_id:
                 conflicts.append(
-                    f"HC3: Bentrok rombel mahasiswa dengan kelas '{other_class.class_name}' (Semester {other_class.semester}, Kelas {other_class.cohort}, KBK {other_class.kbk})."
+                    f"HC1: Dosen {target_class.lecturer.name} bentrok mengajar kelas lain ({other_class.class_name}) pada jam yang bertabrakan."
                 )
+
+            # HC2: Room clash
+            if other.room_id == new_room.id:
+                conflicts.append(
+                    f"HC2: Ruangan {new_room.code} sudah digunakan oleh kelas '{other_class.class_name}' pada jam yang bertabrakan."
+                )
+
+            # HC3: Cohort & KBK parallel rules
+            if other_class.semester == target_class.semester and other_class.cohort == target_class.cohort:
+                if other_class.kbk == target_class.kbk or other_class.kbk == "GENERAL" or target_class.kbk == "GENERAL":
+                    conflicts.append(
+                        f"HC3: Bentrok rombel mahasiswa dengan kelas '{other_class.class_name}' (Semester {other_class.semester}, Kelas {other_class.cohort}, KBK {other_class.kbk})."
+                    )
 
     if conflicts:
         raise HTTPException(
@@ -558,6 +608,9 @@ def manual_swap(
     c = target_sch.academic_class
     crs = c.course
     lec = c.lecturer
+
+    end_slot = slot_lookup.get((new_slot.day_of_week, new_slot.period_order + target_k - 1))
+    computed_end_time = end_slot.end_time if end_slot else new_slot.end_time
 
     response_item = ScheduleItemResponse(
         id=target_sch.id,
@@ -587,7 +640,7 @@ def manual_swap(
         day_of_week=new_slot.day_of_week,
         period_order=new_slot.period_order,
         start_time=new_slot.start_time,
-        end_time=new_slot.end_time,
+        end_time=computed_end_time,
         is_preferred_slot=True,
         soft_penalty_reasons=[]
     )
@@ -615,14 +668,23 @@ def export_schedule(
     if not schedules:
         raise HTTPException(status_code=404, detail="Belum ada data jadwal untuk pekerjaan ini.")
 
+    all_slots = db.query(TimeSlot).all()
+    slot_lookup = {(s.day_of_week, s.period_order): s for s in all_slots}
+
     schedules_data = []
     for s in schedules:
         c = s.academic_class
+        ts = s.time_slot
+        k = max(1, c.course.credits)
+        end_period = ts.period_order + k - 1
+        end_slot = slot_lookup.get((ts.day_of_week, end_period))
+        computed_end_time = end_slot.end_time if end_slot else ts.end_time
+
         schedules_data.append({
-            "day_of_week": s.time_slot.day_of_week,
-            "period_order": s.time_slot.period_order,
-            "start_time": s.time_slot.start_time,
-            "end_time": s.time_slot.end_time,
+            "day_of_week": ts.day_of_week,
+            "period_order": ts.period_order,
+            "start_time": ts.start_time,
+            "end_time": computed_end_time,
             "course_code": c.course.code,
             "course_name": c.course.name,
             "credits": c.course.credits,

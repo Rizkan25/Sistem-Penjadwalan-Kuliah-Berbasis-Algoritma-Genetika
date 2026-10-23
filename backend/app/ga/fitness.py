@@ -11,6 +11,7 @@ def evaluate_fitness(chromosome: Chromosome, context: ProblemContext) -> Tuple[f
     Evaluates chromosome against 6 Hard Constraints and 3 Soft Constraints.
     Returns (fitness, hard_conflicts, soft_conflicts).
     """
+    hc0_boundary_violation = 0
     hc1_lecturer_clash = 0
     hc2_room_clash = 0
     hc3_cohort_clash = 0
@@ -24,9 +25,7 @@ def evaluate_fitness(chromosome: Chromosome, context: ProblemContext) -> Tuple[f
     slot_to_genes: Dict[UUID, List[Gene]] = defaultdict(list)
     
     # Soft constraint mappings
-    # Group by student group (semester, cohort, kbk) -> day_of_week -> list of period_orders
-    cohort_day_periods: Dict[Tuple[int, str, str], Dict[int, List[int]]] = defaultdict(lambda: defaultdict(list))
-    # Group by lecturer -> day_of_week -> count of sessions
+    cohort_day_periods: Dict[Tuple[int, str, str], Dict[int, List[Tuple[int, int]]]] = defaultdict(lambda: defaultdict(list))
     lecturer_day_sessions: Dict[UUID, Dict[int, int]] = defaultdict(lambda: defaultdict(int))
     
     sc1_pref_penalty = 0
@@ -39,47 +38,53 @@ def evaluate_fitness(chromosome: Chromosome, context: ProblemContext) -> Tuple[f
         if not c_info or not r_info or not t_info:
             continue
 
-        # 1. Lecturer clash tracking
-        lecturer_slot_usage[(c_info.lecturer_id, gene.time_slot_id)] += 1
+        spanned_slots = context.get_spanned_slots(gene.class_id, gene.time_slot_id)
+        k = max(1, c_info.credits)
 
-        # 2. Room clash tracking
-        room_slot_usage[(gene.room_id, gene.time_slot_id)] += 1
+        # Check boundary integrity (class must not cross lunch break or overflow the day)
+        if len(spanned_slots) < k:
+            hc0_boundary_violation += (k - len(spanned_slots))
 
-        # 3. Time slot gene index for cohort conflict
-        slot_to_genes[gene.time_slot_id].append(gene)
+        # Check slots occupied by this class
+        for ts in spanned_slots:
+            lecturer_slot_usage[(c_info.lecturer_id, ts.time_slot_id)] += 1
+            room_slot_usage[(gene.room_id, ts.time_slot_id)] += 1
+            slot_to_genes[ts.time_slot_id].append(gene)
 
-        # 4. HC4: Room capacity
+            # HC6: Lecturer unavailable preference
+            pref = context.preferences.get((c_info.lecturer_id, ts.time_slot_id))
+            if pref == "UNAVAILABLE":
+                hc6_lecturer_unavailable += 1
+
+            # SC1: Lecturer preferred time
+            if c_info.lecturer_id in context.lecturers_with_preferred:
+                preferred_slots = context.preferred_slots_by_lecturer.get(c_info.lecturer_id, set())
+                if ts.time_slot_id not in preferred_slots:
+                    sc1_pref_penalty += 1
+
+        # HC4: Room capacity
         if r_info.capacity < c_info.student_count:
             hc4_capacity_deficit += 1
 
-        # 5. HC5: Room type match
+        # HC5: Room type match
         if r_info.room_type != c_info.course_type:
             hc5_room_type_mismatch += 1
 
-        # 6. HC6: Lecturer unavailable preference
-        pref = context.preferences.get((c_info.lecturer_id, gene.time_slot_id))
-        if pref == "UNAVAILABLE":
-            hc6_lecturer_unavailable += 1
-
-        # SC1: Lecturer preferred time
-        # If lecturer has defined preferred slots, check if this slot is one of them
-        if c_info.lecturer_id in context.lecturers_with_preferred:
-            preferred_slots = context.preferred_slots_by_lecturer.get(c_info.lecturer_id, set())
-            if gene.time_slot_id not in preferred_slots:
-                sc1_pref_penalty += 1
-
-        # Mappings for SC2 (Gap hours)
-        cohort_day_periods[(c_info.semester, c_info.cohort, c_info.kbk)][t_info.day_of_week].append(t_info.period_order)
+        # Mappings for SC2 (Gap hours between sessions)
+        if spanned_slots:
+            cohort_day_periods[(c_info.semester, c_info.cohort, c_info.kbk)][t_info.day_of_week].append(
+                (spanned_slots[0].period_order, spanned_slots[-1].period_order)
+            )
 
         # Mappings for SC3 (Lecturer max 3 sessions per day)
         lecturer_day_sessions[c_info.lecturer_id][t_info.day_of_week] += 1
 
-    # Sum HC1: (count - 1) for duplicate bookings
+    # Sum HC1: (count - 1) for duplicate lecturer bookings
     for count in lecturer_slot_usage.values():
         if count > 1:
             hc1_lecturer_clash += (count - 1)
 
-    # Sum HC2: (count - 1) for duplicate bookings
+    # Sum HC2: (count - 1) for duplicate room bookings
     for count in room_slot_usage.values():
         if count > 1:
             hc2_room_clash += (count - 1)
@@ -89,24 +94,26 @@ def evaluate_fitness(chromosome: Chromosome, context: ProblemContext) -> Tuple[f
         n = len(genes)
         if n < 2:
             continue
+        # Avoid double-counting if the same two classes share multiple slots
+        seen_pairs = set()
         for i in range(n):
             for j in range(i + 1, n):
+                pair_key = (min(genes[i].class_id, genes[j].class_id), max(genes[i].class_id, genes[j].class_id))
+                if pair_key in seen_pairs:
+                    continue
+                seen_pairs.add(pair_key)
+
                 c1 = context.classes[genes[i].class_id]
                 c2 = context.classes[genes[j].class_id]
 
-                # Check if same semester and same cohort (e.g. '3' and 'A')
                 if c1.semester == c2.semester and c1.cohort == c2.cohort:
-                    # Clash if:
-                    # a) Both have same KBK (e.g. both 'GENERAL' or both 'PEMROGRAMAN')
-                    # b) One is 'GENERAL' and the other is a specific KBK
                     if c1.kbk == c2.kbk or c1.kbk == "GENERAL" or c2.kbk == "GENERAL":
                         hc3_cohort_clash += 1
-                    # Note: If c1.kbk != c2.kbk and neither is 'GENERAL' (e.g. PEMROGRAMAN vs MULTIMEDIA),
-                    # they are permitted to run in parallel! No clash added.
 
     # Total Hard Conflicts
     total_hard = (
-        hc1_lecturer_clash
+        hc0_boundary_violation
+        + hc1_lecturer_clash
         + hc2_room_clash
         + hc3_cohort_clash
         + hc4_capacity_deficit
@@ -117,11 +124,13 @@ def evaluate_fitness(chromosome: Chromosome, context: ProblemContext) -> Tuple[f
     # Calculate SC2: Gap hours for students on the same day
     sc2_gap_penalty = 0
     for group_key, days_dict in cohort_day_periods.items():
-        for day, periods in days_dict.items():
-            if len(periods) > 1:
-                sorted_periods = sorted(periods)
-                for idx in range(len(sorted_periods) - 1):
-                    gap = sorted_periods[idx + 1] - sorted_periods[idx] - 1
+        for day, sessions in days_dict.items():
+            if len(sessions) > 1:
+                # Sort by start period
+                sorted_sessions = sorted(sessions, key=lambda x: x[0])
+                for idx in range(len(sorted_sessions) - 1):
+                    # Gap between end of session idx and start of session idx+1
+                    gap = sorted_sessions[idx + 1][0] - sorted_sessions[idx][1] - 1
                     if gap > 0:
                         sc2_gap_penalty += gap
 

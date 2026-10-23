@@ -41,14 +41,21 @@ export default function RoomMatrixGrid({
     .filter((ts) => ts.day_of_week === selectedDay)
     .sort((a, b) => a.period_order - b.period_order);
 
-  // Group schedules by key: `${time_slot_id}_${room_id}`
-  const scheduleLookup = new Map<string, ScheduleItem[]>();
+  // Track occupied start slots and covered subsequent slots for rowSpan rendering
+  const scheduleStartLookup = new Map<string, ScheduleItem>();
+  const coveredSlots = new Set<string>();
+
   for (const s of schedules) {
     if (s.day_of_week === selectedDay) {
-      const key = `${s.time_slot_id}_${s.room_id}`;
-      const existing = scheduleLookup.get(key) || [];
-      existing.push(s);
-      scheduleLookup.set(key, existing);
+      const startPeriod = s.period_order;
+      const span = Math.max(1, s.credits || 1);
+      const startKey = `${startPeriod}_${s.room_id}`;
+      scheduleStartLookup.set(startKey, s);
+
+      // Mark subsequent periods in the same room as covered by this schedule's rowSpan
+      for (let p = startPeriod + 1; p < startPeriod + span; p++) {
+        coveredSlots.add(`${p}_${s.room_id}`);
+      }
     }
   }
 
@@ -61,7 +68,7 @@ export default function RoomMatrixGrid({
             Matriks Kalender Jadwal per Ruangan (Room-Time Grid)
           </h3>
           <p className="text-xs text-slate-500 mt-0.5">
-            Visualisasi alokasi ruangan laboratorium dan kelas teori per slot waktu
+            Visualisasi alokasi ruangan laboratorium dan kelas teori per slot waktu (Membentang sesuai jumlah SKS)
           </p>
         </div>
 
@@ -138,10 +145,16 @@ export default function RoomMatrixGrid({
 
                   {/* X-axis: Room Cells */}
                   {rooms.map((room) => {
-                    const cellKey = `${slot.id}_${room.id}`;
-                    const cellSchedules = scheduleLookup.get(cellKey) || [];
+                    const cellKey = `${slot.period_order}_${room.id}`;
 
-                    if (cellSchedules.length === 0) {
+                    // If this cell is covered by an active rowSpan from an earlier slot, skip it
+                    if (coveredSlots.has(cellKey)) {
+                      return null;
+                    }
+
+                    const schedule = scheduleStartLookup.get(cellKey);
+
+                    if (!schedule) {
                       return (
                         <td
                           key={room.id}
@@ -155,62 +168,100 @@ export default function RoomMatrixGrid({
                       );
                     }
 
+                    const span = Math.max(1, schedule.credits || 1);
+                    const isConflict = !!schedule.is_conflict;
+                    const theme = SEMESTER_COLORS[schedule.semester] || SEMESTER_COLORS[1];
+                    const endPeriod = schedule.period_order + span - 1;
+
                     return (
                       <td
                         key={room.id}
-                        className="p-2 border-r border-slate-200 align-top space-y-2"
+                        rowSpan={span}
+                        className="p-2 border-r border-slate-200 align-top h-full"
+                        style={{ height: '100%' }}
                       >
-                        {cellSchedules.map((schedule) => {
-                          const isConflict = !!schedule.is_conflict;
-                          const theme = SEMESTER_COLORS[schedule.semester] || SEMESTER_COLORS[1];
-
-                          return (
-                            <div
-                              key={schedule.id}
-                              onClick={() => onOpenSwapModal(schedule)}
-                              className={`min-h-28 rounded-lg p-2.5 border shadow-2xs hover:shadow-md transition-all cursor-pointer flex flex-col justify-between group relative ${
-                                isConflict
-                                  ? 'border-rose-400 bg-rose-50 ring-2 ring-rose-400'
-                                  : `${theme.border} ${theme.bg}`
-                              }`}
-                            >
-                              <div>
-                                <div className="flex items-center justify-between gap-1 mb-1">
-                                  {isConflict ? (
-                                    <span className="text-[9px] font-bold px-1.5 py-0.2 rounded-sm bg-rose-600 text-white flex items-center space-x-1 animate-pulse">
-                                      <AlertOctagon className="w-2.5 h-2.5 inline" />
-                                      <span>BENTROK</span>
-                                    </span>
-                                  ) : (
-                                    <span className={`text-[9px] font-bold px-1.5 py-0.2 rounded-sm ${theme.badge}`}>
-                                      Sem {schedule.semester}
-                                    </span>
-                                  )}
-                                  <span className="text-[9px] font-semibold text-slate-500 font-mono-metrics">
-                                    {schedule.class_name.split(' ')[0]}
+                        <div
+                          onClick={() => onOpenSwapModal(schedule)}
+                          style={{
+                            minHeight: span > 1 ? `${span * 8 - 1}rem` : '7rem',
+                            height: '100%'
+                          }}
+                          className={`w-full rounded-xl p-3 border shadow-xs hover:shadow-md transition-all cursor-pointer flex flex-col justify-between group relative ${
+                            isConflict
+                              ? 'border-rose-400 bg-rose-50 ring-2 ring-rose-400'
+                              : `${theme.border} ${theme.bg}`
+                          }`}
+                        >
+                          <div>
+                            {/* Badges Header */}
+                            <div className="flex items-center justify-between gap-1 mb-1.5 flex-wrap">
+                              <div className="flex items-center gap-1">
+                                {isConflict ? (
+                                  <span className="text-[9px] font-bold px-1.5 py-0.5 rounded-md bg-rose-600 text-white flex items-center space-x-1 animate-pulse">
+                                    <AlertOctagon className="w-2.5 h-2.5 inline" />
+                                    <span>BENTROK</span>
                                   </span>
-                                </div>
-
-                                <div className={`text-[11px] font-bold leading-tight line-clamp-2 ${isConflict ? 'text-rose-950 font-black' : 'text-slate-800'}`}>
-                                  {schedule.course_name}
-                                </div>
+                                ) : (
+                                  <span className={`text-[9px] font-bold px-2 py-0.5 rounded-md ${theme.badge}`}>
+                                    Sem {schedule.semester}
+                                  </span>
+                                )}
+                                <span className="text-[9px] font-bold px-1.5 py-0.5 rounded-md bg-white/90 text-slate-700 border border-slate-200 font-mono-metrics">
+                                  {schedule.credits} SKS
+                                </span>
                               </div>
+                              <span className="text-[9px] font-semibold text-slate-500 font-mono-metrics">
+                                {schedule.class_name.split(' ')[0]}
+                              </span>
+                            </div>
 
-                              <div className="pt-1 border-t border-slate-200/50 mt-1">
-                                <div className="flex items-center space-x-1 text-[10px] text-slate-600 truncate">
-                                  <User className="w-2.5 h-2.5 shrink-0 text-slate-400" />
-                                  <span className="truncate">{schedule.lecturer_name}</span>
-                                </div>
-                                <div className="flex items-center justify-between text-[9px] text-slate-400 mt-0.5">
-                                  <span>{schedule.student_count} mhs</span>
-                                  <span className="text-[#1D8699] font-bold opacity-0 group-hover:opacity-100 transition-opacity">
-                                    Ubah ↗
-                                  </span>
-                                </div>
+                            {/* Course Name */}
+                            <div className={`text-xs font-bold leading-snug line-clamp-2 ${isConflict ? 'text-rose-950 font-black' : 'text-slate-800'}`}>
+                              {schedule.course_name}
+                            </div>
+
+                            {/* Multi-Period Time Indicator */}
+                            <div className="mt-2 flex items-center gap-1.5 text-[10px] font-mono-metrics font-bold text-[#1D8699] bg-white/80 px-2 py-1 rounded-lg border border-slate-200/60 shadow-2xs">
+                              <Clock className="w-3 h-3 text-[#1D8699] shrink-0" />
+                              <span>
+                                {schedule.start_time.slice(0, 5)} - {schedule.end_time.slice(0, 5)} WIB
+                              </span>
+                              <span className="text-[9px] text-slate-400 font-normal">
+                                ({schedule.credits * 50}m • Jam {schedule.period_order}-{endPeriod})
+                              </span>
+                            </div>
+                          </div>
+
+                          {/* Multi-Period Informative Center Section (Fills empty space gracefully) */}
+                          {span >= 2 && (
+                            <div className="my-auto py-2 space-y-1.5">
+                              <div className="flex items-center justify-between text-[10px] bg-white/70 px-2 py-1 rounded-md border border-slate-200/50 text-slate-600">
+                                <span className="font-medium">Kelas:</span>
+                                <span className="font-bold text-slate-800 font-mono-metrics truncate max-w-[110px]" title={schedule.class_name}>
+                                  {schedule.class_name}
+                                </span>
+                              </div>
+                              <div className="flex items-center justify-between text-[10px] bg-white/70 px-2 py-1 rounded-md border border-slate-200/50 text-slate-600">
+                                <span className="font-medium">Kapasitas:</span>
+                                <span className="font-semibold text-slate-700 font-mono-metrics">{schedule.student_count} / {schedule.room_capacity} kursi</span>
                               </div>
                             </div>
-                          );
-                        })}
+                          )}
+
+                          {/* Footer */}
+                          <div className="pt-2 border-t border-slate-200/60 mt-2">
+                            <div className="flex items-center space-x-1.5 text-[10px] text-slate-700 truncate font-medium">
+                              <User className="w-3 h-3 shrink-0 text-slate-400" />
+                              <span className="truncate">{schedule.lecturer_name}</span>
+                            </div>
+                            <div className="flex items-center justify-between text-[9px] text-slate-400 mt-1">
+                              <span>{schedule.student_count} mhs</span>
+                              <span className="text-[#1D8699] font-bold opacity-0 group-hover:opacity-100 transition-opacity">
+                                Ubah ↗
+                              </span>
+                            </div>
+                          </div>
+                        </div>
                       </td>
                     );
                   })}

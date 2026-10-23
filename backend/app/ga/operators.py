@@ -50,22 +50,27 @@ def mutate(
     if num_genes == 0:
         return chromosome
 
-    # Swap Mutation
+    # Swap Mutation (only swap if both genes have compatible valid slots)
     if random.random() < mutation_rate and num_genes > 1:
         idx1, idx2 = random.sample(range(num_genes), 2)
-        # Swap time slots
-        chromosome.genes[idx1].time_slot_id, chromosome.genes[idx2].time_slot_id = (
-            chromosome.genes[idx2].time_slot_id,
-            chromosome.genes[idx1].time_slot_id,
-        )
+        g1 = chromosome.genes[idx1]
+        g2 = chromosome.genes[idx2]
+        valid_slots_g1 = context.valid_slots_by_class.get(g1.class_id, context.time_slot_list)
+        valid_slots_g2 = context.valid_slots_by_class.get(g2.class_id, context.time_slot_list)
+        valid_ids_g1 = {s.time_slot_id for s in valid_slots_g1}
+        valid_ids_g2 = {s.time_slot_id for s in valid_slots_g2}
+        
+        if g2.time_slot_id in valid_ids_g1 and g1.time_slot_id in valid_ids_g2:
+            g1.time_slot_id, g2.time_slot_id = g2.time_slot_id, g1.time_slot_id
 
     # Gene-level Resetting Mutation
     for gene in chromosome.genes:
         if random.random() < mutation_rate:
             choice_type = random.random()
             if choice_type < 0.5:
-                # Reassign time slot
-                new_slot = random.choice(context.time_slot_list)
+                # Reassign time slot to a valid starting slot
+                valid_slots = context.valid_slots_by_class.get(gene.class_id, context.time_slot_list)
+                new_slot = random.choice(valid_slots)
                 gene.time_slot_id = new_slot.time_slot_id
             else:
                 # Reassign valid room (preserves HC4 and HC5)

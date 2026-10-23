@@ -8,6 +8,7 @@ from app.ga.fitness import evaluate_fitness
 def find_conflicted_gene_indices(chromosome: Chromosome, context: ProblemContext) -> Set[int]:
     """
     Identifies all gene indices involved in any hard constraint violation:
+    - HC0: Boundary violation (overflows block or day)
     - HC1: Lecturer clash (lecturer has > 1 class at the same time slot)
     - HC2: Room clash (room has > 1 class at the same time slot)
     - HC3: Cohort & KBK clash (same semester, same cohort, and same KBK or one is GENERAL)
@@ -26,9 +27,19 @@ def find_conflicted_gene_indices(chromosome: Chromosome, context: ProblemContext
         if not c or not r:
             continue
 
-        lec_slots[(c.lecturer_id, gene.time_slot_id)].append(idx)
-        room_slots[(gene.room_id, gene.time_slot_id)].append(idx)
-        slot_cohorts[(gene.time_slot_id, c.semester, c.cohort)].append((idx, c.kbk))
+        spanned = context.get_spanned_slots(gene.class_id, gene.time_slot_id)
+        k = max(1, c.credits)
+        if len(spanned) < k:
+            conflicted.add(idx)
+
+        for ts in spanned:
+            lec_slots[(c.lecturer_id, ts.time_slot_id)].append(idx)
+            room_slots[(gene.room_id, ts.time_slot_id)].append(idx)
+            slot_cohorts[(ts.time_slot_id, c.semester, c.cohort)].append((idx, c.kbk))
+
+            # HC6: Lecturer unavailable
+            if context.preferences.get((c.lecturer_id, ts.time_slot_id)) == "UNAVAILABLE":
+                conflicted.add(idx)
 
         # HC4: Capacity
         if r.capacity < c.student_count:
@@ -36,10 +47,6 @@ def find_conflicted_gene_indices(chromosome: Chromosome, context: ProblemContext
 
         # HC5: Room type
         if r.room_type != c.course_type:
-            conflicted.add(idx)
-
-        # HC6: Lecturer unavailable
-        if context.preferences.get((c.lecturer_id, gene.time_slot_id)) == "UNAVAILABLE":
             conflicted.add(idx)
 
     # HC1: Lecturer clash (duplicate bookings at same slot)
@@ -73,18 +80,14 @@ def get_conflicted_class_ids(chromosome: Chromosome, context: ProblemContext) ->
     conflicted_indices = find_conflicted_gene_indices(chromosome, context)
     return {chromosome.genes[i].class_id for i in conflicted_indices}
 
-def repair(chromosome: Chromosome, context: ProblemContext, max_rounds: int = 20) -> Chromosome:
+def repair(chromosome: Chromosome, context: ProblemContext, max_rounds: int = 25) -> Chromosome:
     """
-    Repair operator for genetic algorithm:
-    1. Identifies all genes involved in hard conflicts (HC1, HC2, HC3, HC6).
-    2. In randomized order for problematic genes, tests all combinations of
-       slot waktu x ruangan from context.valid_rooms_by_class[class_id].
-    3. Moves the gene to the combination with minimal conflicts, breaking early as soon as 0 conflicts is found.
-    4. Repeats for up to max_rounds (default 20) or until zero hard conflicts remain.
-    5. Re-evaluates chromosome fitness and returns the repaired chromosome.
+    Repair operator for multi-period genetic algorithm:
+    1. Identifies all genes involved in hard conflicts.
+    2. Tests combinations from valid_slots_by_class and valid_rooms_by_class.
+    3. Moves the gene to the combination with minimal conflicts.
+    4. Repeats for up to max_rounds or until zero hard conflicts remain.
     """
-    slots = list(context.time_slot_list)
-
     for _ in range(max_rounds):
         conflicted_indices = find_conflicted_gene_indices(chromosome, context)
         if not conflicted_indices:
@@ -94,7 +97,7 @@ def repair(chromosome: Chromosome, context: ProblemContext, max_rounds: int = 20
         conflicted_list = list(conflicted_indices)
         random.shuffle(conflicted_list)
 
-        # Build state counters for fast candidate conflict evaluation
+        # Build state counters across all occupied slots for fast conflict evaluation
         lec_count: Dict[Tuple[UUID, UUID], int] = defaultdict(int)
         room_count: Dict[Tuple[UUID, UUID], int] = defaultdict(int)
         cohort_map: Dict[Tuple[UUID, int, str], List[Tuple[int, str]]] = defaultdict(list)
@@ -103,9 +106,11 @@ def repair(chromosome: Chromosome, context: ProblemContext, max_rounds: int = 20
             c = context.classes.get(gene.class_id)
             if not c:
                 continue
-            lec_count[(c.lecturer_id, gene.time_slot_id)] += 1
-            room_count[(gene.room_id, gene.time_slot_id)] += 1
-            cohort_map[(gene.time_slot_id, c.semester, c.cohort)].append((idx, c.kbk))
+            spanned = context.get_spanned_slots(gene.class_id, gene.time_slot_id)
+            for ts in spanned:
+                lec_count[(c.lecturer_id, ts.time_slot_id)] += 1
+                room_count[(gene.room_id, ts.time_slot_id)] += 1
+                cohort_map[(ts.time_slot_id, c.semester, c.cohort)].append((idx, c.kbk))
 
         for idx in conflicted_list:
             gene = chromosome.genes[idx]
@@ -113,53 +118,60 @@ def repair(chromosome: Chromosome, context: ProblemContext, max_rounds: int = 20
             if not c:
                 continue
 
+            old_spanned = context.get_spanned_slots(gene.class_id, gene.time_slot_id)
+
             # Remove current gene temporarily from state counters
-            lec_count[(c.lecturer_id, gene.time_slot_id)] -= 1
-            room_count[(gene.room_id, gene.time_slot_id)] -= 1
-            cohort_map[(gene.time_slot_id, c.semester, c.cohort)] = [
-                item for item in cohort_map[(gene.time_slot_id, c.semester, c.cohort)]
-                if item[0] != idx
-            ]
+            for ts in old_spanned:
+                lec_count[(c.lecturer_id, ts.time_slot_id)] -= 1
+                room_count[(gene.room_id, ts.time_slot_id)] -= 1
+                cohort_map[(ts.time_slot_id, c.semester, c.cohort)] = [
+                    item for item in cohort_map[(ts.time_slot_id, c.semester, c.cohort)]
+                    if item[0] != idx
+                ]
 
             valid_rooms = context.valid_rooms_by_class.get(c.class_id, context.room_list)
-            candidates = [(s.time_slot_id, r.room_id) for s in slots for r in valid_rooms]
+            valid_slots = context.valid_slots_by_class.get(c.class_id, context.time_slot_list)
+            candidates = [(s.time_slot_id, r.room_id) for s in valid_slots for r in valid_rooms]
             random.shuffle(candidates)
 
             best_comb = (gene.time_slot_id, gene.room_id)
             best_conflicts = 999999
 
-            for cand_slot, cand_room in candidates:
+            for cand_slot_id, cand_room_id in candidates:
+                cand_spanned = context.get_spanned_slots(c.class_id, cand_slot_id)
+                if len(cand_spanned) < max(1, c.credits):
+                    continue
+
                 conf = 0
-                # HC1: Lecturer clash
-                conf += lec_count[(c.lecturer_id, cand_slot)]
-
-                # HC2: Room clash
-                conf += room_count[(cand_room, cand_slot)]
-
-                # HC3: Cohort & KBK clash (exact rule as fitness.py)
-                coh_items = cohort_map.get((cand_slot, c.semester, c.cohort), [])
-                for _, other_kbk in coh_items:
-                    if other_kbk == c.kbk or other_kbk == "GENERAL" or c.kbk == "GENERAL":
+                for ts in cand_spanned:
+                    # HC1: Lecturer clash
+                    conf += lec_count[(c.lecturer_id, ts.time_slot_id)]
+                    # HC2: Room clash
+                    conf += room_count[(cand_room_id, ts.time_slot_id)]
+                    # HC3: Cohort & KBK clash
+                    coh_items = cohort_map.get((ts.time_slot_id, c.semester, c.cohort), [])
+                    for _, other_kbk in coh_items:
+                        if other_kbk == c.kbk or other_kbk == "GENERAL" or c.kbk == "GENERAL":
+                            conf += 1
+                    # HC6: Lecturer unavailable preference
+                    if context.preferences.get((c.lecturer_id, ts.time_slot_id)) == "UNAVAILABLE":
                         conf += 1
-
-                # HC6: Lecturer unavailable preference
-                if context.preferences.get((c.lecturer_id, cand_slot)) == "UNAVAILABLE":
-                    conf += 1
 
                 if conf < best_conflicts:
                     best_conflicts = conf
-                    best_comb = (cand_slot, cand_room)
+                    best_comb = (cand_slot_id, cand_room_id)
                     if conf == 0:
-                        # Early exit as soon as a 0-conflict combination is encountered
                         break
 
             # Assign best combination found
             gene.time_slot_id, gene.room_id = best_comb
 
             # Add back to state counters
-            lec_count[(c.lecturer_id, gene.time_slot_id)] += 1
-            room_count[(gene.room_id, gene.time_slot_id)] += 1
-            cohort_map[(gene.time_slot_id, c.semester, c.cohort)].append((idx, c.kbk))
+            new_spanned = context.get_spanned_slots(c.class_id, gene.time_slot_id)
+            for ts in new_spanned:
+                lec_count[(c.lecturer_id, ts.time_slot_id)] += 1
+                room_count[(gene.room_id, ts.time_slot_id)] += 1
+                cohort_map[(ts.time_slot_id, c.semester, c.cohort)].append((idx, c.kbk))
 
     evaluate_fitness(chromosome, context)
     return chromosome

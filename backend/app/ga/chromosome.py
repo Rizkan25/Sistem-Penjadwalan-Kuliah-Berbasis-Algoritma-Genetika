@@ -94,6 +94,10 @@ class ProblemContext:
                     self.preferred_slots_by_lecturer[lec_id] = set()
                 self.preferred_slots_by_lecturer[lec_id].add(slot_id)
 
+        self.slot_by_day_period: Dict[tuple, TimeSlotInfo] = {
+            (t.day_of_week, t.period_order): t for t in time_slots
+        }
+
         # Precompute candidate valid rooms for each class:
         # HC5: room_type must match class course_type
         # HC4: room capacity >= class student_count
@@ -109,6 +113,49 @@ class ProblemContext:
             if not valid:
                 valid = rooms
             self.valid_rooms_by_class[c.class_id] = valid
+
+        # Precompute candidate valid STARTING time slots for each class based on SKS credits:
+        # A class with `credits = k` spans k consecutive periods in the same morning/afternoon block.
+        # Morning block: periods 1..4 (ends at or before period 4 / 12:20 or 12:00 on Friday)
+        # Afternoon block: periods 5..9 (starts at or after period 5 / 14:00, ends at or before period 9 / 18:10)
+        self.valid_slots_by_class: Dict[UUID, List[TimeSlotInfo]] = {}
+        for c in classes:
+            k = max(1, c.credits)
+            valid_s = []
+            for s in time_slots:
+                day = s.day_of_week
+                p = s.period_order
+                end_p = p + k - 1
+                # Must stay entirely within morning block (1..4) or afternoon block (5..9)
+                is_valid_block = (p <= 4 and end_p <= 4) or (p >= 5 and end_p <= 9)
+                if is_valid_block:
+                    # Check that all consecutive periods exist
+                    all_exist = all((day, cur_p) in self.slot_by_day_period for cur_p in range(p, end_p + 1))
+                    if all_exist:
+                        valid_s.append(s)
+            if not valid_s:
+                valid_s = time_slots
+            self.valid_slots_by_class[c.class_id] = valid_s
+
+    def get_spanned_slots(self, class_id: UUID, start_slot_id: UUID) -> List[TimeSlotInfo]:
+        """Returns list of consecutive TimeSlotInfo occupied by class based on its SKS credits."""
+        c = self.classes.get(class_id)
+        start_slot = self.time_slots.get(start_slot_id)
+        if not c or not start_slot:
+            return []
+        k = max(1, c.credits)
+        day = start_slot.day_of_week
+        p = start_slot.period_order
+        end_p = p + k - 1
+        # Check boundary integrity
+        if (p <= 4 and end_p > 4) or end_p > 9:
+            return [start_slot] # Boundary violation fallback
+        spanned = []
+        for cur_p in range(p, end_p + 1):
+            ts = self.slot_by_day_period.get((day, cur_p))
+            if ts:
+                spanned.append(ts)
+        return spanned if spanned else [start_slot]
 
 class Chromosome:
     def __init__(self, genes: List[Gene]):
@@ -129,14 +176,15 @@ class Chromosome:
     @classmethod
     def create_heuristic(cls, context: ProblemContext) -> 'Chromosome':
         """
-        Heuristic Room-Type & Capacity Matching:
+        Heuristic Room-Type, Capacity & Valid-SKS Slot Matching:
         Assigns each class to a room that satisfies HC4 and HC5,
-        and assigns a random time slot.
+        and assigns a valid starting time slot according to its SKS.
         """
         genes = []
         for c in context.class_list:
             candidate_rooms = context.valid_rooms_by_class[c.class_id]
+            candidate_slots = context.valid_slots_by_class.get(c.class_id, context.time_slot_list)
             chosen_room = random.choice(candidate_rooms)
-            chosen_slot = random.choice(context.time_slot_list)
+            chosen_slot = random.choice(candidate_slots)
             genes.append(Gene(c.class_id, chosen_room.room_id, chosen_slot.time_slot_id))
         return cls(genes)
