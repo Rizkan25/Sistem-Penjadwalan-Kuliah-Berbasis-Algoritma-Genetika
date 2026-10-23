@@ -2,7 +2,7 @@
 
 import React from 'react';
 import Link from 'next/link';
-import { Calendar, Building2, PanelLeftClose, PanelLeftOpen, LayoutDashboard } from 'lucide-react';
+import { Calendar, Building2, PanelLeftClose, PanelLeftOpen } from 'lucide-react';
 import { useSidebar } from '@/context/SidebarContext';
 
 interface TopNavProps {
@@ -31,16 +31,6 @@ export default function TopNav({
             <PanelLeftClose className="w-5 h-5 text-slate-600" />
           )}
         </button>
-
-        {/* Dashboard Shortcut Button */}
-        <Link
-          href="/"
-          className="px-2.5 py-1.5 text-slate-700 hover:text-[#1D8699] hover:bg-cyan-50/60 rounded-lg cursor-pointer transition border border-slate-200/80 shadow-2xs flex items-center space-x-1.5 shrink-0"
-          title="Ke Halaman Utama (Dashboard)"
-        >
-          <LayoutDashboard className="w-4 h-4 text-[#1D8699]" />
-          <span className="text-xs font-bold hidden sm:inline">Dashboard</span>
-        </Link>
 
         {/* App Title & Subtitle with responsive truncation */}
         <div className="min-w-0 flex-1 overflow-hidden">
