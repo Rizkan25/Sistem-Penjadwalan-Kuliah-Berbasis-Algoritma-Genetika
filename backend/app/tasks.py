@@ -8,6 +8,7 @@ from app.models.master import AcademicClass, Room, TimeSlot, LecturerTimePrefere
 from app.models.schedule import ScheduleJob, Schedule
 from app.ga.chromosome import ProblemContext, ClassInfo, RoomInfo, TimeSlotInfo
 from app.ga.engine import GAEngine
+from app.ga.repair import get_conflicted_class_ids
 
 def build_problem_context(db: Session, academic_year: str, semester_type: str) -> ProblemContext:
     classes_db = db.query(AcademicClass).filter(
@@ -131,18 +132,15 @@ def execute_optimization(job_id_str: str, params: Dict[str, Any]) -> Dict[str, A
         # First clear old schedules for this job if any
         db.query(Schedule).filter(Schedule.job_id == job_uuid).delete()
 
-        used_room_slots = set()
+        conflicted_class_ids = get_conflicted_class_ids(best_chromosome, context)
         for gene in best_chromosome.genes:
-            key = (gene.room_id, gene.time_slot_id)
-            if key in used_room_slots:
-                continue
-            used_room_slots.add(key)
             sch = Schedule(
                 id=uuid.uuid4(),
                 job_id=job_uuid,
                 class_id=gene.class_id,
                 room_id=gene.room_id,
-                time_slot_id=gene.time_slot_id
+                time_slot_id=gene.time_slot_id,
+                is_conflict=(gene.class_id in conflicted_class_ids)
             )
             db.add(sch)
 

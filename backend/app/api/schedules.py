@@ -7,10 +7,11 @@ from sqlalchemy.orm import Session
 from app.database import get_db, SessionLocal
 from app.models.schedule import ScheduleJob, Schedule
 from app.models.master import AcademicClass, Room, TimeSlot, Lecturer, Course, LecturerTimePreference
+from collections import defaultdict
 from app.schemas.schedule import (
     GenerateScheduleRequest, GenerateScheduleResponse, GenerateScheduleResponseData,
     JobStatusResponse, JobStatusData, ScheduleResultResponse, ScheduleItemResponse,
-    ManualSwapRequest, ManualSwapResponse
+    ManualSwapRequest, ManualSwapResponse, JobValidationResponse, ValidationConflictBreakdown
 )
 from app.api.conflicts import run_feasibility_check
 from app.tasks import run_ga_optimization_task, execute_optimization
@@ -230,7 +231,8 @@ def get_schedule_result(
             start_time=ts.start_time,
             end_time=ts.end_time,
             is_preferred_slot=is_pref,
-            soft_penalty_reasons=penalty_reasons
+            soft_penalty_reasons=penalty_reasons,
+            is_conflict=s.is_conflict
         ))
 
     return {
@@ -239,20 +241,213 @@ def get_schedule_result(
         "data": items
     }
 
+def validate_job_internal(job_id: uuid.UUID, db: Session) -> dict:
+    job = db.query(ScheduleJob).filter(ScheduleJob.id == job_id).first()
+    if not job:
+        raise HTTPException(status_code=404, detail=f"Pekerjaan dengan ID {job_id} tidak ditemukan.")
+
+    schedules = db.query(Schedule).filter(Schedule.job_id == job_id).all()
+    if not schedules:
+        return {
+            "status": "success",
+            "job_id": job.id,
+            "is_valid": False,
+            "hard_conflicts_count": 0,
+            "soft_conflicts_count": 0,
+            "conflicts_by_type": {
+                "hc1_lecturer_clash": 0,
+                "hc2_room_clash": 0,
+                "hc3_cohort_clash": 0,
+                "hc4_capacity_deficit": 0,
+                "hc5_room_type_mismatch": 0,
+                "hc6_lecturer_unavailable": 0
+            },
+            "conflict_details": ["Belum ada data jadwal yang tersimpan untuk pekerjaan ini."],
+            "message": "Belum ada jadwal yang tersimpan."
+        }
+
+    # Fetch latest master data
+    classes_map = {c.id: c for c in db.query(AcademicClass).all()}
+    rooms_map = {r.id: r for r in db.query(Room).all()}
+    slots_map = {s.id: s for s in db.query(TimeSlot).all()}
+    prefs_map = {(p.lecturer_id, p.time_slot_id): p.preference_type for p in db.query(LecturerTimePreference).all()}
+    preferred_slots_by_lec = defaultdict(set)
+    lecs_with_preferred = set()
+    for (l_id, s_id), p_type in prefs_map.items():
+        if p_type == "PREFERRED":
+            lecs_with_preferred.add(l_id)
+            preferred_slots_by_lec[l_id].add(s_id)
+
+    hc1_lecturer_clash = 0
+    hc2_room_clash = 0
+    hc3_cohort_clash = 0
+    hc4_capacity_deficit = 0
+    hc5_room_type_mismatch = 0
+    hc6_lecturer_unavailable = 0
+
+    sc1_pref_penalty = 0
+    cohort_day_periods = defaultdict(lambda: defaultdict(list))
+    lecturer_day_sessions = defaultdict(lambda: defaultdict(int))
+
+    conflict_details: List[str] = []
+
+    lec_slot_usage = defaultdict(list)
+    room_slot_usage = defaultdict(list)
+    slot_cohort_usage = defaultdict(list)
+
+    for s in schedules:
+        c = classes_map.get(s.class_id)
+        r = rooms_map.get(s.room_id)
+        ts = slots_map.get(s.time_slot_id)
+
+        if not c or not r or not ts:
+            conflict_details.append(f"Data master referensi jadwal ID {s.id} tidak lengkap/terhapus.")
+            continue
+
+        lec_slot_usage[(c.lecturer_id, s.time_slot_id)].append((s, c))
+        room_slot_usage[(s.room_id, s.time_slot_id)].append((s, c, r))
+        slot_cohort_usage[(s.time_slot_id, c.semester, c.cohort)].append((s, c))
+
+        # HC4: Room capacity
+        if r.capacity < c.student_count:
+            hc4_capacity_deficit += 1
+            conflict_details.append(
+                f"HC4: Kapasitas ruang {r.code} ({r.capacity} kursi) kurang untuk kelas '{c.class_name}' ({c.student_count} mahasiswa)."
+            )
+
+        # HC5: Room type
+        if r.room_type != c.course.course_type:
+            hc5_room_type_mismatch += 1
+            conflict_details.append(
+                f"HC5: Tipe ruang {r.code} ({r.room_type}) tidak sesuai tipe mata kuliah '{c.course.name}' ({c.course.course_type})."
+            )
+
+        # HC6: Lecturer unavailable
+        if prefs_map.get((c.lecturer_id, s.time_slot_id)) == "UNAVAILABLE":
+            hc6_lecturer_unavailable += 1
+            conflict_details.append(
+                f"HC6: Dosen {c.lecturer.name} berhalangan hadir pada slot waktu kelas '{c.class_name}'."
+            )
+
+        # SC1: Preferred slot
+        if c.lecturer_id in lecs_with_preferred:
+            if s.time_slot_id not in preferred_slots_by_lec[c.lecturer_id]:
+                sc1_pref_penalty += 1
+
+        cohort_day_periods[(c.semester, c.cohort, c.kbk)][ts.day_of_week].append(ts.period_order)
+        lecturer_day_sessions[c.lecturer_id][ts.day_of_week] += 1
+
+    # Sum HC1
+    for (lec_id, slot_id), items_list in lec_slot_usage.items():
+        if len(items_list) > 1:
+            hc1_lecturer_clash += (len(items_list) - 1)
+            lec_name = items_list[0][1].lecturer.name
+            c_names = ", ".join([it[1].class_name for it in items_list])
+            conflict_details.append(
+                f"HC1: Dosen {lec_name} mengajar {len(items_list)} kelas bersamaan: {c_names}"
+            )
+
+    # Sum HC2
+    for (room_id, slot_id), items_list in room_slot_usage.items():
+        if len(items_list) > 1:
+            hc2_room_clash += (len(items_list) - 1)
+            rm_code = items_list[0][2].code
+            c_names = ", ".join([it[1].class_name for it in items_list])
+            conflict_details.append(
+                f"HC2: Ruang {rm_code} digunakan bersamaan oleh {len(items_list)} kelas: {c_names}"
+            )
+
+    # Sum HC3: Cohort & KBK parallel rules
+    for (slot_id, sem, coh), items_list in slot_cohort_usage.items():
+        n = len(items_list)
+        if n > 1:
+            for i in range(n):
+                for j in range(i + 1, n):
+                    s_i, c_i = items_list[i]
+                    s_j, c_j = items_list[j]
+                    if c_i.kbk == c_j.kbk or c_i.kbk == "GENERAL" or c_j.kbk == "GENERAL":
+                        hc3_cohort_clash += 1
+                        conflict_details.append(
+                            f"HC3: Bentrok rombel mahasiswa Sem {sem} Kelas {coh}: '{c_i.class_name}' vs '{c_j.class_name}'"
+                        )
+
+    total_hard = (
+        hc1_lecturer_clash
+        + hc2_room_clash
+        + hc3_cohort_clash
+        + hc4_capacity_deficit
+        + hc5_room_type_mismatch
+        + hc6_lecturer_unavailable
+    )
+
+    # Soft constraints sum
+    sc2_gap_penalty = 0
+    for group_key, days_dict in cohort_day_periods.items():
+        for day, periods in days_dict.items():
+            if len(periods) > 1:
+                sorted_periods = sorted(periods)
+                for idx in range(len(sorted_periods) - 1):
+                    gap = sorted_periods[idx + 1] - sorted_periods[idx] - 1
+                    if gap > 0:
+                        sc2_gap_penalty += gap
+
+    sc3_overload_penalty = 0
+    for lec_id, days_dict in lecturer_day_sessions.items():
+        for day, sessions_count in days_dict.items():
+            if sessions_count > 3:
+                sc3_overload_penalty += (sessions_count - 3)
+
+    total_soft = sc1_pref_penalty + sc2_gap_penalty + sc3_overload_penalty
+
+    # Update job fields if different
+    if job.hard_conflicts_count != total_hard or job.soft_conflicts_count != total_soft:
+        job.hard_conflicts_count = total_hard
+        job.soft_conflicts_count = total_soft
+        db.commit()
+
+    is_valid = (total_hard == 0)
+    msg = "Jadwal valid dan 100% bebas bentrok mutlak (Zero Hard Conflicts)." if is_valid else f"Jadwal memiliki {total_hard} bentrok mutlak."
+
+    return {
+        "status": "success",
+        "job_id": job.id,
+        "is_valid": is_valid,
+        "hard_conflicts_count": total_hard,
+        "soft_conflicts_count": total_soft,
+        "conflicts_by_type": {
+            "hc1_lecturer_clash": hc1_lecturer_clash,
+            "hc2_room_clash": hc2_room_clash,
+            "hc3_cohort_clash": hc3_cohort_clash,
+            "hc4_capacity_deficit": hc4_capacity_deficit,
+            "hc5_room_type_mismatch": hc5_room_type_mismatch,
+            "hc6_lecturer_unavailable": hc6_lecturer_unavailable,
+        },
+        "conflict_details": conflict_details,
+        "message": msg
+    }
+
+@router.get("/jobs/{job_id}/validate", response_model=JobValidationResponse)
+def validate_job(job_id: uuid.UUID, db: Session = Depends(get_db)):
+    """
+    Validates a schedule job against latest master data (HC1-HC6) and returns conflict breakdown.
+    """
+    return validate_job_internal(job_id, db)
+
 @router.patch("/jobs/{job_id}/publish")
 def publish_schedule(job_id: uuid.UUID, db: Session = Depends(get_db)):
     """
-    Sets the schedule job as the officially published schedule.
+    Sets the schedule job as the officially published schedule after validating against latest master data.
     """
     job = db.query(ScheduleJob).filter(ScheduleJob.id == job_id).first()
     if not job:
         raise HTTPException(status_code=404, detail="Pekerjaan tidak ditemukan.")
-    
-    # Check if job has hard conflicts
-    if job.hard_conflicts_count > 0:
+
+    validation = validate_job_internal(job_id, db)
+    if not validation["is_valid"]:
+        first_few = "; ".join(validation["conflict_details"][:3])
         raise HTTPException(
             status_code=400,
-            detail=f"Jadwal tidak dapat dipublikasikan karena masih memiliki {job.hard_conflicts_count} bentrok mutlak (hard conflicts)."
+            detail=f"Jadwal tidak dapat dipublikasikan karena memiliki {validation['hard_conflicts_count']} bentrok mutlak: {first_few}"
         )
 
     # Set all other jobs in same year & sem as unpublished
@@ -267,7 +462,7 @@ def publish_schedule(job_id: uuid.UUID, db: Session = Depends(get_db)):
 
     return {
         "status": "success",
-        "message": "Jadwal kuliah berhasil ditetapkan sebagai jadwal resmi aktif (is_published = True)."
+        "message": "Jadwal kuliah berhasil divalidasi dan ditetapkan sebagai jadwal resmi aktif (is_published = True)."
     }
 
 @router.post("/{schedule_id}/manual-swap", response_model=ManualSwapResponse)
@@ -477,6 +672,7 @@ def list_schedule_jobs(db: Session = Depends(get_db)):
                 "semester_type": j.semester_type,
                 "status": j.status,
                 "is_published": j.is_published,
+                "is_valid": (j.hard_conflicts_count == 0 and j.status == "COMPLETED"),
                 "progress_percentage": j.progress_percentage,
                 "current_generation": j.current_generation,
                 "max_generations": j.max_generations,

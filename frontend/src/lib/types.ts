@@ -84,6 +84,7 @@ export interface ScheduleJob {
   soft_conflicts_count: number;
   execution_time_seconds?: number;
   error_message?: string;
+  is_valid?: boolean;
   created_at: string;
   updated_at: string;
 }
@@ -119,6 +120,25 @@ export interface ScheduleItem {
   end_time: string;
   is_preferred_slot: boolean;
   soft_penalty_reasons: string[];
+  is_conflict?: boolean;
+}
+
+export interface JobValidationResult {
+  status: string;
+  job_id: string;
+  is_valid: boolean;
+  hard_conflicts_count: number;
+  soft_conflicts_count: number;
+  conflicts_by_type: {
+    hc1_lecturer_clash: number;
+    hc2_room_clash: number;
+    hc3_cohort_clash: number;
+    hc4_capacity_deficit: number;
+    hc5_room_type_mismatch: number;
+    hc6_lecturer_unavailable: number;
+  };
+  conflict_details: string[];
+  message: string;
 }
 
 export interface PreCheckResult {

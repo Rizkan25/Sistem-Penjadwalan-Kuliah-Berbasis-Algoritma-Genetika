@@ -40,10 +40,10 @@ class Schedule(Base):
     class_id = Column(GUID, ForeignKey("academic_classes.id", ondelete="CASCADE"), nullable=False)
     room_id = Column(GUID, ForeignKey("rooms.id", ondelete="RESTRICT"), nullable=False)
     time_slot_id = Column(GUID, ForeignKey("time_slots.id", ondelete="RESTRICT"), nullable=False)
+    is_conflict = Column(Boolean, default=False, nullable=False)
 
     __table_args__ = (
         UniqueConstraint("job_id", "class_id", name="unique_class_per_job"),
-        UniqueConstraint("job_id", "room_id", "time_slot_id", name="unique_room_slot_per_job"),
     )
 
     # Relationships

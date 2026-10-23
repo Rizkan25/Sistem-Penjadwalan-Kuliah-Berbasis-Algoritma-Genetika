@@ -3,6 +3,7 @@ from typing import List, Callable, Optional, Dict, Any
 from app.ga.chromosome import Chromosome, ProblemContext
 from app.ga.fitness import evaluate_fitness
 from app.ga.operators import tournament_selection, uniform_crossover, mutate
+from app.ga.repair import repair
 
 class GAEngine:
     def __init__(
@@ -92,6 +93,12 @@ class GAEngine:
             new_population.sort(key=lambda x: x.fitness, reverse=True)
             population = new_population
 
+            # Call repair on the best individual every 10 generations
+            if generation % 10 == 0:
+                repair(population[0], self.context)
+                evaluate_fitness(population[0], self.context)
+                population.sort(key=lambda x: x.fitness, reverse=True)
+
             current_best = population[0]
             if current_best.fitness > self.best_ever_fitness:
                 best = current_best.copy()
@@ -127,6 +134,10 @@ class GAEngine:
             # b) Zero hard conflicts and long convergence plateau (at least 50 stagnant generations)
             if best.hard_conflicts == 0 and self.stagnant_generations >= 50:
                 break
+
+        # Repair best individual once more after evolution loop finishes
+        repair(best, self.context)
+        evaluate_fitness(best, self.context)
 
         execution_time = time.time() - start_time
 

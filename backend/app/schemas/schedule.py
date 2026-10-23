@@ -84,6 +84,25 @@ class ScheduleItemResponse(BaseModel):
     # Soft constraint indicators for UI
     is_preferred_slot: bool = True
     soft_penalty_reasons: List[str] = []
+    is_conflict: bool = False
+
+class ValidationConflictBreakdown(BaseModel):
+    hc1_lecturer_clash: int = 0
+    hc2_room_clash: int = 0
+    hc3_cohort_clash: int = 0
+    hc4_capacity_deficit: int = 0
+    hc5_room_type_mismatch: int = 0
+    hc6_lecturer_unavailable: int = 0
+
+class JobValidationResponse(BaseModel):
+    status: str = "success"
+    job_id: UUID
+    is_valid: bool
+    hard_conflicts_count: int
+    soft_conflicts_count: int
+    conflicts_by_type: ValidationConflictBreakdown
+    conflict_details: List[str] = []
+    message: str
 
 class ScheduleResultResponse(BaseModel):
     status: str = "success"

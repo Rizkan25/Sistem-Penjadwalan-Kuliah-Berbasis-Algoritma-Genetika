@@ -2,7 +2,7 @@
 
 import React from 'react';
 import { ScheduleItem } from '@/lib/types';
-import { CheckCircle2, AlertTriangle, ArrowLeftRight, User } from 'lucide-react';
+import { CheckCircle2, AlertTriangle, ArrowLeftRight, User, AlertOctagon } from 'lucide-react';
 
 const DAY_NAMES: Record<number, string> = {
   1: 'Senin',
@@ -49,7 +49,13 @@ export default function ScheduleTable({ schedules, onOpenSwapModal }: ScheduleTa
               return (
                 <tr 
                   key={item.id} 
-                  className={`hover:bg-cyan-50/40 transition-colors ${idx % 2 === 0 ? 'bg-white' : 'bg-slate-50/60'}`}
+                  className={`transition-colors ${
+                    item.is_conflict
+                      ? 'bg-rose-50/80 hover:bg-rose-100/60 border-l-4 border-l-rose-500'
+                      : idx % 2 === 0
+                      ? 'bg-white hover:bg-cyan-50/40'
+                      : 'bg-slate-50/60 hover:bg-cyan-50/40'
+                  }`}
                 >
                   {/* Kolom 1 — Waktu */}
                   <td className="py-3.5 px-4 align-top">
@@ -149,10 +155,17 @@ export default function ScheduleTable({ schedules, onOpenSwapModal }: ScheduleTa
                   {/* Kolom 5 — Status & Aksi */}
                   <td className="py-3.5 px-4 align-top text-center">
                     <div className="flex flex-col items-center space-y-2">
-                      <span className="inline-flex items-center space-x-1 px-2.5 py-1 rounded-full bg-emerald-50 text-emerald-700 border border-emerald-200 text-[10px] font-bold">
-                        <CheckCircle2 className="w-3 h-3 text-emerald-600" />
-                        <span>Optimal (0 Bentrok)</span>
-                      </span>
+                      {item.is_conflict ? (
+                        <span className="inline-flex items-center space-x-1 px-2.5 py-1 rounded-full bg-rose-50 text-rose-700 border border-rose-300 text-[10px] font-bold animate-pulse">
+                          <AlertOctagon className="w-3 h-3 text-rose-600" />
+                          <span>Bentrok Mutlak</span>
+                        </span>
+                      ) : (
+                        <span className="inline-flex items-center space-x-1 px-2.5 py-1 rounded-full bg-emerald-50 text-emerald-700 border border-emerald-200 text-[10px] font-bold">
+                          <CheckCircle2 className="w-3 h-3 text-emerald-600" />
+                          <span>Optimal (0 Bentrok)</span>
+                        </span>
+                      )}
 
                       <button
                         type="button"

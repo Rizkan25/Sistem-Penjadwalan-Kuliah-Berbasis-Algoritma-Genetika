@@ -2,7 +2,7 @@
 
 import React, { useState } from 'react';
 import { ScheduleItem, Room, TimeSlot } from '@/lib/types';
-import { Clock, Lock, ArrowLeftRight, User, BookOpen } from 'lucide-react';
+import { Clock, Lock, ArrowLeftRight, User, BookOpen, AlertOctagon } from 'lucide-react';
 
 const DAY_NAMES: Record<number, string> = {
   1: 'Senin',
@@ -42,10 +42,13 @@ export default function RoomMatrixGrid({
     .sort((a, b) => a.period_order - b.period_order);
 
   // Group schedules by key: `${time_slot_id}_${room_id}`
-  const scheduleLookup = new Map<string, ScheduleItem>();
+  const scheduleLookup = new Map<string, ScheduleItem[]>();
   for (const s of schedules) {
     if (s.day_of_week === selectedDay) {
-      scheduleLookup.set(`${s.time_slot_id}_${s.room_id}`, s);
+      const key = `${s.time_slot_id}_${s.room_id}`;
+      const existing = scheduleLookup.get(key) || [];
+      existing.push(s);
+      scheduleLookup.set(key, existing);
     }
   }
 
@@ -136,9 +139,9 @@ export default function RoomMatrixGrid({
                   {/* X-axis: Room Cells */}
                   {rooms.map((room) => {
                     const cellKey = `${slot.id}_${room.id}`;
-                    const schedule = scheduleLookup.get(cellKey);
+                    const cellSchedules = scheduleLookup.get(cellKey) || [];
 
-                    if (!schedule) {
+                    if (cellSchedules.length === 0) {
                       return (
                         <td
                           key={room.id}
@@ -152,45 +155,62 @@ export default function RoomMatrixGrid({
                       );
                     }
 
-                    const theme = SEMESTER_COLORS[schedule.semester] || SEMESTER_COLORS[1];
-
                     return (
                       <td
                         key={room.id}
-                        className="p-2 border-r border-slate-200 align-top"
+                        className="p-2 border-r border-slate-200 align-top space-y-2"
                       >
-                        <div
-                          onClick={() => onOpenSwapModal(schedule)}
-                          className={`h-28 rounded-lg p-2.5 border ${theme.border} ${theme.bg} shadow-2xs hover:shadow-md transition-all cursor-pointer flex flex-col justify-between group relative`}
-                        >
-                          <div>
-                            <div className="flex items-center justify-between gap-1 mb-1">
-                              <span className={`text-[9px] font-bold px-1.5 py-0.2 rounded-sm ${theme.badge}`}>
-                                Sem {schedule.semester}
-                              </span>
-                              <span className="text-[9px] font-semibold text-slate-500 font-mono-metrics">
-                                {schedule.class_name.split(' ')[0]}
-                              </span>
-                            </div>
+                        {cellSchedules.map((schedule) => {
+                          const isConflict = !!schedule.is_conflict;
+                          const theme = SEMESTER_COLORS[schedule.semester] || SEMESTER_COLORS[1];
 
-                            <div className="text-[11px] font-bold text-slate-800 leading-tight line-clamp-2">
-                              {schedule.course_name}
-                            </div>
-                          </div>
+                          return (
+                            <div
+                              key={schedule.id}
+                              onClick={() => onOpenSwapModal(schedule)}
+                              className={`min-h-28 rounded-lg p-2.5 border shadow-2xs hover:shadow-md transition-all cursor-pointer flex flex-col justify-between group relative ${
+                                isConflict
+                                  ? 'border-rose-400 bg-rose-50 ring-2 ring-rose-400'
+                                  : `${theme.border} ${theme.bg}`
+                              }`}
+                            >
+                              <div>
+                                <div className="flex items-center justify-between gap-1 mb-1">
+                                  {isConflict ? (
+                                    <span className="text-[9px] font-bold px-1.5 py-0.2 rounded-sm bg-rose-600 text-white flex items-center space-x-1 animate-pulse">
+                                      <AlertOctagon className="w-2.5 h-2.5 inline" />
+                                      <span>BENTROK</span>
+                                    </span>
+                                  ) : (
+                                    <span className={`text-[9px] font-bold px-1.5 py-0.2 rounded-sm ${theme.badge}`}>
+                                      Sem {schedule.semester}
+                                    </span>
+                                  )}
+                                  <span className="text-[9px] font-semibold text-slate-500 font-mono-metrics">
+                                    {schedule.class_name.split(' ')[0]}
+                                  </span>
+                                </div>
 
-                          <div className="pt-1 border-t border-slate-200/50">
-                            <div className="flex items-center space-x-1 text-[10px] text-slate-600 truncate">
-                              <User className="w-2.5 h-2.5 shrink-0 text-slate-400" />
-                              <span className="truncate">{schedule.lecturer_name}</span>
+                                <div className={`text-[11px] font-bold leading-tight line-clamp-2 ${isConflict ? 'text-rose-950 font-black' : 'text-slate-800'}`}>
+                                  {schedule.course_name}
+                                </div>
+                              </div>
+
+                              <div className="pt-1 border-t border-slate-200/50 mt-1">
+                                <div className="flex items-center space-x-1 text-[10px] text-slate-600 truncate">
+                                  <User className="w-2.5 h-2.5 shrink-0 text-slate-400" />
+                                  <span className="truncate">{schedule.lecturer_name}</span>
+                                </div>
+                                <div className="flex items-center justify-between text-[9px] text-slate-400 mt-0.5">
+                                  <span>{schedule.student_count} mhs</span>
+                                  <span className="text-[#1D8699] font-bold opacity-0 group-hover:opacity-100 transition-opacity">
+                                    Ubah ↗
+                                  </span>
+                                </div>
+                              </div>
                             </div>
-                            <div className="flex items-center justify-between text-[9px] text-slate-400 mt-0.5">
-                              <span>{schedule.student_count} mhs</span>
-                              <span className="text-[#1D8699] font-bold opacity-0 group-hover:opacity-100 transition-opacity">
-                                Ubah ↗
-                              </span>
-                            </div>
-                          </div>
-                        </div>
+                          );
+                        })}
                       </td>
                     );
                   })}

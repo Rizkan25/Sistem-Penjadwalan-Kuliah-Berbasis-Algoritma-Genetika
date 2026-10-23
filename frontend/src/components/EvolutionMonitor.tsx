@@ -49,7 +49,9 @@ export default function EvolutionMonitor({ job, history = [] }: EvolutionMonitor
               {isRunning 
                 ? 'Mengevaluasi mutasi kromosom dan kalkulasi batasan penalti...' 
                 : isCompleted 
-                ? 'Evolusi konvergen! Seluruh batasan keras mutlak (HC) terpenuhi dengan sukses.'
+                ? (job.hard_conflicts_count === 0
+                    ? 'Evolusi konvergen! Seluruh batasan keras (HC) terpenuhi dengan sukses.'
+                    : `Evolusi selesai, tetapi masih ada ${job.hard_conflicts_count} bentrok mutlak. Jadwal belum layak dipublikasikan.`)
                 : isFailed
                 ? `Terjadi kesalahan: ${job.error_message || 'Optimasi dihentikan.'}`
                 : 'Menunggu antrean komputasi...'}

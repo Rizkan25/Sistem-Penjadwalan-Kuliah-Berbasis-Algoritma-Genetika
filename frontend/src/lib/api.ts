@@ -1,6 +1,6 @@
 import { 
   Lecturer, Room, TimeSlot, Course, AcademicClass, LecturerPreference,
-  GAParameters, ScheduleJob, ScheduleItem, PreCheckResult
+  GAParameters, ScheduleJob, ScheduleItem, PreCheckResult, JobValidationResult
 } from './types';
 
 export function getApiBaseUrl(): string {
@@ -127,6 +127,9 @@ export const api = {
     const qs = params.toString();
     return fetchJSON<{ status: string; total_items: number; data: ScheduleItem[] }>(`/schedules/jobs/${jobId}/result${qs ? `?${qs}` : ''}`);
   },
+
+  validateSchedule: (jobId: string) => 
+    fetchJSON<JobValidationResult>(`/schedules/jobs/${jobId}/validate`),
 
   publishSchedule: (jobId: string) => 
     fetchJSON<{ status: string; message: string }>(`/schedules/jobs/${jobId}/publish`, { method: 'PATCH' }),
