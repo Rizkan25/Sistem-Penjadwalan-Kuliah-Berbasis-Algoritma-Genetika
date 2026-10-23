@@ -110,12 +110,15 @@ export default function GeneratorPage() {
       {/* Title & Description */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between pb-4 border-b border-slate-200 gap-3">
         <div>
-          <h2 className="text-xl font-bold text-slate-800 flex items-center space-x-2">
-            <span>Mesin Optimasi Penjadwalan (GA Generator)</span>
-            <span className="px-2.5 py-0.5 rounded-full bg-cyan-100 text-[#1D8699] text-xs font-semibold">
-              Async Celery
-            </span>
-          </h2>
+          <div className="flex flex-wrap items-center gap-2.5">
+            <h2 className="text-xl font-bold text-slate-800">
+              Mesin Optimasi Penjadwalan (GA Generator)
+            </h2>
+            <div className="inline-flex items-center space-x-1.5 px-2.5 py-1 rounded-full bg-teal-50 border border-teal-200/80 text-[#1D8699] text-xs font-bold whitespace-nowrap shadow-2xs shrink-0">
+              <span className="w-2 h-2 rounded-full bg-[#1D8699] animate-pulse"></span>
+              <span>Async Celery Worker</span>
+            </div>
+          </div>
           <p className="text-xs text-slate-500 mt-1">
             Mengeksekusi evolusi populasi solusi jadwal dengan evaluasi 6 Batasan Keras (Hard Constraints) dan 3 Batasan Lunak (Soft Constraints).
           </p>
@@ -149,30 +152,30 @@ export default function GeneratorPage() {
                 <button
                   type="button"
                   onClick={handlePublish}
-                  className="px-4 py-2.5 bg-amber-500 hover:bg-amber-600 text-white rounded-xl text-xs font-bold shadow-md shadow-amber-500/25 transition-all cursor-pointer"
+                  className="px-4 py-2.5 bg-amber-500 hover:bg-amber-600 text-white rounded-xl text-xs font-bold shadow-md shadow-amber-500/25 transition-all cursor-pointer whitespace-nowrap shrink-0"
                 >
                   Publikasikan Jadwal Resmi
                 </button>
               ) : (
-                <span className="px-3 py-2 bg-white/20 rounded-xl text-xs font-bold text-white backdrop-blur-xs flex items-center space-x-1.5">
-                  <CheckCircle2 className="w-4 h-4 text-emerald-300" />
+                <span className="px-3 py-2 bg-white/20 rounded-xl text-xs font-bold text-white backdrop-blur-xs flex items-center space-x-1.5 whitespace-nowrap shrink-0">
+                  <CheckCircle2 className="w-4 h-4 text-emerald-300 shrink-0" />
                   <span>Resmi Dipublikasikan</span>
                 </span>
               )}
 
               <Link
                 href="/schedule"
-                className="px-4 py-2.5 bg-white text-slate-800 hover:bg-slate-100 rounded-xl text-xs font-bold shadow-sm transition-all flex items-center space-x-1.5"
+                className="px-4 py-2.5 bg-white text-slate-800 hover:bg-slate-100 rounded-xl text-xs font-bold shadow-sm transition-all flex items-center space-x-1.5 whitespace-nowrap shrink-0"
               >
-                <Calendar className="w-4 h-4 text-[#1D8699]" />
+                <Calendar className="w-4 h-4 text-[#1D8699] shrink-0" />
                 <span>Lihat Tabel Jadwal</span>
               </Link>
 
               <Link
                 href="/schedule/matrix"
-                className="px-4 py-2.5 bg-white/10 hover:bg-white/20 text-white rounded-xl text-xs font-bold backdrop-blur-xs transition-all flex items-center space-x-1.5"
+                className="px-4 py-2.5 bg-white/10 hover:bg-white/20 text-white rounded-xl text-xs font-bold backdrop-blur-xs transition-all flex items-center space-x-1.5 whitespace-nowrap shrink-0"
               >
-                <LayoutGrid className="w-4 h-4" />
+                <LayoutGrid className="w-4 h-4 shrink-0" />
                 <span>Buka Matriks Ruangan</span>
               </Link>
             </div>

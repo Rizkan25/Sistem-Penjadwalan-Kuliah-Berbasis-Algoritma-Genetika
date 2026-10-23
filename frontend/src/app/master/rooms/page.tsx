@@ -77,9 +77,9 @@ export default function RoomsPage() {
 
         <button
           onClick={() => setShowAddModal(true)}
-          className="flex items-center space-x-1.5 px-3.5 py-2 bg-[#1D8699] hover:bg-[#166978] text-white rounded-lg text-xs font-bold shadow-xs cursor-pointer shrink-0"
+          className="flex items-center space-x-1.5 px-3.5 py-2 bg-[#1D8699] hover:bg-[#166978] text-white rounded-lg text-xs font-bold shadow-xs cursor-pointer transition whitespace-nowrap shrink-0"
         >
-          <Plus className="w-3.5 h-3.5" />
+          <Plus className="w-3.5 h-3.5 shrink-0" />
           <span>Tambah Ruangan</span>
         </button>
       </div>

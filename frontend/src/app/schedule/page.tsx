@@ -140,9 +140,9 @@ export default function ScheduleTablePage() {
           {/* Switch to Matrix view */}
           <Link
             href="/schedule/matrix"
-            className="flex items-center space-x-1.5 px-3 py-2 rounded-lg border border-slate-300 bg-white hover:bg-slate-50 text-slate-700 text-xs font-semibold shadow-2xs transition-colors"
+            className="flex items-center space-x-1.5 px-3 py-2 rounded-lg border border-slate-300 bg-white hover:bg-slate-50 text-slate-700 text-xs font-semibold shadow-2xs transition-colors whitespace-nowrap shrink-0"
           >
-            <LayoutGrid className="w-3.5 h-3.5 text-[#1D8699]" />
+            <LayoutGrid className="w-3.5 h-3.5 text-[#1D8699] shrink-0" />
             <span>Matriks Ruangan</span>
           </Link>
 
@@ -152,9 +152,9 @@ export default function ScheduleTablePage() {
               <a
                 href={api.getExportUrl(job.id, 'excel')}
                 download
-                className="flex items-center space-x-1.5 px-3 py-2 rounded-lg bg-emerald-700 hover:bg-emerald-800 text-white text-xs font-bold shadow-xs transition-colors"
+                className="flex items-center space-x-1.5 px-3 py-2 rounded-lg bg-emerald-700 hover:bg-emerald-800 text-white text-xs font-bold shadow-xs transition-colors whitespace-nowrap shrink-0"
               >
-                <FileSpreadsheet className="w-3.5 h-3.5 text-white" />
+                <FileSpreadsheet className="w-3.5 h-3.5 text-white shrink-0" />
                 <span>Ekspor Excel</span>
               </a>
 
@@ -162,9 +162,9 @@ export default function ScheduleTablePage() {
               <a
                 href={api.getExportUrl(job.id, 'pdf')}
                 download
-                className="flex items-center space-x-1.5 px-3 py-2 rounded-lg bg-rose-700 hover:bg-rose-800 text-white text-xs font-bold shadow-xs transition-colors"
+                className="flex items-center space-x-1.5 px-3 py-2 rounded-lg bg-rose-700 hover:bg-rose-800 text-white text-xs font-bold shadow-xs transition-colors whitespace-nowrap shrink-0"
               >
-                <FileText className="w-3.5 h-3.5 text-white" />
+                <FileText className="w-3.5 h-3.5 text-white shrink-0" />
                 <span>Ekspor PDF</span>
               </a>
 
@@ -173,9 +173,9 @@ export default function ScheduleTablePage() {
                 <button
                   type="button"
                   onClick={handlePublish}
-                  className="flex items-center space-x-1.5 px-3.5 py-2 rounded-lg bg-amber-600 hover:bg-amber-700 text-white text-xs font-bold shadow-xs transition-colors cursor-pointer"
+                  className="flex items-center space-x-1.5 px-3.5 py-2 rounded-lg bg-amber-600 hover:bg-amber-700 text-white text-xs font-bold shadow-xs transition-colors cursor-pointer whitespace-nowrap shrink-0"
                 >
-                  <CheckCircle2 className="w-3.5 h-3.5" />
+                  <CheckCircle2 className="w-3.5 h-3.5 shrink-0" />
                   <span>Publikasikan Jadwal</span>
                 </button>
               )}

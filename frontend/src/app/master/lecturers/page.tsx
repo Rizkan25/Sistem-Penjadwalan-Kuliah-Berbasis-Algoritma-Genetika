@@ -166,7 +166,7 @@ export default function LecturersPage() {
           </p>
         </div>
 
-        <div className="flex items-center space-x-2">
+        <div className="flex flex-wrap sm:flex-nowrap items-center gap-2 shrink-0">
           <button
             onClick={() => {
               if (lecturers.length > 0 && timeSlots.length > 0) {
@@ -175,17 +175,17 @@ export default function LecturersPage() {
                 setShowPrefModal(true);
               }
             }}
-            className="flex items-center space-x-1.5 px-3 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-lg text-xs font-semibold cursor-pointer transition-colors"
+            className="flex items-center space-x-1.5 px-3 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-lg text-xs font-semibold cursor-pointer transition-colors whitespace-nowrap shrink-0 shadow-2xs"
           >
-            <Clock className="w-3.5 h-3.5 text-amber-600" />
+            <Clock className="w-3.5 h-3.5 text-amber-600 shrink-0" />
             <span>Tambah Preferensi</span>
           </button>
 
           <button
             onClick={() => setShowAddModal(true)}
-            className="flex items-center space-x-1.5 px-3.5 py-2 bg-[#1D8699] hover:bg-[#166978] text-white rounded-lg text-xs font-bold shadow-xs cursor-pointer transition-colors"
+            className="flex items-center space-x-1.5 px-3.5 py-2 bg-[#1D8699] hover:bg-[#166978] text-white rounded-lg text-xs font-bold shadow-xs cursor-pointer transition-colors whitespace-nowrap shrink-0"
           >
-            <Plus className="w-3.5 h-3.5" />
+            <Plus className="w-3.5 h-3.5 shrink-0" />
             <span>Tambah Dosen</span>
           </button>
         </div>
@@ -268,7 +268,7 @@ export default function LecturersPage() {
                 </select>
               </div>
 
-              <div className="text-[11px] font-bold text-slate-500">
+              <div className="text-[11px] font-bold text-slate-500 whitespace-nowrap shrink-0">
                 Menampilkan <span className="text-[#1D8699] font-extrabold">{filteredLecturers.length}</span> dari {lecturers.length} Dosen
               </div>
             </div>
