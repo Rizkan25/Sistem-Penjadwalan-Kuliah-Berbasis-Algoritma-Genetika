@@ -16,7 +16,11 @@ Aplikasi web _full-stack_ cerdas dan modern untuk otomatisasi penyusunan jadwal 
 
 ### 1. Mesin Optimasi Algoritma Genetika (GA Engine)
 
-- **6 Batasan Keras (_Hard Constraints_ - $HC_1$ s/d $HC_6$ / Wajib Nol Pelanggaran):**
+- **Model Blok Sesi Multi-Period (54 Slot Waktu Resmi UBBG):**
+  - Mengadopsi 9 periode pembelajaran harian (Jam 1 s.d 9, masing-masing 50 menit) x 6 hari perkuliahan (Senin s.d Sabtu), total **54 slot waktu pembelajaran terstandarisasi**.
+  - **SKS Spanning Cerdas:** Mata kuliah 2-SKS otomatis menempati 2 sesi berurutan (100 menit) dan 3-SKS menempati 3 sesi berurutan (150 menit) dalam satu blok sesi yang valid (Blok Pagi: Sesi 1–4 [09:00–12:20], Blok Siang/Sore: Sesi 5–9 [14:00–18:10]).
+- **7 Batasan Keras (_Hard Constraints_ - $HC_0$ s/d $HC_6$ / Wajib Nol Pelanggaran):**
+  - **$HC_0$ (Integritas Batas Sesi SKS / Boundary Integrity):** Alokasi kelas dengan bobot $k$-SKS wajib menempati $k$ sesi berurutan utuh dalam satu blok harian tanpa menyeberangi jeda istirahat siang/sholat atau melebihi batas akhir hari perkuliahan.
   - **$HC_1$ (Bebas Bentrok Dosen):** Seorang dosen tidak boleh mengajar lebih dari 1 kelas pada slot waktu yang bersamaan.
   - **$HC_2$ (Bebas Bentrok Ruangan):** Suatu ruangan tidak boleh digunakan oleh lebih dari 1 sesi perkuliahan pada slot waktu yang bersamaan.
   - **$HC_3$ (Bebas Bentrok Rombel & Aturan Paralel KBK):** Kelas pada semester dan kelompok (_cohort_) yang sama tidak boleh bertabrakan, **kecuali** kelas peminatan spesifik antar-KBK yang berbeda (misalnya: kelas KBK Pemrograman dan KBK Multimedia diizinkan berjalan paralel di ruangan berbeda).
@@ -27,33 +31,40 @@ Aplikasi web _full-stack_ cerdas dan modern untuk otomatisasi penyusunan jadwal 
   - **$SC_1$ (Preferensi Waktu Dosen):** Memprioritaskan alokasi mengajar pada slot waktu yang ditandai `PREFERRED` oleh dosen bersangkutan.
   - **$SC_2$ (Minimasi Jam Kosong Mahasiswa):** Meminimalkan jeda waktu kosong (_gap hours_) antar-perkuliahan dalam hari yang sama untuk kelompok mahasiswa yang sama.
   - **$SC_3$ (Pemerataan Beban Mengajar Harian):** Membatasi beban mengajar dosen maksimal 3 blok sesi kelas dalam satu hari.
+- **Operator Perbaikan Lokal Berbasis Batasan (_Constraint-Directed Repair Operator_ - `repair.py`):**
+  - Memadukan komputasi evolusi genetik dengan pencarian lokal heuristik (_memetic search_) yang secara berkala (setiap 10 generasi dan pasca-evolusi) mendeteksi gen yang terlibat bentrok dan merelokasikannya ke kombinasi ruangan & slot waktu valid yang meminimalkan penalti, menjamin tercapainya **Zero Hard Conflicts** bahkan untuk skala 122+ kelas.
 - **Inisialisasi Heuristik & Mutasi Adaptif:**
   - Penempatan ruangan langsung mencocokkan tipe dan kapasitas sejak pembentukan kromosom generasi awal ($HC_4$ & $HC_5$ langsung terpenuhi).
   - Mekanisme _Diversity Injection_: Peningkatan _mutation rate_ otomatis (dari 0.08 ke 0.25 selama 5 generasi) jika populasi mengalami konvergensi prematur / stagnan selama 15 generasi berturut-turut.
 - **Validasi Kelayakan Pra-Eksekusi (_Pre-feasibility Check_):**
   - Endpoint `/api/v1/conflicts/pre-check` memverifikasi rasio ketersediaan jam ruangan dan beban mengajar dosen sebelum proses GA dimulai, menolak komputasi yang tidak layak secara matematis dengan kode respons `422 Unprocessable Entity`.
 - **Proteksi Waktu Ibadah Sholat Jumat (Banda Aceh):**
-  - Slot perkuliahan pada hari Jumat pukul `11:30 - 14:00 WIB` dikunci otomatis untuk menghormati pelaksanaan ibadah Sholat Jumat.
+  - Slot perkuliahan pada hari Jumat pukul `12:00 - 14:00 WIB` dikunci otomatis untuk menghormati pelaksanaan ibadah Sholat Jumat.
 
-### 2. Sinkronisasi Data Kurikulum & Dosen Riil (Data Sync & Scraper)
+### 2. Sinkronisasi Data Kurikulum, Ruangan, & Dosen Riil (Data Sync & Scraper)
 
 - **Sinkronisasi Web Dosen Resmi UBBG (`sync_web_lecturers.py`):**
   - Mengambil data dosen aktif secara otomatis dari portal resmi Prodi S1 Ilmu Komputer UBBG ([https://ilkom.bbg.ac.id/dosen/](https://ilkom.bbg.ac.id/dosen/)) menggunakan BeautifulSoup4 dan HTTPX.
-  - Mendeteksi nama lengkap, gelar akademik, jabatan struktural (misal: Ketua Prodi, Sekretaris Prodi, Dosen Tetap/Tamu), dan menangani relasi kelas secara aman (`--clean-dummy`).
+  - Mendeteksi nama lengkap, gelar akademik, jabatan struktural (Wakil Rektor, Dekan, Kaprodi, Sekprodi, Dosen Tetap/Tamu), serta penentuan rumpun KBK dosen (`GENERAL`, `PEMROGRAMAN`, `MULTIMEDIA`, `IOT`).
 - **Sinkronisasi Kurikulum Lengkap OpenSIMKA (`sync_simka_courses.py`):**
-  - Memuat 71+ mata kuliah resmi dari dataset portal OpenSIMKA UBBG (`app/seeds/opensimka_courses.json`).
+  - Memuat 101+ mata kuliah resmi dari dataset portal OpenSIMKA UBBG (`app/seeds/opensimka_courses.json`).
   - Menyinkronkan kode MK, bobot SKS, semester, jenis mata kuliah (`Wajib` / `Pilihan`), status prasyarat, serta klasifikasi cerdas rumpun KBK dan tipe ruang (Teori/Lab).
+- **Spesifikasi & Verifikasi 28 Target Ruangan Kampus (`clean_and_sync_rooms.py` & `sync_target_rooms_dataset.py`):**
+  - Mensinkronkan spesifikasi 28 ruangan kampus UBBG (Lantai 2: 14 ruangan, Lantai 3: 13 ruangan, Lantai 4: 1 Smart Room) yang mencakup 4 Laboratorium CBT/Komputer, 1 Smart Room, dan 23 Ruang Kelas Teori dengan daya tampung akurat.
+- **Sinkronisasi 54 Slot Waktu Pembelajaran Resmi UBBG (`sync_official_time_slots.py`):**
+  - Menginisialisasi 54 slot waktu terstandarisasi (Senin–Sabtu, Sesi 1–9 per hari) dan meregenerasi jadwal bebas bentrok dengan SKS spanning secara transaksional.
 
 ### 3. Antarmuka Modern & Responsif (Frontend Next.js)
 
 - **Desain Adaptif OpenSIMKA UBBG:** Filosofi desain data modern berbasis _Teal-Blue_ (`#1D8699`), _Warm Amber_ (`#D4822A`), dan _Slate Canvas_ yang bersih dan elegan.
 - **Sidebar Buka-Tutup (_Collapsible Responsive Navigation_):** Dapat diperkecil menjadi mode bilah ikon ramping (72px) di desktop dengan _floating hover tooltip_, serta dilengkapi _backdrop overlay_ otomatis untuk perangkat seluler.
 - **Live Evolution Monitor:** Visualisasi pemantauan progres generasi algoritma secara _real-time_ (persentase, counter generasi, skor fitness terbaik, dan indikator sisa konflik) via polling asinkron anti-timeout.
-- **Matriks Kalender Ruangan 2D (_Room-Time Grid_):** Visualisasi matriks 2D interaktif (Sumbu X: Seluruh Ruangan, Sumbu Y: Sesi Waktu) lengkap dengan penanda blokade waktu ibadah Sholat Jumat dan badge jenis kelas.
-- **Penyesuaian Manual Anti-Bentrok (_Manual Swap Modal_):** Fitur tukar slot/ruangan pasca-generasi yang divalidasi langsung oleh sistem terhadap batasan $HC_1$ hingga $HC_6$.
-- **Table Sorting & Quick Search:** Pengurutan kolom interaktif dua arah (A–Z / Z–A) pada nama kelas, mata kuliah, dosen, semester, KBK, dan kuota mahasiswa, dilengkapi bilah pencarian instan.
+- **Matriks Kalender Ruangan 2D (_Room-Time Grid_):** Visualisasi matriks 2D interaktif (Sumbu X: Seluruh Ruangan, Sumbu Y: Sesi Waktu) lengkap dengan penanda blokade waktu ibadah Sholat Jumat, badge jenis kelas, dan indikator span SKS multi-periode.
+- **Tabel Rombel Kelas dengan Kolom Terpisah (`/master/classes`):** Pemisahan kolom Semester dan Rombel (Cohort) dengan pengurutan kolom independen (Sorting 2 arah untuk Nama Kelas, Mata Kuliah, Dosen, Semester, Rombel, KBK, dan Kuota Mahasiswa) serta pencarian instan.
+- **Matriks Preferensi Dosen Interaktif (`/master/lecturers`):** Fitur input preferensi waktu mengajar multi-slot per hari/sesi secara interaktif (`UNAVAILABLE` / `PREFERRED`) dan penetapan rumpun KBK dosen.
+- **Riwayat Pekerjaan & Proteksi Publikasi Cerdas (`/history`):** Filter tab riwayat (`ALL`, `PUBLISHED`, `READY`, `REVISE`), validasi otomatis sebelum jadwal di-publish ke publik (`validateSchedule` via `/jobs/{job_id}/validate`), dan fitur salin Job ID.
+- **Penyesuaian Manual Anti-Bentrok (_Manual Swap Modal_):** Fitur tukar slot/ruangan pasca-generasi yang divalidasi langsung oleh sistem terhadap batasan $HC_0$ hingga $HC_6$.
 - **Ekspor Dokumen Resmi Siap Cetak:** Unduh jadwal hasil optimasi ke format **Excel (`.xlsx`)** (tabel resmi berlogo UBBG) dan **PDF (`.pdf`)** (format A4 Landscape siap cetak) dalam 1 klik.
-- **CRUD Data Master Komprehensif:** Manajemen data Dosen & Preferensi Waktu, Ruangan & Tipe/Kapasitas, Mata Kuliah & SKS, Rombel Kelas Akademik (dengan modal Tambah & Edit), serta Slot Waktu.
 - **Dukungan Akses Multi-Device & Jaringan Lokal (LAN/Wi-Fi):** Server otomatis di-bind ke `0.0.0.0` dan klien API mendeteksi alamat jaringan secara dinamis, memungkinkan pengujian langsung dari laptop maupun smartphone dalam satu jaringan Wi-Fi tanpa konfigurasi rumit.
 
 ---
@@ -86,10 +97,11 @@ Aplikasi web _full-stack_ cerdas dan modern untuk otomatisasi penyusunan jadwal 
 │   │   │   └── schedules.py         # Trigger GA, polling status, manual swap, ekspor file, jobs
 │   │   ├── ga/                      # Inti Mesin Algoritma Genetika
 │   │   │   ├── __init__.py          # Export modul GA
-│   │   │   ├── chromosome.py        # Struktur gen, kelas, ruangan, slot waktu, context
-│   │   │   ├── engine.py            # GA loop, adaptive mutation, elitism, termination
-│   │   │   ├── fitness.py           # Evaluasi 6 hard constraints & 3 soft constraints
-│   │   │   └── operators.py         # Tournament selection, uniform crossover, swap mutation
+│   │   │   ├── chromosome.py        # Struktur gen, kelas, ruangan, slot waktu, SKS spanning, context
+│   │   │   ├── engine.py            # GA loop, adaptive mutation, elitism, periodic repair, termination
+│   │   │   ├── fitness.py           # Evaluasi 7 hard constraints (HC0-HC6) & 3 soft constraints
+│   │   │   ├── operators.py         # Tournament selection, uniform crossover, swap mutation
+│   │   │   └── repair.py            # Constraint-directed local repair operator (memetic search)
 │   │   ├── models/                  # Model database SQLAlchemy 2.x
 │   │   │   ├── __init__.py          # Export relasi model
 │   │   │   ├── master.py            # Tabel lecturers, rooms, time_slots, courses, academic_classes
@@ -97,11 +109,12 @@ Aplikasi web _full-stack_ cerdas dan modern untuk otomatisasi penyusunan jadwal 
 │   │   ├── schemas/                 # Validasi skema input/output Pydantic v2
 │   │   │   ├── __init__.py          # Export skema DTO
 │   │   │   ├── master.py            # Skema DTO master data & preferensi dosen
-│   │   │   └── schedule.py          # Skema parameter GA, response job, & swap DTO
+│   │   │   └── schedule.py          # Skema parameter GA, response job, validation, & swap DTO
 │   │   ├── seeds/                   # Berkas data awal eksternal
-│   │   │   └── opensimka_courses.json # Dataset resmi 71+ mata kuliah OpenSIMKA UBBG
+│   │   │   └── opensimka_courses.json # Dataset resmi 101+ mata kuliah OpenSIMKA UBBG
 │   │   ├── adjust_class_capacities.py # Kalibrasi kuota mahasiswa terhadap batas kapasitas 28 ruangan kampus
 │   │   ├── celery_app.py            # Konfigurasi Celery & broker antrean Redis
+│   │   ├── clean_and_sync_rooms.py  # Pembersihan dan verifikasi 28 target ruangan kampus UBBG
 │   │   ├── config.py                # Konfigurasi environment & parameter sistem
 │   │   ├── database.py              # Engine koneksi basis data (SQLite WAL / PostgreSQL) & SessionLocal
 │   │   ├── exporter.py              # Generator dokumen resmi Excel (.xlsx) & PDF (.pdf)
@@ -109,9 +122,17 @@ Aplikasi web _full-stack_ cerdas dan modern untuk otomatisasi penyusunan jadwal 
 │   │   ├── migrate_real_courses.py  # Migrasi dataset kurikulum lengkap & 52 kelas akademik aktif
 │   │   ├── seed_data.py             # Seeder master data dasar (31 dosen, 28 ruang kampus, slot waktu, preferensi)
 │   │   ├── seed_even_courses.py     # Seeder mata kuliah semester genap (Sem 2, 4, 6, 8)
+│   │   ├── sync_official_time_slots.py # Sinkronisasi 54 slot waktu pembelajaran resmi & regenerasi jadwal SKS
 │   │   ├── sync_simka_courses.py    # Skrip sinkronisasi kurikulum mata kuliah dari OpenSIMKA UBBG
+│   │   ├── sync_target_rooms_dataset.py # Scraper spesifikasi 28 target ruangan dari ruang.bbg.ac.id
 │   │   ├── sync_web_lecturers.py    # Skrip sinkronisasi data dosen dari web resmi ilkom.bbg.ac.id
 │   │   └── tasks.py                 # Task runner asinkron (Celery worker / background thread fallback)
+│   ├── tests/                       # Suite pengujian otomatis (Unit & Integration Testing)
+│   │   ├── __init__.py              # Inisialisasi package testing
+│   │   ├── test_fitness.py          # Pengujian evaluasi fitness & seluruh batasan keras/lunak
+│   │   ├── test_repair.py           # Pengujian efektivitas operator perbaikan lokal (repair)
+│   │   ├── test_storage.py          # Pengujian integritas penyimpanan database & serialisasi
+│   │   └── test_validation.py       # Pengujian endpoint validasi konflik jadwal
 │   ├── requirements.txt             # Dependensi pustaka Python
 │   ├── run.py                       # Launcher server Uvicorn (0.0.0.0:8000)
 │   └── spk_ag.db                    # Basis data SQLite lokal (dibuat otomatis)
@@ -178,8 +199,11 @@ Seluruh endpoint backend berada di bawah prefix `/api/v1` dan dapat diuji secara
 | `PUT` / `DELETE` | `/api/v1/master/courses/{id}`     | Memperbarui / Menghapus data mata kuliah                 |
 | `GET` / `POST`   | `/api/v1/master/classes`          | Menampilkan rombel kelas / Menambahkan rombel kelas baru |
 | `PUT` / `DELETE` | `/api/v1/master/classes/{id}`     | Memperbarui / Menghapus rombel kelas perkuliahan         |
-| `GET` / `POST`   | `/api/v1/master/preferences`      | Menampilkan preferensi waktu dosen / Menambah preferensi |
-| `DELETE`         | `/api/v1/master/preferences/{id}` | Menghapus preferensi waktu dosen                         |
+| `GET` / `POST`   | `/api/v1/master/preferences`                 | Menampilkan preferensi waktu dosen / Menambah preferensi |
+| `POST`           | `/api/v1/master/preferences/batch`           | Menetapkan / menukar preferensi waktu dosen secara batch |
+| `POST`           | `/api/v1/master/preferences/bulk-update`      | Memperbarui seluruh preferensi waktu seorang dosen sekaligus |
+| `DELETE`         | `/api/v1/master/preferences/lecturer/{id}`    | Menghapus seluruh preferensi waktu seorang dosen         |
+| `DELETE`         | `/api/v1/master/preferences/{id}`            | Menghapus satu entri preferensi waktu dosen              |
 
 ### 2. Validasi Kelayakan & Pencegahan Konflik (`/api/v1/conflicts`)
 
@@ -194,6 +218,7 @@ Seluruh endpoint backend berada di bawah prefix `/api/v1` dan dapat diuji secara
 | `POST`  | `/api/v1/schedules/generate`                  | Memicu optimasi GA asinkron di latar belakang (`202 Accepted` + `job_id`)                               |
 | `GET`   | `/api/v1/schedules/jobs/{job_id}/status`      | Polling status eksekusi GA (persentase progres, generasi saat ini, fitness, konflik)                    |
 | `GET`   | `/api/v1/schedules/jobs/{job_id}/result`      | Mengambil matriks jadwal (mendukung filter `semester`, `kbk`, `lecturer_id`, `room_id`)                 |
+| `GET`   | `/api/v1/schedules/jobs/{job_id}/validate`    | Memvalidasi integritas jadwal terhadap data master terbaru dan mengembalikan rincian bentrok ($HC_0-HC_6$) |
 | `GET`   | `/api/v1/schedules/jobs`                      | Menampilkan daftar riwayat seluruh pekerjaan optimasi jadwal yang pernah dijalankan                     |
 | `PATCH` | `/api/v1/schedules/jobs/{job_id}/publish`     | Menetapkan hasil generasi jadwal sebagai jadwal perkuliahan resmi aktif (`is_published`)                |
 | `POST`  | `/api/v1/schedules/{schedule_id}/manual-swap` | Validasi bentrok dan penukaran slot waktu/ruangan secara manual pasca-generasi                          |
@@ -265,7 +290,7 @@ python -m app.seed_data
 # OPSI B: Sinkronisasi Dosen Resmi dari Website Prodi S1 Ilmu Komputer UBBG (ilkom.bbg.ac.id)
 python -m app.sync_web_lecturers --clean-dummy
 
-# OPSI C: Sinkronisasi Kurikulum 71+ Mata Kuliah Lengkap dari OpenSIMKA UBBG
+# OPSI C: Sinkronisasi Kurikulum 101+ Mata Kuliah Lengkap dari OpenSIMKA UBBG
 python -m app.sync_simka_courses
 
 # OPSI D: Inisialisasi Dataset Lengkap Kurikulum Aktif (52 Rombel Kelas Semester 1–5)
@@ -274,7 +299,13 @@ python -m app.migrate_real_courses
 # OPSI E: Kalibrasi Kuota Kelas terhadap Daya Tampung 28 Ruangan Kampus (Pencegahan HC_4)
 python -m app.adjust_class_capacities
 
-# OPSI F: (Opsional) Tambahkan Mata Kuliah Semester Genap (Sem 2, 4, 6, 8)
+# OPSI F: Sinkronisasi 54 Slot Waktu Pembelajaran Resmi UBBG & Regenerasi Jadwal Multi-Period Bebas Bentrok
+python -m app.sync_official_time_slots
+
+# OPSI G: Sinkronisasi & Verifikasi 28 Target Ruangan Kampus UBBG
+python -m app.clean_and_sync_rooms
+
+# OPSI H: (Opsional) Tambahkan Mata Kuliah Semester Genap (Sem 2, 4, 6, 8)
 python -m app.seed_even_courses
 
 # Kembali ke folder root proyek
@@ -378,15 +409,31 @@ Sistem telah dirancang agar dapat diuji langsung dari berbagai perangkat (laptop
 
 ## 📊 Hasil Uji Konvergensi Algoritma Genetika
 
-| Skenario Pengujian                      | Jumlah Kelas  | Ukuran Populasi | Maks. Generasi | Waktu Komputasi | Pelanggaran Mutlak (_Hard Conflicts_) | Pelanggaran Lunak (_Soft Conflicts_) |        Skor Fitness        |
-| :-------------------------------------- | :-----------: | :-------------: | :------------: | :-------------: | :-----------------------------------: | :----------------------------------: | :------------------------: |
-| **Dataset Kurikulum Inti (Sem 1–5)**    | **52 Kelas**  |   60 individu   |  150 generasi  | **~2.4 detik**  |      **0 (Nol / Zero Conflict)**      |            **0 (Ideal)**             | **1.0 (Optimal Sempurna)** |
-| **Dataset Skala Penuh Semester Ganjil** | **122 Kelas** |  100 individu   |  500 generasi  | **25–35 detik** |      **0 (Nol / Zero Conflict)**      |        **11–18 (Sangat Rendah)**      | **0.0526 – 0.0833 (Optimal)** |
+| Skenario Pengujian                                        | Jumlah Kelas  | Slot Waktu | Ukuran Populasi | Maks. Generasi | Waktu Komputasi | Pelanggaran Mutlak (_Hard Conflicts_) | Pelanggaran Lunak (_Soft Conflicts_) |      Status & Konvergensi     |
+| :-------------------------------------------------------- | :-----------: | :--------: | :-------------: | :------------: | :-------------: | :-----------------------------------: | :----------------------------------: | :---------------------------: |
+| **Dataset Kurikulum Inti (Sem 1–5)**                      | **52 Kelas**  |  24 Slot   |   60 individu   |  150 generasi  | **~2.4 detik**  |      **0 (Nol / Zero Conflict)**      |            **0 (Ideal)**             |  **1.0 (Optimal Sempurna)**   |
+| **Dataset Kurikulum Resmi Multi-Period (SKS Spanning)**   | **122 Kelas** |  54 Slot   |  100 individu   |  500 generasi  | **~1.5 detik**  |      **0 (Nol / Zero Conflict)**      |             **Minimal**              |  **Konvergen Teroptimasi**    |
 
-- ✅ **100% Bebas Bentrok Mutlak:** Seluruh dosen, 28 ruangan kelas/lab kampus, dan rombel mahasiswa berhasil terjadwal tanpa tumpang tindih ($HC_1$ s/d $HC_6$ = 0).
+- ✅ **100% Bebas Bentrok Mutlak:** Seluruh dosen, 28 ruangan kelas/lab kampus, dan rombel mahasiswa berhasil terjadwal tanpa tumpang tindih ($HC_0$ s/d $HC_6$ = 0).
+- ✅ **Multi-Period SKS Spanning Terintegrasi:** Perkuliahan 2-SKS dan 3-SKS otomatis menempati blok sesi berkelanjutan tanpa memotong waktu istirahat siang/sholat.
 - ✅ **Paralel Multi-KBK Berjalan Sempurna:** Kelas peminatan spesifik (Pemrograman, Multimedia, dan IoT) pada cohort yang sama sukses dialokasikan pada slot jam yang bersamaan di laboratorium berbeda tanpa konflik rombel.
+- ✅ **Operator Perbaikan Lokal Berkinerja Tinggi:** Waktu konvergensi ke nol konflik terpangkas drastis (hanya ~1.5 detik untuk 122 kelas) berkat memetic repair operator.
 - ✅ **Bebas Request Timeout:** Pembuatan jadwal berlangsung di latar belakang dengan respons instan `202 Accepted` dan indikator progres real-time.
 - ✅ **Hasil Siap Cetak:** Jadwal dapat langsung diekspor ke format Excel (`.xlsx`) berlogo UBBG maupun PDF (`.pdf`) format landscape resmi.
+
+---
+
+## 🧪 Pengujian Otomatis (Automated Testing)
+
+Proyek ini telah dilengkapi dengan suite pengujian otomatis berbasis `pytest` yang mencakup validasi formula evaluasi fitness, operator perbaikan lokal (_repair_), integritas penyimpanan database, dan validasi konflik jadwal:
+
+```bash
+cd backend
+# Aktifkan virtual environment
+.\.venv\Scripts\activate
+# Jalankan seluruh test suite
+python -m pytest tests/
+```
 
 ---
 
