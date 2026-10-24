@@ -10,6 +10,7 @@ class LecturerBase(BaseModel):
     email: EmailStr
     jabatan: Optional[str] = Field(None, max_length=150)
     is_guest: bool = False
+    kbk: str = Field(default="GENERAL", description="GENERAL, PEMROGRAMAN, MULTIMEDIA, or IOT")
 
 class LecturerCreate(LecturerBase):
     pass
@@ -20,6 +21,7 @@ class LecturerUpdate(BaseModel):
     email: Optional[EmailStr] = None
     jabatan: Optional[str] = Field(None, max_length=150)
     is_guest: Optional[bool] = None
+    kbk: Optional[str] = None
 
 class LecturerResponse(LecturerBase):
     id: UUID
@@ -95,6 +97,28 @@ class LecturerPreferenceResponse(LecturerPreferenceBase):
 
     class Config:
         from_attributes = True
+
+class BatchPreferenceRequest(BaseModel):
+    lecturer_id: UUID
+    mode: str = Field(..., description="'UNAVAILABLE_DAYS', 'ONLY_AVAILABLE_DAYS', or 'PREFERRED_DAYS'")
+    days: List[int] = Field(..., description="List of day_of_week integers (1: Senin s/d 6: Sabtu)")
+    time_range: str = Field("ALL", description="'ALL', 'MORNING' (period 1-4), 'AFTERNOON' (period 5-9)")
+    reason: Optional[str] = None
+    clear_existing_days: bool = True
+
+class BulkSlotPreference(BaseModel):
+    time_slot_id: UUID
+    preference_type: str = Field(..., description="'UNAVAILABLE', 'PREFERRED', or 'NONE'")
+    reason: Optional[str] = None
+
+class BulkPreferenceRequest(BaseModel):
+    lecturer_id: UUID
+    slots: List[BulkSlotPreference]
+
+class BatchPreferenceResponse(BaseModel):
+    status: str
+    message: str
+    affected_count: int
 
 # Course
 class CourseBase(BaseModel):

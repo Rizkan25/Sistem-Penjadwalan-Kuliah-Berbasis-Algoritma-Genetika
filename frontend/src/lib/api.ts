@@ -1,5 +1,6 @@
 import { 
   Lecturer, Room, TimeSlot, Course, AcademicClass, LecturerPreference,
+  BatchPreferenceRequest, BulkPreferenceRequest,
   GAParameters, ScheduleJob, ScheduleItem, PreCheckResult, JobValidationResult
 } from './types';
 
@@ -101,6 +102,20 @@ export const api = {
     fetchJSON<LecturerPreference[]>(`/master/preferences${lecturerId ? `?lecturer_id=${lecturerId}` : ''}`),
   createPreference: (data: Omit<LecturerPreference, 'id'>) => 
     fetchJSON<LecturerPreference>('/master/preferences', { method: 'POST', body: JSON.stringify(data) }),
+  createBatchPreference: (data: BatchPreferenceRequest) =>
+    fetchJSON<{ status: string; message: string; affected_count: number }>('/master/preferences/batch', {
+      method: 'POST',
+      body: JSON.stringify(data),
+    }),
+  bulkUpdatePreferences: (data: BulkPreferenceRequest) =>
+    fetchJSON<{ status: string; message: string; affected_count: number }>('/master/preferences/bulk-update', {
+      method: 'POST',
+      body: JSON.stringify(data),
+    }),
+  clearLecturerPreferences: (lecturerId: string) =>
+    fetchJSON<{ status: string; message: string }>(`/master/preferences/lecturer/${lecturerId}`, {
+      method: 'DELETE',
+    }),
   deletePreference: (id: string) => 
     fetchJSON<void>(`/master/preferences/${id}`, { method: 'DELETE' }),
 

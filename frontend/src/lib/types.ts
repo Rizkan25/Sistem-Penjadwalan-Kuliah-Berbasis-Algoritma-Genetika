@@ -5,6 +5,7 @@ export interface Lecturer {
   email: string;
   jabatan?: string | null;
   is_guest?: boolean;
+  kbk?: 'GENERAL' | 'PEMROGRAMAN' | 'MULTIMEDIA' | 'IOT';
   created_at?: string;
 }
 
@@ -60,6 +61,26 @@ export interface LecturerPreference {
   reason?: string;
   lecturer?: Lecturer;
   time_slot?: TimeSlot;
+}
+
+export interface BatchPreferenceRequest {
+  lecturer_id: string;
+  mode: 'UNAVAILABLE_DAYS' | 'ONLY_AVAILABLE_DAYS' | 'PREFERRED_DAYS';
+  days: number[];
+  time_range?: 'ALL' | 'MORNING' | 'AFTERNOON';
+  reason?: string;
+  clear_existing_days?: boolean;
+}
+
+export interface BulkSlotPreference {
+  time_slot_id: string;
+  preference_type: 'UNAVAILABLE' | 'PREFERRED' | 'NONE';
+  reason?: string;
+}
+
+export interface BulkPreferenceRequest {
+  lecturer_id: string;
+  slots: BulkSlotPreference[];
 }
 
 export interface GAParameters {

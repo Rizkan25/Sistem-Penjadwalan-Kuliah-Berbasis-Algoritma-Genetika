@@ -13,7 +13,12 @@ class Lecturer(Base):
     email = Column(String(100), unique=True, nullable=False)
     jabatan = Column(String(150), nullable=True)
     is_guest = Column(Boolean, default=False)
+    kbk = Column(String(30), nullable=False, default="GENERAL") # GENERAL, PEMROGRAMAN, MULTIMEDIA, IOT
     created_at = Column(DateTime(timezone=True), default=lambda: datetime.now(timezone.utc))
+
+    __table_args__ = (
+        CheckConstraint("kbk IN ('GENERAL', 'PEMROGRAMAN', 'MULTIMEDIA', 'IOT')", name="check_lecturer_kbk"),
+    )
 
     # Relationships
     classes = relationship("AcademicClass", back_populates="lecturer")

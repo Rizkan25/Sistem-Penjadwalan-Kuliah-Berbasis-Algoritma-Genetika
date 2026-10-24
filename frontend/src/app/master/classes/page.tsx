@@ -8,7 +8,7 @@ import {
 import { AcademicClass, Course, Lecturer } from '@/lib/types';
 import { api } from '@/lib/api';
 
-type SortField = 'class_name' | 'course' | 'lecturer' | 'semester' | 'kbk' | 'student_count';
+type SortField = 'class_name' | 'course' | 'lecturer' | 'semester' | 'cohort' | 'kbk' | 'student_count';
 
 export default function ClassesPage() {
   const [classes, setClasses] = useState<AcademicClass[]>([]);
@@ -276,8 +276,12 @@ export default function ClassesPage() {
         valB = (b.lecturer?.name || '').toLowerCase();
         break;
       case 'semester':
-        valA = a.semester * 10 + (a.cohort.charCodeAt(0) || 0);
-        valB = b.semester * 10 + (b.cohort.charCodeAt(0) || 0);
+        valA = a.semester;
+        valB = b.semester;
+        break;
+      case 'cohort':
+        valA = a.cohort.toLowerCase();
+        valB = b.cohort.toLowerCase();
         break;
       case 'kbk':
         valA = a.kbk.toLowerCase();
@@ -343,7 +347,8 @@ export default function ClassesPage() {
                     {sortField === 'class_name' && 'Nama Kelas'}
                     {sortField === 'course' && 'Mata Kuliah'}
                     {sortField === 'lecturer' && 'Dosen Pengampu'}
-                    {sortField === 'semester' && 'Semester & Rombel'}
+                    {sortField === 'semester' && 'Semester'}
+                    {sortField === 'cohort' && 'Kelompok Rombel'}
                     {sortField === 'kbk' && 'Jalur KBK'}
                     {sortField === 'student_count' && 'Jumlah Mahasiswa'}
                   </strong> ({sortDirection === 'asc' ? 'Menaik / A-Z' : 'Menurun / Z-A'})
@@ -434,19 +439,31 @@ export default function ClassesPage() {
                     </div>
                   </th>
 
-                  {/* Kolom 4: Semester / Rombel */}
+                  {/* Kolom 4: Semester */}
                   <th 
                     onClick={() => handleSort('semester')}
                     className="py-2.5 px-4 text-center cursor-pointer hover:bg-slate-100 transition group"
-                    title="Klik untuk mengurutkan berdasarkan Semester & Rombel"
+                    title="Klik untuk mengurutkan berdasarkan Semester"
                   >
                     <div className="flex items-center justify-center space-x-1">
-                      <span className={sortField === 'semester' ? 'text-[#1D8699]' : ''}>Semester / Rombel</span>
+                      <span className={sortField === 'semester' ? 'text-[#1D8699]' : ''}>Semester</span>
                       {renderSortIcon('semester')}
                     </div>
                   </th>
 
-                  {/* Kolom 5: KBK */}
+                  {/* Kolom 5: Rombel */}
+                  <th 
+                    onClick={() => handleSort('cohort')}
+                    className="py-2.5 px-4 text-center cursor-pointer hover:bg-slate-100 transition group"
+                    title="Klik untuk mengurutkan berdasarkan Kelompok Rombel"
+                  >
+                    <div className="flex items-center justify-center space-x-1">
+                      <span className={sortField === 'cohort' ? 'text-[#1D8699]' : ''}>Rombel</span>
+                      {renderSortIcon('cohort')}
+                    </div>
+                  </th>
+
+                  {/* Kolom 6: KBK */}
                   <th 
                     onClick={() => handleSort('kbk')}
                     className="py-2.5 px-4 cursor-pointer hover:bg-slate-100 transition group"
@@ -458,7 +475,7 @@ export default function ClassesPage() {
                     </div>
                   </th>
 
-                  {/* Kolom 6: Jumlah Mahasiswa */}
+                  {/* Kolom 7: Jumlah Mahasiswa */}
                   <th 
                     onClick={() => handleSort('student_count')}
                     className="py-2.5 px-4 text-center cursor-pointer hover:bg-slate-100 transition group"
@@ -470,7 +487,7 @@ export default function ClassesPage() {
                     </div>
                   </th>
 
-                  {/* Kolom 7: Aksi */}
+                  {/* Kolom 8: Aksi */}
                   <th className="py-2.5 px-4 text-center">
                     Aksi
                   </th>
@@ -479,7 +496,7 @@ export default function ClassesPage() {
               <tbody className="divide-y divide-slate-100">
                 {sortedClasses.length === 0 ? (
                   <tr>
-                    <td colSpan={7} className="py-10 text-center text-slate-400">
+                    <td colSpan={8} className="py-10 text-center text-slate-400">
                       {searchQuery ? (
                         <div>
                           <p className="font-semibold text-slate-600">Tidak ada kelas yang cocok dengan pencarian &quot;{searchQuery}&quot;</p>
@@ -492,10 +509,11 @@ export default function ClassesPage() {
                   </tr>
                 ) : (
                   sortedClasses.map((c) => {
+                    const cleanName = c.class_name.replace(/\s*-\s*Rombel.*$/i, '').replace(/\s*\(\*\)/g, '').trim();
                     return (
                       <tr key={c.id} className="hover:bg-slate-50/60">
                         <td className="py-3 px-4 font-bold text-slate-800">
-                          {c.class_name}
+                          {cleanName}
                         </td>
                         <td className="py-3 px-4">
                           <div className="font-semibold text-slate-800">
@@ -510,7 +528,11 @@ export default function ClassesPage() {
                         </td>
                         <td className="py-3 px-4 text-center">
                           <span className="font-bold text-slate-800">Sem {c.semester}</span>
-                          <span className="text-[10px] text-slate-500 block">Rombel {c.cohort}</span>
+                        </td>
+                        <td className="py-3 px-4 text-center">
+                          <span className="inline-flex items-center justify-center px-2.5 py-1 rounded-md text-xs font-bold bg-[#E6F4F7] text-[#1D8699] border border-[#BCE3EB] font-mono-metrics shadow-2xs">
+                            Rombel {c.cohort}
+                          </span>
                         </td>
                         <td className="py-3 px-4">
                           <span className={`px-2 py-0.5 rounded-full text-[10px] font-bold ${
@@ -695,11 +717,14 @@ export default function ClassesPage() {
                   onChange={(e) => setSelectedLecturerId(e.target.value)}
                   className="w-full px-3 py-2 bg-white border border-slate-300 rounded-lg text-xs font-medium text-slate-800 focus:outline-none focus:ring-2 focus:ring-[#1D8699]/30"
                 >
-                  {lecturers.map((lec) => (
-                    <option key={lec.id} value={lec.id}>
-                      {lec.name} ({lec.nidn})
-                    </option>
-                  ))}
+                  {lecturers.map((lec) => {
+                    const kbkText = !lec.kbk || lec.kbk === 'GENERAL' ? 'Semua KBK' : `KBK: ${lec.kbk}`;
+                    return (
+                      <option key={lec.id} value={lec.id}>
+                        {lec.name} ({lec.nidn || '-'}) • [{kbkText}] {lec.is_guest ? '(Tamu)' : ''}
+                      </option>
+                    );
+                  })}
                 </select>
               </div>
 

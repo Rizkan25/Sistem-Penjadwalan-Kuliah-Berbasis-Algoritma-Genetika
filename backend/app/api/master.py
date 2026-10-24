@@ -11,6 +11,7 @@ from app.schemas.master import (
     RoomCreate, RoomUpdate, RoomResponse,
     TimeSlotCreate, TimeSlotUpdate, TimeSlotResponse,
     LecturerPreferenceCreate, LecturerPreferenceUpdate, LecturerPreferenceResponse,
+    BatchPreferenceRequest, BulkPreferenceRequest, BatchPreferenceResponse,
     CourseCreate, CourseUpdate, CourseResponse,
     AcademicClassCreate, AcademicClassUpdate, AcademicClassResponse
 )
@@ -225,6 +226,191 @@ def create_preference(payload: LecturerPreferenceCreate, db: Session = Depends(g
     db.commit()
     db.refresh(obj)
     return obj
+
+@router.post("/preferences/batch", response_model=BatchPreferenceResponse)
+def batch_create_preference(payload: BatchPreferenceRequest, db: Session = Depends(get_db)):
+    """
+    Applies batch day-level preferences for a lecturer:
+    - 'UNAVAILABLE_DAYS': Marks all slots on selected days as UNAVAILABLE.
+    - 'ONLY_AVAILABLE_DAYS': Marks days NOT in selected days as UNAVAILABLE.
+    - 'PREFERRED_DAYS': Marks all slots on selected days as PREFERRED.
+    """
+    lecturer = db.query(Lecturer).filter(Lecturer.id == payload.lecturer_id).first()
+    if not lecturer:
+        raise HTTPException(status_code=404, detail="Dosen tidak ditemukan.")
+
+    all_slots = db.query(TimeSlot).all()
+    affected_count = 0
+
+    DAY_NAMES = {1: 'Senin', 2: 'Selasa', 3: 'Rabu', 4: 'Kamis', 5: 'Jumat', 6: 'Sabtu'}
+
+    def slot_matches_range(ts: TimeSlot) -> bool:
+        if payload.time_range == 'MORNING':
+            return ts.period_order <= 4
+        elif payload.time_range == 'AFTERNOON':
+            return ts.period_order >= 5
+        return True
+
+    if payload.mode == 'UNAVAILABLE_DAYS':
+        target_days = set(payload.days)
+        reason_text = payload.reason or f"Berhalangan hadir pada hari {', '.join([DAY_NAMES.get(d, str(d)) for d in sorted(target_days)])}"
+        
+        # If clear_existing_days, remove old prefs on those days
+        if payload.clear_existing_days:
+            slot_ids_on_days = [ts.id for ts in all_slots if ts.day_of_week in target_days and slot_matches_range(ts)]
+            if slot_ids_on_days:
+                db.query(LecturerTimePreference).filter(
+                    LecturerTimePreference.lecturer_id == payload.lecturer_id,
+                    LecturerTimePreference.time_slot_id.in_(slot_ids_on_days)
+                ).delete(synchronize_session=False)
+
+        for ts in all_slots:
+            if ts.day_of_week in target_days and slot_matches_range(ts):
+                existing = db.query(LecturerTimePreference).filter(
+                    LecturerTimePreference.lecturer_id == payload.lecturer_id,
+                    LecturerTimePreference.time_slot_id == ts.id
+                ).first()
+                if existing:
+                    existing.preference_type = "UNAVAILABLE"
+                    existing.reason = reason_text
+                else:
+                    db.add(LecturerTimePreference(
+                        id=uuid.uuid4(),
+                        lecturer_id=payload.lecturer_id,
+                        time_slot_id=ts.id,
+                        preference_type="UNAVAILABLE",
+                        reason=reason_text
+                    ))
+                affected_count += 1
+
+    elif payload.mode == 'ONLY_AVAILABLE_DAYS':
+        # Days where lecturer CAN enter: payload.days
+        # Days where lecturer CANNOT enter: all other active days (1..6)
+        active_days = {1, 2, 3, 4, 5, 6}
+        allowed_days = set(payload.days)
+        unavailable_days = active_days - allowed_days
+
+        allowed_names = [DAY_NAMES.get(d, str(d)) for d in sorted(allowed_days)]
+        reason_unavailable = payload.reason or f"Dosen hanya bertugas/hadir pada hari {', '.join(allowed_names)}"
+
+        # 1. Clear any existing preferences on all days for this lecturer to reset clean state
+        if payload.clear_existing_days:
+            db.query(LecturerTimePreference).filter(
+                LecturerTimePreference.lecturer_id == payload.lecturer_id
+            ).delete(synchronize_session=False)
+
+        # 2. Mark unavailable days
+        for ts in all_slots:
+            if ts.day_of_week in unavailable_days:
+                db.add(LecturerTimePreference(
+                    id=uuid.uuid4(),
+                    lecturer_id=payload.lecturer_id,
+                    time_slot_id=ts.id,
+                    preference_type="UNAVAILABLE",
+                    reason=reason_unavailable
+                ))
+                affected_count += 1
+            elif ts.day_of_week in allowed_days and slot_matches_range(ts):
+                # Optionally mark as PREFERRED priority
+                db.add(LecturerTimePreference(
+                    id=uuid.uuid4(),
+                    lecturer_id=payload.lecturer_id,
+                    time_slot_id=ts.id,
+                    preference_type="PREFERRED",
+                    reason=f"Hari prioritas mengajar ({DAY_NAMES.get(ts.day_of_week, '')})"
+                ))
+                affected_count += 1
+
+    elif payload.mode == 'PREFERRED_DAYS':
+        target_days = set(payload.days)
+        reason_text = payload.reason or f"Hari prioritas mengajar ({', '.join([DAY_NAMES.get(d, str(d)) for d in sorted(target_days)])})"
+
+        if payload.clear_existing_days:
+            slot_ids_on_days = [ts.id for ts in all_slots if ts.day_of_week in target_days and slot_matches_range(ts)]
+            if slot_ids_on_days:
+                db.query(LecturerTimePreference).filter(
+                    LecturerTimePreference.lecturer_id == payload.lecturer_id,
+                    LecturerTimePreference.time_slot_id.in_(slot_ids_on_days)
+                ).delete(synchronize_session=False)
+
+        for ts in all_slots:
+            if ts.day_of_week in target_days and slot_matches_range(ts):
+                existing = db.query(LecturerTimePreference).filter(
+                    LecturerTimePreference.lecturer_id == payload.lecturer_id,
+                    LecturerTimePreference.time_slot_id == ts.id
+                ).first()
+                if existing:
+                    existing.preference_type = "PREFERRED"
+                    existing.reason = reason_text
+                else:
+                    db.add(LecturerTimePreference(
+                        id=uuid.uuid4(),
+                        lecturer_id=payload.lecturer_id,
+                        time_slot_id=ts.id,
+                        preference_type="PREFERRED",
+                        reason=reason_text
+                    ))
+                affected_count += 1
+
+    db.commit()
+    return BatchPreferenceResponse(
+        status="success",
+        message=f"Berhasil menerapkan aturan preferensi untuk {affected_count} slot waktu.",
+        affected_count=affected_count
+    )
+
+@router.post("/preferences/bulk-update", response_model=BatchPreferenceResponse)
+def bulk_update_preferences(payload: BulkPreferenceRequest, db: Session = Depends(get_db)):
+    """
+    Updates or clears a list of slot preferences in one atomic transaction (e.g. from weekly matrix).
+    """
+    lecturer = db.query(Lecturer).filter(Lecturer.id == payload.lecturer_id).first()
+    if not lecturer:
+        raise HTTPException(status_code=404, detail="Dosen tidak ditemukan.")
+
+    count = 0
+    for item in payload.slots:
+        existing = db.query(LecturerTimePreference).filter(
+            LecturerTimePreference.lecturer_id == payload.lecturer_id,
+            LecturerTimePreference.time_slot_id == item.time_slot_id
+        ).first()
+
+        if item.preference_type == "NONE":
+            if existing:
+                db.delete(existing)
+                count += 1
+        elif item.preference_type in ("UNAVAILABLE", "PREFERRED"):
+            if existing:
+                existing.preference_type = item.preference_type
+                if item.reason is not None:
+                    existing.reason = item.reason
+            else:
+                db.add(LecturerTimePreference(
+                    id=uuid.uuid4(),
+                    lecturer_id=payload.lecturer_id,
+                    time_slot_id=item.time_slot_id,
+                    preference_type=item.preference_type,
+                    reason=item.reason
+                ))
+            count += 1
+
+    db.commit()
+    return BatchPreferenceResponse(
+        status="success",
+        message=f"Berhasil memperbarui {count} slot preferensi.",
+        affected_count=count
+    )
+
+@router.delete("/preferences/lecturer/{lecturer_id}", status_code=status.HTTP_200_OK)
+def clear_lecturer_preferences(lecturer_id: uuid.UUID, db: Session = Depends(get_db)):
+    """
+    Clears all preferences for a specific lecturer.
+    """
+    deleted = db.query(LecturerTimePreference).filter(
+        LecturerTimePreference.lecturer_id == lecturer_id
+    ).delete(synchronize_session=False)
+    db.commit()
+    return {"status": "success", "message": f"{deleted} preferensi waktu dosen berhasil direset."}
 
 @router.delete("/preferences/{id}", status_code=status.HTTP_204_NO_CONTENT)
 def delete_preference(id: uuid.UUID, db: Session = Depends(get_db)):
